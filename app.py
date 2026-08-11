@@ -6,7 +6,7 @@ live sub-agent progress monitoring, requirement filtering, and PDF export.
 
 import os
 import json
-import fitz # PyMuPDF
+import pymupdf as fitz
 import streamlit as st
 from config import config
 from db.supabase_client import supabase_db
