@@ -15,17 +15,22 @@ class LLMProviderChain:
     def __init__(self):
         self.gemini_key = config.GEMINI_API_KEY
         self.groq_key = config.GROQ_API_KEY
-        
+        self.gemini_model = None
+        self.groq_client = None
+
         if self.gemini_key:
             try:
                 genai.configure(api_key=self.gemini_key)
-                self.gemini_model = genai.GenerativeModel("gemini-1.5-flash")
-                print("[INFO] Gemini 1.5 Flash client initialized.")
+                # Try models in fallback order
+                for m_name in ["gemini-2.5-flash", "gemini-1.5-flash-latest", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]:
+                    try:
+                        self.gemini_model = genai.GenerativeModel(m_name)
+                        print(f"[INFO] Gemini model '{m_name}' initialized.")
+                        break
+                    except Exception:
+                        continue
             except Exception as e:
                 print(f"[WARNING] Gemini initialization error: {e}")
-                self.gemini_model = None
-        else:
-            self.gemini_model = None
 
         if self.groq_key:
             try:
@@ -33,9 +38,6 @@ class LLMProviderChain:
                 print("[INFO] Groq Llama 3.3 70B client initialized.")
             except Exception as e:
                 print(f"[WARNING] Groq initialization error: {e}")
-                self.groq_client = None
-        else:
-            self.groq_client = None
 
     def generate(self, prompt: str, system_instruction: str = None) -> str:
         """
@@ -69,7 +71,6 @@ class LLMProviderChain:
             except Exception as e:
                 print(f"[WARNING] Groq API call failed: {e}")
 
-        # Fallback 2: Rule-based heuristic fallback if API limits reached
         return None
 
 llm_chain = LLMProviderChain()
@@ -119,7 +120,6 @@ Respond strictly in valid JSON format:
             
             if raw_response:
                 try:
-                    # Clean markdown code block formatting if present
                     json_str = re.sub(r'^```json\s*|\s*```$', '', raw_response.strip(), flags=re.MULTILINE)
                     verdict_obj = json.loads(json_str)
                     verdicts.append(verdict_obj)

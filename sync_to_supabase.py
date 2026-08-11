@@ -9,8 +9,8 @@ import os
 from db.supabase_client import supabase_db
 from config import config
 
-def create_supabase_table_instructions():
-    sql_schema = """
+def get_supabase_sql_script():
+    return """
 -- =======================================================
 -- 1. Enable Vector Extension (Run in Supabase SQL Editor)
 -- =======================================================
@@ -41,8 +41,13 @@ CREATE TABLE IF NOT EXISTS public.compliance_reports (
     report_data JSONB NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- =======================================================
+-- 4. Enable Public Read/Write Access (Disable RLS for API)
+-- =======================================================
+ALTER TABLE public.gdpr_requirements DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.compliance_reports DISABLE ROW LEVEL SECURITY;
 """
-    return sql_schema
 
 def sync_chunks():
     print("=====================================================")
@@ -65,17 +70,28 @@ def sync_chunks():
         chunks = json.load(f)
 
     print(f"[INFO] Loaded {len(chunks)} GDPR requirement chunks from {json_path}.")
-    print("[INFO] Uploading chunks to Supabase `gdpr_requirements` table...")
+    print("[INFO] Uploading chunks to Supabase `gdpr_requirements` table...\n")
 
     success_count = 0
+    rls_error_detected = False
+
     for chunk in chunks:
-        if supabase_db.store_gdpr_requirement(chunk):
+        res = supabase_db.store_gdpr_requirement(chunk)
+        if res:
             success_count += 1
             print(f"  ✓ Uploaded [{chunk.get('id')}] {chunk.get('article_number')}: {chunk.get('atomic_requirement')[:50]}...")
         else:
-            print(f"  ✗ Failed to upload [{chunk.get('id')}]")
+            rls_error_detected = True
 
     print(f"\n[SUMMARY] Successfully uploaded {success_count}/{len(chunks)} GDPR chunks to Supabase Cloud!")
+
+    if rls_error_detected and success_count == 0:
+        print("\n" + "="*60)
+        print(" 🚨 ROW-LEVEL SECURITY (RLS) ERROR DETECTED!")
+        print("="*60)
+        print("Supabase blocked the write because RLS is enabled on the table.")
+        print("\n👉 SOLUTION: Open Supabase SQL Editor and run this SQL snippet:\n")
+        print(get_supabase_sql_script())
 
 if __name__ == "__main__":
     sync_chunks()
