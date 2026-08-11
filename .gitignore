@@ -1,0 +1,23 @@
+# Environment & Secrets
+.env
+*.env
+!.env.example
+
+# Python Cache & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+
+# IDE & OS Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Output PDFs & Generated Test Files
+*.pdf
+scratch/
