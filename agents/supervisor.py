@@ -1,7 +1,7 @@
 """
-Supervisor Router Agent
+Supervisor Router Agent (Enterprise-Grade Pipeline)
 Orchestrates Chapter Sub-Agents (Chapters I-XI), aggregates gap analysis results,
-calculates overall compliance scores, generates Priority Action Plans,
+calculates dynamic chapter readiness scores, generates Priority Action Plans,
 and persists the master report JSON to Supabase.
 """
 
@@ -23,7 +23,7 @@ class SupervisorAgent:
 
         for gap in detailed_gaps:
             v = gap.get("verdict", "").lower()
-            if "fully" in v or "met" == v:
+            if "fully" in v:
                 counts["fully_met"] += 1
             elif "partially" in v:
                 counts["partially_met"] += 1
@@ -32,7 +32,7 @@ class SupervisorAgent:
             else:
                 counts["not_met"] += 1
 
-        # Formula: Fully Met = 1.0, Partially Met = 0.5, Not Met = 0.0, Conflicting = 0.0
+        # Score formula: Fully Met = 1.0, Partially Met = 0.5, Not Met = 0.0, Conflicting = 0.0
         if counts["total"] > 0:
             raw_score = (counts["fully_met"] * 1.0 + counts["partially_met"] * 0.5) / counts["total"]
             overall_score = int(round(raw_score * 100))
@@ -50,7 +50,7 @@ class SupervisorAgent:
 
     def build_chapter_breakdown(self, detailed_gaps: list) -> list:
         """
-        Builds Chapter I to XI readiness breakdown.
+        Builds Chapter I to XI readiness breakdown based on actual sub-agent verdicts.
         """
         chapter_articles_map = {
             "I": ("General Provisions", "Art. 1–4"),
@@ -68,20 +68,21 @@ class SupervisorAgent:
 
         breakdown = []
         for ch_num, (ch_name, art_range) in chapter_articles_map.items():
-            ch_gaps = [g for g in detailed_gaps if g.get("requirement_id", "").startswith(f"REQ-") and g.get("chapter") == ch_num]
+            ch_gaps = [g for g in detailed_gaps if g.get("chapter") == ch_num]
             
-            # Simple heuristic calculation for chapter score
-            score = 60  # Default baseline
             if ch_gaps:
                 met = len([g for g in ch_gaps if "fully" in g.get("verdict", "").lower()])
-                score = int(round((met / len(ch_gaps)) * 100))
+                part = len([g for g in ch_gaps if "partially" in g.get("verdict", "").lower()])
+                ch_score = int(round(((met * 1.0 + part * 0.5) / len(ch_gaps)) * 100))
+            else:
+                ch_score = 0
 
-            status = "✓" if score >= 65 else ("■" if score >= 40 else "✗")
+            status = "✓" if ch_score >= 65 else ("■" if ch_score >= 40 else "✗")
             breakdown.append({
                 "chapter": ch_num,
                 "name": ch_name,
                 "articles": art_range,
-                "score": score,
+                "score": ch_score,
                 "status": status
             })
 
@@ -90,15 +91,23 @@ class SupervisorAgent:
     def build_action_plan(self, detailed_gaps: list) -> dict:
         """
         Categorizes recommendations into P1 Critical, P2 High, and P3 Medium.
+        Fixes 'None.' string for fully compliant P3 items.
         """
         p1, p2, p3 = [], [], []
         
         for gap in detailed_gaps:
             v = gap.get("verdict", "").lower()
+            raw_fix = gap.get("fix_required", "").strip()
+
+            if not raw_fix or raw_fix.lower() in ["none", "none.", "no fix required", "n/a"]:
+                clean_fix = "Fully compliant. Maintain existing policy clause and schedule annual review."
+            else:
+                clean_fix = raw_fix
+
             item = {
-                "action_required": gap.get("fix_required", "Remediate policy clause."),
+                "action_required": clean_fix,
                 "gdpr_article": gap.get("article", ""),
-                "current_status": "Missing entirely" if "not met" in v else ("Currently vague" if "partially" in v else "Needs review")
+                "current_status": "Missing entirely" if "not met" in v else ("Currently vague" if "partially" in v else "Fully compliant")
             }
             if "not met" in v or "conflict" in v:
                 p1.append(item)
@@ -117,7 +126,7 @@ class SupervisorAgent:
         """
         Main orchestration entry point: routes policy text to chapter sub-agents and aggregates master JSON.
         """
-        print(f"[INFO] Starting ComplianceIQ Gap Analysis for '{company_name}' ({policy_name})...")
+        print(f"[INFO] Starting LexMesh Enterprise Gap Analysis for '{company_name}' ({policy_name})...")
         
         # Group requirements by chapter
         chapter_reqs_map = {}
@@ -134,9 +143,6 @@ class SupervisorAgent:
             
             sub_agent = ChapterSubAgent(ch_num, ch_title)
             verdicts = sub_agent.evaluate_requirements(reqs, policy_text)
-            
-            for v in verdicts:
-                v["chapter"] = ch_num
             detailed_gaps.extend(verdicts)
 
         overall_score, verdict_counts, risk_level = self.calculate_scores_and_summary(detailed_gaps)
@@ -172,7 +178,7 @@ class SupervisorAgent:
                 "strongly recommended before regulatory audit."
             ),
             "disclaimer": (
-                "DISCLAIMER: This report was generated by ComplianceIQ, an AI-powered compliance analysis tool. "
+                "DISCLAIMER: This report was generated by LexMesh, an AI-powered compliance analysis tool. "
                 "It is intended for informational purposes only and does not constitute legal advice."
             )
         }
