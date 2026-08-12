@@ -1,6 +1,6 @@
 """
-ComplianceIQ — Streamlit Web Interface
-Interactive dashboard for document ingestion, Google ADK agentic RAG gap analysis,
+LexMesh — Streamlit Web Interface
+Interactive dashboard for document ingestion, agentic RAG gap analysis,
 live sub-agent progress monitoring, requirement filtering, and PDF export.
 """
 
@@ -14,7 +14,7 @@ from agents.adk_agent import adk_supervisor
 from reporter.pdf_generator import generate_compliance_pdf
 
 st.set_page_config(
-    page_title="ComplianceIQ — Google ADK Agentic RAG Gap Analysis",
+    page_title="LexMesh — Agentic RAG Gap Analysis",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -29,8 +29,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-header">🛡️ ComplianceIQ</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Agentic RAG Engine | Google ADK Orchestration & GDPR Audit</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">🛡️ LexMesh</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-header">Agentic RAG Engine | GDPR Audit & Gap Analysis</div>', unsafe_allow_html=True)
 
 # SIDEBAR CONFIGURATION & UPLOAD
 with st.sidebar:
@@ -50,11 +50,11 @@ with st.sidebar:
     
     uploaded_file = st.file_uploader("Upload Company Policy PDF", type=["pdf"])
     
-    run_btn = st.button("🚀 Run Google ADK Gap Analysis", disabled=(uploaded_file is None))
+    run_btn = st.button("🚀 Run Gap Analysis", disabled=(uploaded_file is None))
 
 # MAIN CONTENT AREA
 if uploaded_file and run_btn:
-    st.info("Ingesting company policy PDF and initializing Google ADK Supervisor Agent...")
+    st.info("Ingesting company policy PDF and initializing Supervisor Agent...")
     
     # Extract PDF text
     pdf_bytes = uploaded_file.read()
@@ -79,7 +79,7 @@ if uploaded_file and run_btn:
             {"id": "REQ-005", "chapter_number": "III", "chapter_title": "Rights of data subject", "article_number": "Art. 17(1)", "article_title": "Right to erasure", "atomic_requirement": "Data subject has the right to erasure without undue delay"}
         ]
         
-    with st.spinner("Google ADK Supervisor delegating policy chunks to Chapter Sub-Agents (Chapters I–XI)..."):
+    with st.spinner("Delegating policy chunks to Chapter Sub-Agents (Chapters I–XI)..."):
         report_json = adk_supervisor.run_adk_pipeline(company_name, policy_name, policy_text, reqs_catalog)
         st.session_state["active_report"] = report_json
 
@@ -179,4 +179,4 @@ if "active_report" in st.session_state:
                             mime="application/pdf"
                         )
 else:
-    st.info("👈 Upload a company policy PDF in the sidebar and click **Run Google ADK Gap Analysis** to start!")
+    st.info("👈 Upload a company policy PDF in the sidebar and click **Run Gap Analysis** to start!")
