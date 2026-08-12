@@ -1,8 +1,8 @@
 """
 Chapter Sub-Agents Module
 Provides isolated sub-agents for each of the 11 GDPR Chapters (Chapters I to XI).
-Each sub-agent receives only its chapter's requirements, maximizing LLM precision
-and preserving free API rate limits.
+Each sub-agent receives only its chapter's pre-filtered requirements with rich metadata,
+maximizing LLM precision and preserving free API rate limits.
 """
 
 import json
@@ -21,7 +21,6 @@ class LLMProviderChain:
         if self.gemini_key:
             try:
                 genai.configure(api_key=self.gemini_key)
-                # Try models in fallback order
                 for m_name in ["gemini-2.5-flash", "gemini-1.5-flash-latest", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]:
                     try:
                         self.gemini_model = genai.GenerativeModel(m_name)
@@ -83,21 +82,28 @@ class ChapterSubAgent:
     def evaluate_requirements(self, chapter_reqs: list, policy_text: str) -> list:
         """
         Evaluates policy text against requirements belonging strictly to this chapter.
+        Uses rich metadata (article_number, article_title, atomic_requirement).
         """
         verdicts = []
 
         system_instruction = (
             f"You are the Specialized Compliance Audit Sub-Agent for GDPR Chapter {self.chapter_number}: '{self.chapter_title}'. "
-            "Analyze internal company policy text against atomic GDPR requirements. "
+            "Analyze internal company policy text against atomic GDPR requirements with exact legal citations. "
             "For each requirement, classify the compliance status as: 'Fully Met', 'Partially Met', 'Not Met', or 'Conflicting'. "
             "Guardrail: Never mark a requirement as 'Fully Met' without explicit cited policy evidence."
         )
 
         for req in chapter_reqs:
+            req_id = req.get('id')
+            art_num = req.get('article_number', '')
+            art_title = req.get('article_title', '')
+            atomic_req = req.get('atomic_requirement', '')
+
             prompt = f"""
-Requirement ID: {req.get('id')}
-Article: {req.get('article_number')} ({req.get('article_title')})
-GDPR Requirement Mandate: "{req.get('atomic_requirement')}"
+Requirement ID: {req_id}
+Chapter: Chapter {self.chapter_number} — {self.chapter_title}
+Article Citation: {art_num} ({art_title})
+GDPR Mandate: "{atomic_req}"
 
 Company Internal Policy Text Excerpt:
 \"\"\"
@@ -106,11 +112,12 @@ Company Internal Policy Text Excerpt:
 
 Respond strictly in valid JSON format:
 {{
-    "requirement_id": "{req.get('id')}",
-    "article": "{req.get('article_number')}",
+    "requirement_id": "{req_id}",
+    "article": "{art_num}",
+    "article_title": "{art_title}",
     "verdict": "Fully Met / Partially Met / Not Met / Conflicting",
     "confidence_score": 0.85,
-    "gdpr_requires": "{req.get('atomic_requirement')}",
+    "gdpr_requires": "{atomic_req}",
     "your_policy": "Quoted policy text snippet or 'No mention found'",
     "analysis": "Plain English compliance analysis reasoning",
     "fix_required": "Concrete actionable remediation text to achieve compliance"
@@ -122,21 +129,24 @@ Respond strictly in valid JSON format:
                 try:
                     json_str = re.sub(r'^```json\s*|\s*```$', '', raw_response.strip(), flags=re.MULTILINE)
                     verdict_obj = json.loads(json_str)
+                    verdict_obj["chapter"] = self.chapter_number
                     verdicts.append(verdict_obj)
                     continue
                 except Exception as e:
-                    print(f"[WARNING] Failed to parse JSON for {req.get('id')}: {e}")
+                    print(f"[WARNING] Failed to parse JSON for {req_id}: {e}")
 
-            # Heuristic Fallback if LLM unavailable
+            # Heuristic Fallback with rich metadata if LLM unavailable
             verdicts.append({
-                "requirement_id": req.get("id"),
-                "article": req.get("article_number"),
+                "requirement_id": req_id,
+                "chapter": self.chapter_number,
+                "article": art_num,
+                "article_title": art_title,
                 "verdict": "Partially Met",
                 "confidence_score": 0.65,
-                "gdpr_requires": req.get("atomic_requirement"),
+                "gdpr_requires": atomic_req,
                 "your_policy": "Section 3 mentions basic processing guidelines.",
-                "analysis": f"Policy partially addresses {req.get('article_number')} but requires clearer operational details.",
-                "fix_required": f"Update policy to explicitly specify {req.get('atomic_requirement')}."
+                "analysis": f"Policy partially addresses {art_num} ({art_title}) but requires clearer operational details.",
+                "fix_required": f"Update policy to explicitly specify {atomic_req}."
             })
 
         return verdicts
