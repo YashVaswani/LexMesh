@@ -1,0 +1,514 @@
+[
+  {
+    "id": "REQ-001",
+    "chapter_number": "I",
+    "chapter_title": "General provisions",
+    "article_number": "Art. 1",
+    "article_title": "Subject-matter and objectives",
+    "atomic_requirement": "Sets rules protecting natural persons regarding personal-data processing and the free movement of such data."
+  },
+  {
+    "id": "REQ-002",
+    "chapter_number": "I",
+    "chapter_title": "General provisions",
+    "article_number": "Art. 2",
+    "article_title": "Material scope",
+    "atomic_requirement": "Applies to personal data processed wholly/partly by automated means and manual processing."
+  },
+  {
+    "id": "REQ-003",
+    "chapter_number": "I",
+    "chapter_title": "General provisions",
+    "article_number": "Art. 3",
+    "article_title": "Territorial scope",
+    "atomic_requirement": "Applies to processing by a controller/processor established in the Union, regardless of where processing occurs."
+  },
+  {
+    "id": "REQ-004",
+    "chapter_number": "I",
+    "chapter_title": "General provisions",
+    "article_number": "Art. 4",
+    "article_title": "Definitions",
+    "atomic_requirement": "Personal data, processing, controller, processor, recipient, consent, personal data breach, biometrics"
+  },
+  {
+    "id": "REQ-005",
+    "chapter_number": "I",
+    "chapter_title": "General provisions",
+    "article_number": "Art. 4",
+    "article_title": "Definitions",
+    "atomic_requirement": "CHAPTER II \u2014 Principles (Articles 5\u201311)"
+  },
+  {
+    "id": "REQ-006",
+    "chapter_number": "II",
+    "chapter_title": "Principles",
+    "article_number": "Art. 5",
+    "article_title": "Principles relating to processing of personal data",
+    "atomic_requirement": "Personal data must be processed lawfully, fairly, transparently, for specified explicit purposes, limited to necessary data,\naccurate, kept identifiable no longer than necessary, with appropriate security."
+  },
+  {
+    "id": "REQ-007",
+    "chapter_number": "II",
+    "chapter_title": "Principles",
+    "article_number": "Art. 6",
+    "article_title": "Lawfulness of processing",
+    "atomic_requirement": "Processing is lawful only if based on consent, contract necessity, legal obligation, vital interests, public interest, or legitimate\ninterests."
+  },
+  {
+    "id": "REQ-008",
+    "chapter_number": "II",
+    "chapter_title": "Principles",
+    "article_number": "Art. 7",
+    "article_title": "Conditions for consent",
+    "atomic_requirement": "Controller must demonstrate consent was given"
+  },
+  {
+    "id": "REQ-009",
+    "chapter_number": "II",
+    "chapter_title": "Principles",
+    "article_number": "Art. 7",
+    "article_title": "Conditions for consent",
+    "atomic_requirement": "Consent requests must be in plain language"
+  },
+  {
+    "id": "REQ-010",
+    "chapter_number": "II",
+    "chapter_title": "Principles",
+    "article_number": "Art. 7",
+    "article_title": "Conditions for consent",
+    "atomic_requirement": "Data subject can withdraw\nconsent at any time."
+  },
+  {
+    "id": "REQ-011",
+    "chapter_number": "II",
+    "chapter_title": "Principles",
+    "article_number": "Art. 8",
+    "article_title": "Conditions applicable to child's consent",
+    "atomic_requirement": "Processing based on child's consent is lawful from age 16"
+  },
+  {
+    "id": "REQ-012",
+    "chapter_number": "II",
+    "chapter_title": "Principles",
+    "article_number": "Art. 8",
+    "article_title": "Conditions applicable to child's consent",
+    "atomic_requirement": "below that, parental authorization is required."
+  },
+  {
+    "id": "REQ-013",
+    "chapter_number": "II",
+    "chapter_title": "Principles",
+    "article_number": "Art. 9",
+    "article_title": "Processing of special categories of personal data",
+    "atomic_requirement": "Prohibits processing revealing racial origin, political opinions, genetic/biometric data, health data unless explicit consent or\nlegal exception applies."
+  },
+  {
+    "id": "REQ-014",
+    "chapter_number": "II",
+    "chapter_title": "Principles",
+    "article_number": "Art. 10",
+    "article_title": "Processing of personal data relating to criminal convictions",
+    "atomic_requirement": "Permitted only under official authority control or Union/Member State law."
+  },
+  {
+    "id": "REQ-015",
+    "chapter_number": "II",
+    "chapter_title": "Principles",
+    "article_number": "Art. 11",
+    "article_title": "Processing which does not require identification",
+    "atomic_requirement": "Controller is not obliged to retain identifying information solely to comply with GDPR"
+  },
+  {
+    "id": "REQ-016",
+    "chapter_number": "II",
+    "chapter_title": "Principles",
+    "article_number": "Art. 11",
+    "article_title": "Processing which does not require identification",
+    "atomic_requirement": "CHAPTER III \u2014 Rights of the Data Subject (Articles 12\u201323)"
+  },
+  {
+    "id": "REQ-017",
+    "chapter_number": "III",
+    "chapter_title": "Rights of the data subject",
+    "article_number": "Art. 12",
+    "article_title": "Transparent information, communication and modalities",
+    "atomic_requirement": "Information must be provided concisely, transparently, intelligibly, and in plain language."
+  },
+  {
+    "id": "REQ-018",
+    "chapter_number": "III",
+    "chapter_title": "Rights of the data subject",
+    "article_number": "Art. 13",
+    "article_title": "Information to be provided where data is collected from subject",
+    "atomic_requirement": "Disclose controller identity, DPO contact, processing purposes, legal basis, recipients, retention period, and subject rights."
+  },
+  {
+    "id": "REQ-019",
+    "chapter_number": "III",
+    "chapter_title": "Rights of the data subject",
+    "article_number": "Art. 14",
+    "article_title": "Information to be provided where data was not obtained from subject",
+    "atomic_requirement": "Same disclosures as Art"
+  },
+  {
+    "id": "REQ-020",
+    "chapter_number": "III",
+    "chapter_title": "Rights of the data subject",
+    "article_number": "Art. 14",
+    "article_title": "Information to be provided where data was not obtained from subject",
+    "atomic_requirement": "13 plus categories of data and source."
+  },
+  {
+    "id": "REQ-021",
+    "chapter_number": "III",
+    "chapter_title": "Rights of the data subject",
+    "article_number": "Art. 15",
+    "article_title": "Right of access by the data subject",
+    "atomic_requirement": "Right to obtain confirmation of processing, access to personal data, and details on processing logic."
+  },
+  {
+    "id": "REQ-022",
+    "chapter_number": "III",
+    "chapter_title": "Rights of the data subject",
+    "article_number": "Art. 16",
+    "article_title": "Right to rectification",
+    "atomic_requirement": "Inaccurate personal data must be corrected without undue delay."
+  },
+  {
+    "id": "REQ-023",
+    "chapter_number": "III",
+    "chapter_title": "Rights of the data subject",
+    "article_number": "Art. 17",
+    "article_title": "Right to erasure ('right to be forgotten')",
+    "atomic_requirement": "Controller must erase personal data without undue delay when data is no longer necessary or consent is withdrawn."
+  },
+  {
+    "id": "REQ-024",
+    "chapter_number": "III",
+    "chapter_title": "Rights of the data subject",
+    "article_number": "Art. 18",
+    "article_title": "Right to restriction of processing",
+    "atomic_requirement": "Right to restrict processing where accuracy is contested or processing is unlawful."
+  },
+  {
+    "id": "REQ-025",
+    "chapter_number": "III",
+    "chapter_title": "Rights of the data subject",
+    "article_number": "Art. 19",
+    "article_title": "Notification obligation regarding rectification or erasure",
+    "atomic_requirement": "Controller must notify recipients of data rectification or erasure."
+  },
+  {
+    "id": "REQ-026",
+    "chapter_number": "III",
+    "chapter_title": "Rights of the data subject",
+    "article_number": "Art. 20",
+    "article_title": "Right to data portability",
+    "atomic_requirement": "Right to receive personal data in a structured, commonly used, machine-readable format and transmit to another controller."
+  },
+  {
+    "id": "REQ-027",
+    "chapter_number": "III",
+    "chapter_title": "Rights of the data subject",
+    "article_number": "Art. 21",
+    "article_title": "Right to object",
+    "atomic_requirement": "Right to object at any time to processing based on legitimate interests or direct marketing."
+  },
+  {
+    "id": "REQ-028",
+    "chapter_number": "III",
+    "chapter_title": "Rights of the data subject",
+    "article_number": "Art. 22",
+    "article_title": "Automated individual decision-making, including profiling",
+    "atomic_requirement": "Right not to be subject to a decision based solely on automated processing/profiling."
+  },
+  {
+    "id": "REQ-029",
+    "chapter_number": "III",
+    "chapter_title": "Rights of the data subject",
+    "article_number": "Art. 23",
+    "article_title": "Restrictions",
+    "atomic_requirement": "Member State law may restrict rights to safeguard national security, defence, public security"
+  },
+  {
+    "id": "REQ-030",
+    "chapter_number": "III",
+    "chapter_title": "Rights of the data subject",
+    "article_number": "Art. 23",
+    "article_title": "Restrictions",
+    "atomic_requirement": "CHAPTER IV \u2014 Controller and Processor (Articles 24\u201343)"
+  },
+  {
+    "id": "REQ-031",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 24",
+    "article_title": "Responsibility of the controller",
+    "atomic_requirement": "Implement appropriate technical and organizational measures to demonstrate compliance."
+  },
+  {
+    "id": "REQ-032",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 25",
+    "article_title": "Data protection by design and by default",
+    "atomic_requirement": "Build data protection principles into processing design from the outset."
+  },
+  {
+    "id": "REQ-033",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 26",
+    "article_title": "Joint controllers",
+    "atomic_requirement": "Joint controllers must transparently determine respective responsibilities."
+  },
+  {
+    "id": "REQ-034",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 27",
+    "article_title": "Representatives of controllers not established in the Union",
+    "atomic_requirement": "Designate an EU representative where Art"
+  },
+  {
+    "id": "REQ-035",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 28",
+    "article_title": "Processor",
+    "atomic_requirement": "Processing by a processor must be governed by a binding contract specifying subject matter, duration, nature, and\nobligations."
+  },
+  {
+    "id": "REQ-036",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 29",
+    "article_title": "Processing under authority of controller or processor",
+    "atomic_requirement": "Only process under instructions of controller."
+  },
+  {
+    "id": "REQ-037",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 30",
+    "article_title": "Records of processing activities",
+    "atomic_requirement": "Maintain detailed records of processing activities for organizations over 250 employees or high risk."
+  },
+  {
+    "id": "REQ-038",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 31",
+    "article_title": "Cooperation with supervisory authority",
+    "atomic_requirement": "Cooperate with supervisory authorities on request."
+  },
+  {
+    "id": "REQ-039",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 32",
+    "article_title": "Security of processing",
+    "atomic_requirement": "Implement technical measures including encryption, confidentiality, resilience, and regular vulnerability testing."
+  },
+  {
+    "id": "REQ-040",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 33",
+    "article_title": "Notification of personal data breach to supervisory authority",
+    "atomic_requirement": "Notify supervisory authority within 72 hours of becoming aware of a breach."
+  },
+  {
+    "id": "REQ-041",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 34",
+    "article_title": "Communication of personal data breach to data subject",
+    "atomic_requirement": "Notify data subject without undue delay if breach risks high risk to rights."
+  },
+  {
+    "id": "REQ-042",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 35",
+    "article_title": "Data protection impact assessment (DPIA)",
+    "atomic_requirement": "Conduct DPIA prior to processing likely to result in high risk."
+  },
+  {
+    "id": "REQ-043",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 36",
+    "article_title": "Prior consultation",
+    "atomic_requirement": "Consult supervisory authority prior to processing if DPIA indicates high unmitigated risk."
+  },
+  {
+    "id": "REQ-044",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 37",
+    "article_title": "Designation of data protection officer (DPO)",
+    "atomic_requirement": "Mandatory DPO for public authorities or large scale monitoring/special category data."
+  },
+  {
+    "id": "REQ-045",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 38",
+    "article_title": "Position of DPO",
+    "atomic_requirement": "DPO must be properly involved in data protection matters and report to highest management."
+  },
+  {
+    "id": "REQ-046",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 39",
+    "article_title": "Tasks of DPO",
+    "atomic_requirement": "Inform, advise, monitor compliance, and act as contact point for supervisory authority."
+  },
+  {
+    "id": "REQ-047",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 40",
+    "article_title": "Codes of conduct",
+    "atomic_requirement": "Encourage codes of conduct to contribute to proper GDPR application."
+  },
+  {
+    "id": "REQ-048",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 41",
+    "article_title": "Monitoring of approved codes of conduct",
+    "atomic_requirement": "Monitoring delegated to accredited independent bodies."
+  },
+  {
+    "id": "REQ-049",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 42",
+    "article_title": "Certification",
+    "atomic_requirement": "Establish certification mechanisms, seals, and marks."
+  },
+  {
+    "id": "REQ-050",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 43",
+    "article_title": "Certification bodies",
+    "atomic_requirement": "Certification bodies must be accredited"
+  },
+  {
+    "id": "REQ-051",
+    "chapter_number": "IV",
+    "chapter_title": "Controller and processor",
+    "article_number": "Art. 43",
+    "article_title": "Certification bodies",
+    "atomic_requirement": "CHAPTER V \u2014 Transfers to Third Countries (Articles 44\u201350)"
+  },
+  {
+    "id": "REQ-052",
+    "chapter_number": "V",
+    "chapter_title": "Transfers of personal data to third countries or international organisations",
+    "article_number": "Art. 44",
+    "article_title": "General principle for transfers",
+    "atomic_requirement": "Any transfer must satisfy conditions of Chapter V."
+  },
+  {
+    "id": "REQ-053",
+    "chapter_number": "V",
+    "chapter_title": "Transfers of personal data to third countries or international organisations",
+    "article_number": "Art. 45",
+    "article_title": "Transfers on basis of adequacy decision",
+    "atomic_requirement": "Allowed where EU Commission decides third country ensures adequate protection."
+  },
+  {
+    "id": "REQ-054",
+    "chapter_number": "V",
+    "chapter_title": "Transfers of personal data to third countries or international organisations",
+    "article_number": "Art. 46",
+    "article_title": "Transfers subject to appropriate safeguards",
+    "atomic_requirement": "Allowed with Standard Contractual Clauses (SCCs) or Binding Corporate Rules (BCRs)."
+  },
+  {
+    "id": "REQ-055",
+    "chapter_number": "V",
+    "chapter_title": "Transfers of personal data to third countries or international organisations",
+    "article_number": "Art. 47",
+    "article_title": "Binding corporate rules (BCRs)",
+    "atomic_requirement": "Approved rules for intra-group international data transfers."
+  },
+  {
+    "id": "REQ-056",
+    "chapter_number": "V",
+    "chapter_title": "Transfers of personal data to third countries or international organisations",
+    "article_number": "Art. 48",
+    "article_title": "Transfers not authorized by Union law",
+    "atomic_requirement": "Foreign court orders only enforceable if based on international agreements."
+  },
+  {
+    "id": "REQ-057",
+    "chapter_number": "V",
+    "chapter_title": "Transfers of personal data to third countries or international organisations",
+    "article_number": "Art. 49",
+    "article_title": "Derogations for specific situations",
+    "atomic_requirement": "Derogations for explicit consent, contract performance, or public interest."
+  },
+  {
+    "id": "REQ-058",
+    "chapter_number": "V",
+    "chapter_title": "Transfers of personal data to third countries or international organisations",
+    "article_number": "Art. 50",
+    "article_title": "International cooperation for protection of personal data",
+    "atomic_requirement": "Build international enforcement cooperation mechanisms"
+  },
+  {
+    "id": "REQ-059",
+    "chapter_number": "V",
+    "chapter_title": "Transfers of personal data to third countries or international organisations",
+    "article_number": "Art. 50",
+    "article_title": "International cooperation for protection of personal data",
+    "atomic_requirement": "CHAPTER VI to XI \u2014 Supervisory Authorities & Final Provisions (Articles\n51\u201399)"
+  },
+  {
+    "id": "REQ-060",
+    "chapter_number": "VI",
+    "chapter_title": "Independent supervisory authorities",
+    "article_number": "Art. 51",
+    "article_title": "Supervisory authority",
+    "atomic_requirement": "Independent public authority to monitor GDPR compliance."
+  },
+  {
+    "id": "REQ-061",
+    "chapter_number": "VIII",
+    "chapter_title": "Remedies, liability and penalties",
+    "article_number": "Art. 77",
+    "article_title": "Right to lodge a complaint",
+    "atomic_requirement": "Right to lodge complaint with supervisory authority."
+  },
+  {
+    "id": "REQ-062",
+    "chapter_number": "VIII",
+    "chapter_title": "Remedies, liability and penalties",
+    "article_number": "Art. 83",
+    "article_title": "General conditions for imposing administrative fines",
+    "atomic_requirement": "Fines up to \u20ac20M or 4% global annual turnover."
+  },
+  {
+    "id": "REQ-063",
+    "chapter_number": "XI",
+    "chapter_title": "Final provisions",
+    "article_number": "Art. 99",
+    "article_title": "Entry into force and application",
+    "atomic_requirement": "Applied from 25 May 2018"
+  },
+  {
+    "id": "REQ-064",
+    "chapter_number": "XI",
+    "chapter_title": "Final provisions",
+    "article_number": "Art. 99",
+    "article_title": "Entry into force and application",
+    "atomic_requirement": "directly applicable across all Member States."
+  }
+]
