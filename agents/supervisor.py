@@ -2,7 +2,7 @@
 Supervisor Router Agent (Enterprise-Grade Parallel Pipeline)
 Orchestrates Chapter Sub-Agents (Chapters I-XI) using ThreadPoolExecutor for PARALLEL execution,
 calculates dynamic chapter readiness scores, prioritizes Conflicting items in P1 Action Plan,
-and enforces consistent status-action alignment across P1, P2, and P3 action plans.
+and evaluates Fine Exposure strictly based on official GDPR Article 83(4) vs Article 83(5) statutory tiers.
 """
 
 import json
@@ -18,20 +18,30 @@ class SupervisorAgent:
 
     def calculate_scores_and_summary(self, detailed_gaps: list) -> tuple:
         """
-        Calculates overall compliance score %, verdict counts, and risk level.
+        Calculates overall compliance score %, verdict counts, risk level,
+        and fine exposure based strictly on official GDPR Article 83 fine tiers:
+        - GDPR Art. 83(5) Tier 2 (€20M / 4%): Triggered if violations exist in Chapter II (Principles), Chapter III (Rights), Chapter V (Transfers), or Chapter VIII (Penalties).
+        - GDPR Art. 83(4) Tier 1 (€10M / 2%): Triggered if violations exist ONLY in Chapter IV (Controllers/Security), Chapter VI, or Chapter IX.
+        - Compliant: Triggered if 0 violations exist.
         """
         counts = {"fully_met": 0, "partially_met": 0, "not_met": 0, "conflicting": 0, "total": len(detailed_gaps)}
+        failing_chapters = set()
 
         for gap in detailed_gaps:
             v = gap.get("verdict", "").lower()
+            ch = gap.get("chapter", "")
+            
             if "fully" in v:
                 counts["fully_met"] += 1
             elif "partially" in v:
                 counts["partially_met"] += 1
+                failing_chapters.add(ch)
             elif "conflict" in v:
                 counts["conflicting"] += 1
+                failing_chapters.add(ch)
             else:
                 counts["not_met"] += 1
+                failing_chapters.add(ch)
 
         if counts["total"] > 0:
             raw_score = (counts["fully_met"] * 1.0 + counts["partially_met"] * 0.5) / counts["total"]
@@ -39,6 +49,7 @@ class SupervisorAgent:
         else:
             overall_score = 0
 
+        # Risk Level Assessment
         if overall_score >= 80:
             risk_level = "LOW RISK — Compliant Posture"
         elif overall_score >= 60:
@@ -46,7 +57,19 @@ class SupervisorAgent:
         else:
             risk_level = "HIGH RISK — Immediate action required"
 
-        return overall_score, counts, risk_level
+        # Official GDPR Article 83 Fine Exposure Assessment:
+        # Tier 2 (Art. 83(5)): Principles (Ch II), Data Subject Rights (Ch III), International Transfers (Ch V)
+        tier2_chapters = {"II", "III", "V", "VIII"}
+        has_tier2_violation = bool(failing_chapters.intersection(tier2_chapters))
+
+        if has_tier2_violation:
+            max_fine = "€20M or 4% global annual revenue (GDPR Art. 83(5) Tier 2 — Rights & Principles)"
+        elif failing_chapters:
+            max_fine = "€10M or 2% global annual revenue (GDPR Art. 83(4) Tier 1 — Technical & Operational)"
+        else:
+            max_fine = "Low Exposure — Standard Supervisory Maintenance"
+
+        return overall_score, counts, risk_level, max_fine
 
     def build_chapter_breakdown(self, detailed_gaps: list) -> list:
         """
@@ -97,11 +120,7 @@ class SupervisorAgent:
     def build_action_plan(self, detailed_gaps: list) -> dict:
         """
         Categorizes recommendations into P1 Critical, P2 High, and P3 Medium.
-        Enforces strict consistency:
-        - Conflicting -> Status: "Legal contradiction", Action: fix_required
-        - Not Met -> Status: "Missing entirely", Action: fix_required
-        - Partially Met -> Status: "Currently vague", Action: fix_required
-        - Fully Met -> Status: "Fully compliant", Action: "No action required. Maintain existing compliant policy clause."
+        Enforces strict status-action alignment across tables.
         """
         p1_conflicting, p1_not_met, p2, p3 = [], [], [], []
         
@@ -187,7 +206,7 @@ class SupervisorAgent:
         # Sort detailed_gaps by requirement ID for clean display
         detailed_gaps.sort(key=lambda x: x.get("requirement_id", ""))
 
-        overall_score, verdict_counts, risk_level = self.calculate_scores_and_summary(detailed_gaps)
+        overall_score, verdict_counts, risk_level, max_fine = self.calculate_scores_and_summary(detailed_gaps)
         chapter_breakdown = self.build_chapter_breakdown(detailed_gaps)
         action_plan = self.build_action_plan(detailed_gaps)
 
@@ -208,7 +227,7 @@ class SupervisorAgent:
                 "overall_score": overall_score,
                 "verdict_counts": verdict_counts,
                 "risk_level": risk_level,
-                "max_fine_exposure": "€20M or 4% annual revenue"
+                "max_fine_exposure": max_fine
             },
             "chapter_breakdown": chapter_breakdown,
             "detailed_gaps": detailed_gaps,

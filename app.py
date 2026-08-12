@@ -1,11 +1,13 @@
 """
 LexMesh — Streamlit Web Interface
 Interactive dashboard for document ingestion, parallel agentic RAG gap analysis,
+automatic document metadata extraction (Company Name & Policy Version),
 live sub-agent progress monitoring, requirement filtering, and PDF export.
 """
 
 import os
 import json
+import re
 import pymupdf as fitz
 import streamlit as st
 from config import config
@@ -31,6 +33,41 @@ st.markdown("""
 
 st.markdown('<div class="main-header">🛡️ LexMesh</div>', unsafe_allow_html=True)
 
+def extract_metadata_from_pdf(pdf_bytes: bytes) -> tuple:
+    """
+    Extracts Company Name and Policy Version/Name automatically from the uploaded PDF document.
+    """
+    try:
+        doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+        first_page_text = doc[0].get_text() if len(doc) > 0 else ""
+        
+        extracted_company = ""
+        extracted_policy_name = ""
+
+        # 1. Company Name Extraction
+        comp_match = re.search(r"Company\s*[:\t]?\s*([^\n\r]+)", first_page_text, re.IGNORECASE)
+        if comp_match:
+            extracted_company = comp_match.group(1).strip()
+        else:
+            corp_match = re.search(r"([A-Za-z0-9\s&]+(?:Pvt Ltd|Ltd|Inc|Corp|Corporation|Technologies|Cloud|Systems|AI))", first_page_text)
+            if corp_match:
+                extracted_company = corp_match.group(1).strip()
+
+        # 2. Policy Version / Title Extraction
+        title_match = re.search(r"(PRIVACY POLICY|PRIVACY NOTICE|DATA PROTECTION POLICY|TERMS OF SERVICE)[^\n]*", first_page_text, re.IGNORECASE)
+        ver_match = re.search(r"(v\d+\.\d+|\b\d+\.\d+\b)", first_page_text, re.IGNORECASE)
+
+        if title_match and ver_match:
+            extracted_policy_name = f"{title_match.group(0).strip().title()} {ver_match.group(0)}"
+        elif title_match:
+            extracted_policy_name = title_match.group(0).strip().title()
+        elif ver_match:
+            extracted_policy_name = f"Privacy Policy {ver_match.group(0)}"
+
+        return extracted_company, extracted_policy_name
+    except Exception:
+        return "", ""
+
 # SIDEBAR CONFIGURATION & UPLOAD
 with st.sidebar:
     st.header("⚙️ Configuration & Upload")
@@ -44,19 +81,41 @@ with st.sidebar:
     
     st.divider()
     st.subheader("Document Input")
-    company_name = st.text_input("Company Name", value="TechStartup Pvt Ltd")
-    policy_name = st.text_input("Policy Version / Name", value="Privacy Policy v2.1")
     
     uploaded_file = st.file_uploader("Upload Company Policy PDF", type=["pdf"])
+    
+    auto_company = ""
+    auto_policy = ""
+    pdf_bytes = None
+
+    if uploaded_file is not None:
+        pdf_bytes = uploaded_file.read()
+        extracted_company, extracted_policy = extract_metadata_from_pdf(pdf_bytes)
+        
+        if extracted_company and "extracted_company" not in st.session_state:
+            st.session_state["extracted_company"] = extracted_company
+        if extracted_policy and "extracted_policy" not in st.session_state:
+            st.session_state["extracted_policy"] = extracted_policy
+            
+        auto_company = st.session_state.get("extracted_company", extracted_company or "Uploaded Organization")
+        auto_policy = st.session_state.get("extracted_policy", extracted_policy or "Uploaded Policy v1.0")
+    else:
+        # Reset extracted state when file is removed
+        st.session_state.pop("extracted_company", None)
+        st.session_state.pop("extracted_policy", None)
+        auto_company = "TechStartup Pvt Ltd"
+        auto_policy = "Privacy Policy v2.1"
+
+    company_name = st.text_input("Company Name (Auto-Extracted)", value=auto_company)
+    policy_name = st.text_input("Policy Version / Name (Auto-Extracted)", value=auto_policy)
     
     run_btn = st.button("🚀 Run Gap Analysis", disabled=(uploaded_file is None))
 
 # MAIN CONTENT AREA
-if uploaded_file and run_btn:
+if uploaded_file and run_btn and pdf_bytes:
     st.info("Ingesting company policy PDF and initializing Parallel Sub-Agents...")
     
     # Extract PDF text
-    pdf_bytes = uploaded_file.read()
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
     policy_text = ""
     for page in doc:
