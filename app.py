@@ -1,6 +1,6 @@
 """
 LexMesh — Streamlit Web Interface
-Interactive dashboard for document ingestion, agentic RAG gap analysis,
+Interactive dashboard for document ingestion, parallel agentic RAG gap analysis,
 live sub-agent progress monitoring, requirement filtering, and PDF export.
 """
 
@@ -25,6 +25,7 @@ st.markdown("""
 <style>
     .main-header { font-size: 2.5rem; font-weight: 800; color: #1E3A8A; margin-bottom: 1rem; }
     .stButton>button { background-color: #2563EB; color: white; border-radius: 6px; font-weight: 600; width: 100%; }
+    .legend-box { background-color: #F8FAFC; border: 1px solid #E2E8F0; padding: 10px 15px; border-radius: 6px; font-size: 0.9rem; margin-bottom: 1rem; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -39,7 +40,7 @@ with st.sidebar:
     st.write(f"🔹 Gemini API: {'✅ Connected' if config.GEMINI_API_KEY else '❌ Missing'}")
     st.write(f"🔹 Groq API: {'✅ Connected' if config.GROQ_API_KEY else '❌ Missing'}")
     st.write(f"🔹 Supabase DB: {'✅ Connected' if supabase_db.is_connected() else '⚠️ Offline / Local Mode'}")
-    st.write(f"🔹 Orchestration: ✅ Google ADK Supervisor Active")
+    st.write(f"🔹 Orchestration: ✅ Google ADK Supervisor Active (Parallel Pool)")
     
     st.divider()
     st.subheader("Document Input")
@@ -52,7 +53,7 @@ with st.sidebar:
 
 # MAIN CONTENT AREA
 if uploaded_file and run_btn:
-    st.info("Ingesting company policy PDF and initializing Supervisor Agent...")
+    st.info("Ingesting company policy PDF and initializing Parallel Sub-Agents...")
     
     # Extract PDF text
     pdf_bytes = uploaded_file.read()
@@ -77,7 +78,7 @@ if uploaded_file and run_btn:
             {"id": "REQ-005", "chapter_number": "III", "chapter_title": "Rights of data subject", "article_number": "Art. 17(1)", "article_title": "Right to erasure", "atomic_requirement": "Data subject has the right to erasure without undue delay"}
         ]
         
-    with st.spinner("Delegating policy chunks to Chapter Sub-Agents (Chapters I–XI)..."):
+    with st.spinner("Running Gap Analysis..."):
         report_json = adk_supervisor.run_adk_pipeline(company_name, policy_name, policy_text, reqs_catalog)
         st.session_state["active_report"] = report_json
 
@@ -89,14 +90,17 @@ if "active_report" in st.session_state:
     
     st.divider()
     
-    # Dashboard Tabs
-    tab1, tab2, tab3, tab4, tab5 = st.tabs([
-        "📊 Score & Metrics", 
-        "📑 Chapter Breakdown", 
-        "🔍 Detailed Gaps", 
-        "📋 Action Plan", 
-        "📥 Report Export"
-    ])
+    # Dashboard Tabs with Key Persistence
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(
+        [
+            "📊 Score & Metrics", 
+            "📑 Chapter Breakdown", 
+            "🔍 Detailed Gaps", 
+            "📋 Action Plan", 
+            "📥 Report Export"
+        ],
+        key="active_dashboard_tab"
+    )
     
     # TAB 1: OVERVIEW METRICS
     with tab1:
@@ -114,12 +118,28 @@ if "active_report" in st.session_state:
     # TAB 2: CHAPTER BREAKDOWN
     with tab2:
         st.subheader("Chapter-by-Chapter Compliance Posture")
+        
+        # Legend Callout Box
+        st.markdown("""
+        <div class="legend-box">
+            <b>📌 Status Legend:</b> &nbsp;&nbsp;
+            <span>🟢 <b>Compliant</b> (Score ≥ 65%) — High policy alignment</span> &nbsp;|&nbsp;
+            <span>🟡 <b>Partial</b> (Score 35%–64%) — Operational gaps exist</span> &nbsp;|&nbsp;
+            <span>🔴 <b>Non-Compliant</b> (Score &lt; 35%) — Critical omissions</span>
+        </div>
+        """, unsafe_allow_html=True)
+        
         st.table(report.get("chapter_breakdown", []))
 
     # TAB 3: DETAILED GAPS
     with tab3:
         st.subheader("Requirement-by-Requirement Analysis")
-        filter_status = st.multiselect("Filter by Verdict", ["Fully Met", "Partially Met", "Not Met", "Conflicting"], default=["Not Met", "Partially Met"])
+        filter_status = st.multiselect(
+            "Filter by Verdict", 
+            ["Fully Met", "Partially Met", "Not Met", "Conflicting"], 
+            default=["Not Met", "Partially Met", "Conflicting"],
+            key="gap_verdict_filter"
+        )
         
         for gap in report.get("detailed_gaps", []):
             if filter_status and gap.get("verdict") not in filter_status:
@@ -136,13 +156,13 @@ if "active_report" in st.session_state:
         st.subheader("Priority Action Plan")
         action_plan = report.get("priority_action_plan", {})
         
-        st.error("🚨 P1 — Critical Priority")
+        st.error("🚨 P1 — Critical Priority (Immediate Action Required)")
         st.table(action_plan.get("p1_critical", []))
         
-        st.warning("⚠️ P2 — High Priority")
+        st.warning("⚠️ P2 — High Priority (Operational Fixes)")
         st.table(action_plan.get("p2_high", []))
         
-        st.info("ℹ️ P3 — Medium Priority")
+        st.info("ℹ️ P3 — Medium Priority (Maintenance & Review)")
         st.table(action_plan.get("p3_medium", []))
 
     # TAB 5: REPORT EXPORT

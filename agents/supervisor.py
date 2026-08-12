@@ -1,13 +1,14 @@
 """
-Supervisor Router Agent (Enterprise-Grade Pipeline)
-Orchestrates Chapter Sub-Agents (Chapters I-XI), aggregates gap analysis results,
-calculates dynamic chapter readiness scores, generates Priority Action Plans,
-and persists the master report JSON to Supabase.
+Supervisor Router Agent (Enterprise-Grade Parallel Pipeline)
+Orchestrates Chapter Sub-Agents (Chapters I-XI) using ThreadPoolExecutor for PARALLEL execution,
+calculates dynamic chapter readiness scores, prioritizes Conflicting items in P1 Action Plan,
+and enforces consistent status-action alignment across P1, P2, and P3 action plans.
 """
 
 import json
 import uuid
 import datetime
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from agents.chapter_agents import ChapterSubAgent
 from db.supabase_client import supabase_db
 
@@ -32,7 +33,6 @@ class SupervisorAgent:
             else:
                 counts["not_met"] += 1
 
-        # Score formula: Fully Met = 1.0, Partially Met = 0.5, Not Met = 0.0, Conflicting = 0.0
         if counts["total"] > 0:
             raw_score = (counts["fully_met"] * 1.0 + counts["partially_met"] * 0.5) / counts["total"]
             overall_score = int(round(raw_score * 100))
@@ -50,7 +50,7 @@ class SupervisorAgent:
 
     def build_chapter_breakdown(self, detailed_gaps: list) -> list:
         """
-        Builds Chapter I to XI readiness breakdown based on actual sub-agent verdicts.
+        Builds Chapter I to XI readiness breakdown with clear status indicators.
         """
         chapter_articles_map = {
             "I": ("General Provisions", "Art. 1–4"),
@@ -77,12 +77,18 @@ class SupervisorAgent:
             else:
                 ch_score = 0
 
-            status = "✓" if ch_score >= 65 else ("■" if ch_score >= 40 else "✗")
+            if ch_score >= 65:
+                status = "🟢 Compliant"
+            elif ch_score >= 35:
+                status = "🟡 Partial"
+            else:
+                status = "🔴 Non-Compliant"
+
             breakdown.append({
                 "chapter": ch_num,
                 "name": ch_name,
                 "articles": art_range,
-                "score": ch_score,
+                "score": f"{ch_score}%",
                 "status": status
             })
 
@@ -91,42 +97,70 @@ class SupervisorAgent:
     def build_action_plan(self, detailed_gaps: list) -> dict:
         """
         Categorizes recommendations into P1 Critical, P2 High, and P3 Medium.
-        Fixes 'None.' string for fully compliant P3 items.
+        Enforces strict consistency:
+        - Conflicting -> Status: "Legal contradiction", Action: fix_required
+        - Not Met -> Status: "Missing entirely", Action: fix_required
+        - Partially Met -> Status: "Currently vague", Action: fix_required
+        - Fully Met -> Status: "Fully compliant", Action: "No action required. Maintain existing compliant policy clause."
         """
-        p1, p2, p3 = [], [], []
+        p1_conflicting, p1_not_met, p2, p3 = [], [], [], []
         
         for gap in detailed_gaps:
             v = gap.get("verdict", "").lower()
             raw_fix = gap.get("fix_required", "").strip()
 
-            if not raw_fix or raw_fix.lower() in ["none", "none.", "no fix required", "n/a"]:
-                clean_fix = "Fully compliant. Maintain existing policy clause and schedule annual review."
-            else:
-                clean_fix = raw_fix
-
-            item = {
-                "action_required": clean_fix,
-                "gdpr_article": gap.get("article", ""),
-                "current_status": "Missing entirely" if "not met" in v else ("Currently vague" if "partially" in v else "Fully compliant")
-            }
-            if "not met" in v or "conflict" in v:
-                p1.append(item)
+            if "conflict" in v:
+                status_str = "Legal contradiction"
+                action_str = raw_fix if raw_fix else "Update policy to eliminate GDPR contradiction."
+                p1_conflicting.append({
+                    "action_required": action_str,
+                    "gdpr_article": gap.get("article", ""),
+                    "current_status": status_str
+                })
+            elif "not met" in v or "missing" in v:
+                status_str = "Missing entirely"
+                action_str = raw_fix if raw_fix else f"Add policy clause for {gap.get('article')}."
+                p1_not_met.append({
+                    "action_required": action_str,
+                    "gdpr_article": gap.get("article", ""),
+                    "current_status": status_str
+                })
             elif "partially" in v:
-                p2.append(item)
-            else:
-                p3.append(item)
+                status_str = "Currently vague"
+                action_str = raw_fix if raw_fix else f"Refine policy clause for {gap.get('article')}."
+                p2.append({
+                    "action_required": action_str,
+                    "gdpr_article": gap.get("article", ""),
+                    "current_status": status_str
+                })
+            else:  # Fully Met
+                status_str = "Fully compliant"
+                action_str = "No action required. Maintain existing compliant policy clause and schedule annual review."
+                p3.append({
+                    "action_required": action_str,
+                    "gdpr_article": gap.get("article", ""),
+                    "current_status": status_str
+                })
+
+        # Place Conflicting items FIRST at the top of P1 Action Plan
+        p1 = p1_conflicting + p1_not_met
 
         return {
-            "p1_critical": p1[:5],
-            "p2_high": p2[:4],
-            "p3_medium": p3[:3]
+            "p1_critical": p1[:8],
+            "p2_high": p2[:6],
+            "p3_medium": p3[:5]
         }
+
+    def _evaluate_chapter(self, ch_num: str, reqs: list, policy_text: str) -> list:
+        ch_title = reqs[0].get("chapter_title", f"Chapter {ch_num}") if reqs else f"Chapter {ch_num}"
+        sub_agent = ChapterSubAgent(ch_num, ch_title)
+        return sub_agent.evaluate_requirements(reqs, policy_text)
 
     def run_analysis(self, company_name: str, policy_name: str, policy_text: str, reqs_catalog: list) -> dict:
         """
-        Main orchestration entry point: routes policy text to chapter sub-agents and aggregates master JSON.
+        Main orchestration entry point: executes Chapter Sub-Agents IN PARALLEL and aggregates master JSON.
         """
-        print(f"[INFO] Starting LexMesh Enterprise Gap Analysis for '{company_name}' ({policy_name})...")
+        print(f"[INFO] Starting LexMesh Parallel Gap Analysis for '{company_name}' ({policy_name})...")
         
         # Group requirements by chapter
         chapter_reqs_map = {}
@@ -136,14 +170,22 @@ class SupervisorAgent:
 
         detailed_gaps = []
 
-        # Execute Chapter Sub-Agents
-        for ch_num, reqs in chapter_reqs_map.items():
-            ch_title = reqs[0].get("chapter_title", f"Chapter {ch_num}") if reqs else f"Chapter {ch_num}"
-            print(f"[INFO] Delegating {len(reqs)} requirements to Chapter {ch_num} Sub-Agent ('{ch_title}')...")
-            
-            sub_agent = ChapterSubAgent(ch_num, ch_title)
-            verdicts = sub_agent.evaluate_requirements(reqs, policy_text)
-            detailed_gaps.extend(verdicts)
+        # EXECUTE SUB-AGENTS IN PARALLEL USING THREAD POOL
+        with ThreadPoolExecutor(max_workers=11) as executor:
+            future_to_ch = {
+                executor.submit(self._evaluate_chapter, ch_num, reqs, policy_text): ch_num
+                for ch_num, reqs in chapter_reqs_map.items()
+            }
+            for future in as_completed(future_to_ch):
+                ch_num = future_to_ch[future]
+                try:
+                    verdicts = future.result()
+                    detailed_gaps.extend(verdicts)
+                except Exception as e:
+                    print(f"[WARNING] Error evaluating Chapter {ch_num}: {e}")
+
+        # Sort detailed_gaps by requirement ID for clean display
+        detailed_gaps.sort(key=lambda x: x.get("requirement_id", ""))
 
         overall_score, verdict_counts, risk_level = self.calculate_scores_and_summary(detailed_gaps)
         chapter_breakdown = self.build_chapter_breakdown(detailed_gaps)
