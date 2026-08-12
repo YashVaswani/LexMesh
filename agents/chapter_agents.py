@@ -1,13 +1,13 @@
 """
 Chapter Sub-Agents Module (High-Speed Enterprise RAG Engine)
 Provides isolated sub-agents for each of the 11 GDPR Chapters (Chapters I to XI).
-Evaluates requirements in CHAPTER BATCHES (1 LLM call per chapter instead of 64 calls),
-reducing execution time from 10 minutes down to ~10-15 SECONDS!
+Evaluates requirements in CHAPTER BATCHES with temperature=0.0 for DETERMINISTIC audit output.
 """
 
 import json
 import re
 from google import genai
+from google.genai import types
 from groq import Groq
 from config import config
 
@@ -35,15 +35,17 @@ class LLMProviderChain:
     def generate(self, prompt: str, system_instruction: str = None) -> str:
         """
         Generates text using primary provider (Gemini 3.6/3.5 Flash) -> Fallback 1 (Groq 70B).
+        Enforces temperature=0.0 for deterministic greedy decoding.
         """
-        # Primary: Gemini via new google.genai SDK
+        # Primary: Gemini via google.genai SDK
         if self.genai_client:
             for m_name in ["gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.1-flash-lite"]:
                 try:
                     full_content = f"{system_instruction}\n\n{prompt}" if system_instruction else prompt
                     response = self.genai_client.models.generate_content(
                         model=m_name,
-                        contents=full_content
+                        contents=full_content,
+                        config=types.GenerateContentConfig(temperature=0.0)
                     )
                     if response and response.text:
                         return response.text
@@ -61,7 +63,7 @@ class LLMProviderChain:
                 response = self.groq_client.chat.completions.create(
                     model="llama-3.3-70b-versatile",
                     messages=messages,
-                    temperature=0.1
+                    temperature=0.0
                 )
                 if response and response.choices:
                     return response.choices[0].message.content

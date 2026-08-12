@@ -92,27 +92,34 @@ with st.sidebar:
         pdf_bytes = uploaded_file.read()
         extracted_company, extracted_policy = extract_metadata_from_pdf(pdf_bytes)
         
-        if extracted_company and "extracted_company" not in st.session_state:
-            st.session_state["extracted_company"] = extracted_company
-        if extracted_policy and "extracted_policy" not in st.session_state:
-            st.session_state["extracted_policy"] = extracted_policy
+        # Check if file has changed
+        current_file_id = f"{uploaded_file.name}_{uploaded_file.size}"
+        if st.session_state.get("last_uploaded_file_id") != current_file_id:
+            st.session_state["last_uploaded_file_id"] = current_file_id
+            st.session_state["company_name_input"] = extracted_company or ""
+            st.session_state["policy_name_input"] = extracted_policy or ""
             
-        auto_company = st.session_state.get("extracted_company", extracted_company or "Uploaded Organization")
-        auto_policy = st.session_state.get("extracted_policy", extracted_policy or "Uploaded Policy v1.0")
+        auto_company = st.session_state.get("company_name_input", extracted_company or "")
+        auto_policy = st.session_state.get("policy_name_input", extracted_policy or "")
     else:
-        # Reset extracted state when file is removed
-        st.session_state.pop("extracted_company", None)
-        st.session_state.pop("extracted_policy", None)
-        auto_company = "TechStartup Pvt Ltd"
-        auto_policy = "Privacy Policy v2.1"
+        # Clear all session state metadata when file is removed (cross button clicked)
+        st.session_state.pop("last_uploaded_file_id", None)
+        st.session_state.pop("company_name_input", None)
+        st.session_state.pop("policy_name_input", None)
+        auto_company = ""
+        auto_policy = ""
 
-    company_name = st.text_input("Company Name (Auto-Extracted)", value=auto_company)
-    policy_name = st.text_input("Policy Version / Name (Auto-Extracted)", value=auto_policy)
+    company_name = st.text_input("Company Name", value=auto_company, placeholder="e.g. TechStartup Pvt Ltd")
+    policy_name = st.text_input("Policy Version / Name", value=auto_policy, placeholder="e.g. Privacy Policy v2.1")
     
     run_btn = st.button("🚀 Run Gap Analysis", disabled=(uploaded_file is None))
 
 # MAIN CONTENT AREA
 if uploaded_file and run_btn and pdf_bytes:
+    # Use fallback company/policy name if user leaves text input blank
+    final_company = company_name.strip() if company_name.strip() else "Uploaded Organization"
+    final_policy = policy_name.strip() if policy_name.strip() else "Privacy Policy Document"
+
     st.info("Ingesting company policy PDF and initializing Parallel Sub-Agents...")
     
     # Extract PDF text
@@ -138,7 +145,7 @@ if uploaded_file and run_btn and pdf_bytes:
         ]
         
     with st.spinner("Running Gap Analysis..."):
-        report_json = adk_supervisor.run_adk_pipeline(company_name, policy_name, policy_text, reqs_catalog)
+        report_json = adk_supervisor.run_adk_pipeline(final_company, final_policy, policy_text, reqs_catalog)
         st.session_state["active_report"] = report_json
 
 # DISPLAY REPORT DASHBOARD IF AVAILABLE
@@ -239,12 +246,12 @@ if "active_report" in st.session_state:
             st.download_button(
                 label="📥 Download JSON Report",
                 data=report_str,
-                file_name=f"GapAnalysis_{company_name}.json",
+                file_name=f"GapAnalysis_{company_name or 'Report'}.json",
                 mime="application/json"
             )
             
         with c_right:
-            pdf_path = f"GapAnalysisReport_{company_name}.pdf"
+            pdf_path = f"GapAnalysisReport_{company_name or 'Report'}.pdf"
             if st.button("📄 Export to PDF"):
                 with st.spinner("Rendering PDF..."):
                     generate_compliance_pdf(report, pdf_path)
