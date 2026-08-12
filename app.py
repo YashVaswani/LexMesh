@@ -14,7 +14,7 @@ from agents.adk_agent import adk_supervisor
 from reporter.pdf_generator import generate_compliance_pdf
 
 st.set_page_config(
-    page_title="LexMesh — Agentic RAG Gap Analysis",
+    page_title="LexMesh",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -23,14 +23,12 @@ st.set_page_config(
 # Custom CSS for dark/modern styling
 st.markdown("""
 <style>
-    .main-header { font-size: 2.2rem; font-weight: 800; color: #1E3A8A; margin-bottom: 0rem; }
-    .sub-header { font-size: 1rem; color: #0D9488; margin-bottom: 1.5rem; }
+    .main-header { font-size: 2.5rem; font-weight: 800; color: #1E3A8A; margin-bottom: 1rem; }
     .stButton>button { background-color: #2563EB; color: white; border-radius: 6px; font-weight: 600; width: 100%; }
 </style>
 """, unsafe_allow_html=True)
 
 st.markdown('<div class="main-header">🛡️ LexMesh</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Agentic RAG Engine | GDPR Audit & Gap Analysis</div>', unsafe_allow_html=True)
 
 # SIDEBAR CONFIGURATION & UPLOAD
 with st.sidebar:

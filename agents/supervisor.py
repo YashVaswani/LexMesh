@@ -153,7 +153,7 @@ class SupervisorAgent:
                 "policy_name": policy_name,
                 "standard": "GDPR — All 99 Articles, 11 Chapters",
                 "analysis_date": now_str,
-                "generated_by": "LexMesh Engine v1.0 — onetab.ai",
+                "generated_by": "LexMesh Engine v1.0",
                 "analyzed_by": "Agentic RAG Pipeline (4-Agent System)"
             },
             "summary": {
