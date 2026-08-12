@@ -1,6 +1,7 @@
 """
 Supabase Database Helper for ComplianceIQ
-Manages requirements, vector similarity search via pgvector, and JSON report storage.
+Manages requirements with rich metadata payload, pgvector similarity search,
+chapter pre-filtering, and JSON report storage.
 """
 
 import os
@@ -24,28 +25,43 @@ class SupabaseManager:
 
     def store_gdpr_requirement(self, req_data: dict) -> bool:
         """
-        Stores an atomic GDPR requirement JSON into the `gdpr_requirements` table.
+        Stores an atomic GDPR requirement with rich metadata and vector embedding
+        into the `gdpr_requirements` table.
         """
         if not self.is_connected():
             return False
         try:
-            res = self.client.table("gdpr_requirements").upsert(req_data).execute()
+            payload = {
+                "id": req_data.get("id"),
+                "chapter_number": req_data.get("chapter_number"),
+                "chapter_title": req_data.get("chapter_title"),
+                "article_number": req_data.get("article_number"),
+                "article_title": req_data.get("article_title"),
+                "atomic_requirement": req_data.get("atomic_requirement"),
+                "embedding": req_data.get("embedding")
+            }
+            res = self.client.table("gdpr_requirements").upsert(payload).execute()
             return True
         except Exception as e:
             print(f"[ERROR] Failed to store requirement {req_data.get('id')}: {e}")
             return False
 
-    def get_requirements_by_chapter(self, chapter: str) -> list:
+    def get_requirements_by_chapter(self, chapter_number: str) -> list:
         """
-        Fetches atomic GDPR requirements for a specific chapter (e.g. 'III').
+        Pre-filters Supabase by chapter_number and retrieves rich metadata for all requirements.
         """
         if not self.is_connected():
             return []
         try:
-            res = self.client.table("gdpr_requirements").select("*").eq("chapter_number", chapter).execute()
+            res = (
+                self.client.table("gdpr_requirements")
+                .select("id, chapter_number, chapter_title, article_number, article_title, atomic_requirement, embedding")
+                .eq("chapter_number", chapter_number)
+                .execute()
+            )
             return res.data or []
         except Exception as e:
-            print(f"[ERROR] Failed to fetch requirements for Chapter {chapter}: {e}")
+            print(f"[ERROR] Failed to fetch requirements for Chapter {chapter_number}: {e}")
             return []
 
     def save_compliance_report(self, report_id: str, company_name: str, policy_name: str, overall_score: int, report_json: dict) -> bool:
