@@ -76,6 +76,45 @@ FRAMEWORKS = {
     }
 }
 
+POLICY_DOMAINS = {
+    "data_governance": {
+        "id": "data_governance",
+        "title": "Data Governance & Privacy Notice",
+        "icon": "📄",
+        "description": "General principles, transparency, privacy notices, data controller/processor roles, and governance frameworks."
+    },
+    "access_control": {
+        "id": "access_control",
+        "title": "Access Control & Technical Safeguards",
+        "icon": "🔒",
+        "description": "Encryption standards, user access management, network security, authentication, and technical safeguards."
+    },
+    "incident_response": {
+        "id": "incident_response",
+        "title": "Incident Response & Breach Notification",
+        "icon": "🚨",
+        "description": "Breach identification, 72h supervisory notification, data subject alerts, SOC monitoring, and IR procedures."
+    },
+    "data_subject_rights": {
+        "id": "data_subject_rights",
+        "title": "Data Subject Rights & Consent",
+        "icon": "👤",
+        "description": "Explicit consent mechanisms, Right of Access, Rectification, Erasure, Portability, and Right to Object."
+    },
+    "vendor_risk": {
+        "id": "vendor_risk",
+        "title": "Third-Party & Vendor Risk Management",
+        "icon": "🤝",
+        "description": "Data Processing Agreements (DPAs), Business Associate Agreements (BAAs), vendor audits, and cross-border transfers."
+    },
+    "data_retention": {
+        "id": "data_retention",
+        "title": "Data Retention & Disposal",
+        "icon": "⏳",
+        "description": "Storage limitation, data destruction protocols, archiving policies, and audit log retention."
+    }
+}
+
 class FrameworkCatalogManager:
     @staticmethod
     def get_framework_info(framework_id: str = "gdpr") -> dict:
@@ -88,9 +127,55 @@ class FrameworkCatalogManager:
         if os.path.exists(file_path):
             try:
                 with open(file_path, "r", encoding="utf-8") as f:
-                    return json.load(f)
+                    reqs = json.load(f)
+                    for r in reqs:
+                        r["framework"] = framework_id.lower()
+                        r["policy_domain"] = FrameworkCatalogManager.map_req_to_policy_domain(r, framework_id)
+                    return reqs
             except Exception as e:
                 print(f"[ERROR] Failed to load catalog {file_path}: {e}")
         return []
 
+    @staticmethod
+    def map_req_to_policy_domain(req: dict, framework_id: str) -> str:
+        """
+        Classifies compliance requirement into one of the 6 Core Enterprise Policy Domains.
+        """
+        text = f"{req.get('article_number', '')} {req.get('article_title', '')} {req.get('atomic_requirement', '')} {req.get('chapter_title', '')}".lower()
+        
+        # 1. Incident Response & Breach Notification
+        if any(k in text for k in ["incident", "breach", "notification", "72h", "soc", "monitoring", "alert", "outage", "crisis", "disaster"]):
+            return "incident_response"
+
+        # 2. Access Control & Technical Safeguards
+        if any(k in text for k in ["access", "encryption", "password", "authentication", "technical safeguard", "physical safeguard", "network", "firewall", "security rule", "mfa", "cipher", "tls", "aes"]):
+            return "access_control"
+
+        # 3. Data Subject Rights & Consent
+        if any(k in text for k in ["consent", "erasure", "access right", "rectification", "portability", "opt-out", "object", "data subject", "privacy notice", "phi standards"]):
+            if "vendor" not in text and "third" not in text:
+                return "data_subject_rights"
+
+        # 4. Third-Party & Vendor Risk Management
+        if any(k in text for k in ["vendor", "third party", "business associate", "processor", "dpa", "baa", "outsourcing", "transfer", "third country", "contractor"]):
+            return "vendor_risk"
+
+        # 5. Data Retention & Disposal
+        if any(k in text for k in ["retention", "disposal", "destruction", "storage limitation", "archive", "purge"]):
+            return "data_retention"
+
+        # 6. Default: Data Governance & Privacy Notice
+        return "data_governance"
+
+    @staticmethod
+    def load_all_catalogs() -> dict:
+        """
+        Loads all 4 compliance catalogs (GDPR, HIPAA, RBI, SOC 2) simultaneously.
+        """
+        all_catalogs = {}
+        for fw_id in FRAMEWORKS.keys():
+            all_catalogs[fw_id] = FrameworkCatalogManager.load_catalog(fw_id)
+        return all_catalogs
+
 catalog_manager = FrameworkCatalogManager()
+

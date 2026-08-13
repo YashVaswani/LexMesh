@@ -7,9 +7,13 @@ and populates pgvector embeddings directly into Supabase Cloud.
 import json
 import os
 import math
+import sys
 from db.supabase_client import supabase_db
 from config import config
-from ingestion.catalog_manager import FRAMEWORKS
+from ingestion.catalog_manager import catalog_manager, FRAMEWORKS
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 
 # Optional SentenceTransformer with fallback embedder
 try:
@@ -58,8 +62,12 @@ def sync_chunks():
             raw_vec = embedder.encode(req_text)
             vec_list = raw_vec.tolist() if hasattr(raw_vec, "tolist") else raw_vec
 
+            policy_dom = catalog_manager.map_req_to_policy_domain(chunk, fw_id)
+
             payload = {
                 "id": chunk.get("id"),
+                "framework": fw_id.lower(),
+                "policy_domain": policy_dom,
                 "chapter_number": chunk.get("chapter_number"),
                 "chapter_title": chunk.get("chapter_title"),
                 "article_number": chunk.get("article_number"),
@@ -68,7 +76,7 @@ def sync_chunks():
                 "embedding": vec_list
             }
 
-            res = supabase_db.store_gdpr_requirement(payload, framework_id=fw_id)
+            res = supabase_db.store_requirement(payload, framework_id=fw_id)
             if res:
                 success_count += 1
                 disp_text = req_text[:40].encode('ascii', errors='ignore').decode('ascii')

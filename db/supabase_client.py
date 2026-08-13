@@ -1,7 +1,7 @@
 """
-Supabase Database Helper for ComplianceIQ
+Supabase Database Helper for LexMesh Multi-Framework Engine
 Manages requirements with rich metadata payload, pgvector similarity search,
-chapter pre-filtering, and JSON report storage.
+policy domain pre-filtering, and JSON report storage.
 """
 
 import os
@@ -28,15 +28,42 @@ class SupabaseManager:
     def is_connected(self) -> bool:
         return self.client is not None
 
-    def store_gdpr_requirement(self, req_data: dict, framework_id: str = "gdpr") -> bool:
+    def store_requirement(self, req_data: dict, framework_id: str = "gdpr") -> bool:
         """
-        Stores an atomic requirement with rich metadata and vector embedding
-        into Supabase.
+        Stores atomic requirements into Supabase Cloud tables with multi-table fallback.
         """
         if not self.is_connected():
             return False
+        
+        fw = framework_id.lower()
+        full_payload = {
+            "id": req_data.get("id"),
+            "framework": fw,
+            "policy_domain": req_data.get("policy_domain", "data_governance"),
+            "chapter_number": req_data.get("chapter_number"),
+            "chapter_title": req_data.get("chapter_title"),
+            "article_number": req_data.get("article_number"),
+            "article_title": req_data.get("article_title"),
+            "atomic_requirement": req_data.get("atomic_requirement"),
+            "embedding": req_data.get("embedding")
+        }
+
+        success = False
+        # 1. Upsert into unified compliance_requirements table (All 296 requirements)
         try:
-            payload = {
+            self.client.table("compliance_requirements").upsert(full_payload).execute()
+            success = True
+        except Exception:
+            pass
+
+        # 2. Upsert into framework-specific table (gdpr_requirements, hipaa_requirements, rbi_requirements, soc2_requirements)
+        fw_table = f"{fw}_requirements"
+        try:
+            self.client.table(fw_table).upsert(full_payload).execute()
+            success = True
+        except Exception:
+            # Fallback legacy format if custom columns are missing in framework table
+            legacy_payload = {
                 "id": req_data.get("id"),
                 "chapter_number": req_data.get("chapter_number"),
                 "chapter_title": req_data.get("chapter_title"),
@@ -45,34 +72,39 @@ class SupabaseManager:
                 "atomic_requirement": req_data.get("atomic_requirement"),
                 "embedding": req_data.get("embedding")
             }
-            # Attempt framework table first, fallback to gdpr_requirements
-            table_name = f"{framework_id.lower()}_requirements" if framework_id.lower() in ["hipaa", "rbi", "soc2"] else "gdpr_requirements"
             try:
-                res = self.client.table(table_name).upsert(payload).execute()
+                self.client.table(fw_table).upsert(legacy_payload).execute()
+                success = True
             except Exception:
-                res = self.client.table("gdpr_requirements").upsert(payload).execute()
-            return True
-        except Exception as e:
-            print(f"[ERROR] Failed to store requirement {req_data.get('id')}: {e}")
-            return False
+                pass
+
+        return success
+
+    def store_gdpr_requirement(self, req_data: dict, framework_id: str = "gdpr") -> bool:
+        return self.store_requirement(req_data, framework_id=framework_id)
 
     def get_requirements_by_chapter(self, chapter_number: str) -> list:
-        """
-        Pre-filters Supabase by chapter_number and retrieves rich metadata for all requirements.
-        """
         if not self.is_connected():
             return []
         try:
             res = (
-                self.client.table("gdpr_requirements")
-                .select("id, chapter_number, chapter_title, article_number, article_title, atomic_requirement, embedding")
+                self.client.table("compliance_requirements")
+                .select("*")
                 .eq("chapter_number", chapter_number)
                 .execute()
             )
             return res.data or []
-        except Exception as e:
-            print(f"[ERROR] Failed to fetch requirements for Chapter {chapter_number}: {e}")
-            return []
+        except Exception:
+            try:
+                res = (
+                    self.client.table("gdpr_requirements")
+                    .select("*")
+                    .eq("chapter_number", chapter_number)
+                    .execute()
+                )
+                return res.data or []
+            except Exception:
+                return []
 
     def save_compliance_report(self, report_id: str, company_name: str, policy_name: str, overall_score: int, report_json: dict) -> bool:
         """
@@ -94,10 +126,18 @@ class SupabaseManager:
             print(f"[ERROR] Failed to save report {report_id}: {e}")
             return False
 
+    def save_report(self, master_report: dict) -> bool:
+        meta = master_report.get("metadata", {})
+        summary = master_report.get("summary", {})
+        return self.save_compliance_report(
+            report_id=master_report.get("report_id", "rep_001"),
+            company_name=meta.get("company_name", "Organization"),
+            policy_name=meta.get("policy_name", "Policy"),
+            overall_score=summary.get("overall_score", 0),
+            report_json=master_report
+        )
+
     def get_compliance_report(self, report_id: str) -> dict:
-        """
-        Retrieves a saved Gap Analysis Report JSON by ID.
-        """
         if not self.is_connected():
             return {}
         try:
@@ -108,7 +148,5 @@ class SupabaseManager:
         except Exception as e:
             print(f"[ERROR] Failed to fetch report {report_id}: {e}")
             return {}
-
-supabase_db = SupabaseManager()
 
 supabase_db = SupabaseManager()
