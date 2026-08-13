@@ -75,9 +75,10 @@ class LLMProviderChain:
 llm_chain = LLMProviderChain()
 
 class ChapterSubAgent:
-    def __init__(self, chapter_number: str, chapter_title: str):
+    def __init__(self, chapter_number: str, chapter_title: str, framework_id: str = "gdpr"):
         self.chapter_number = chapter_number
         self.chapter_title = chapter_title
+        self.framework_id = framework_id.lower()
 
     def evaluate_requirements(self, chapter_reqs: list, policy_text: str) -> list:
         """

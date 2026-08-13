@@ -200,12 +200,28 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
         header_p = Paragraph(f"<b>{gap.get('requirement_id')}</b> &nbsp; {gap.get('article')}", ParagraphStyle('H', parent=bold_body, textColor=PRIMARY))
         status_p = Paragraph(f"<font color='{v_color.hexval()}'><b>{verdict}</b></font> &nbsp; <font color='#64748B'>Confidence: High (0.88)</font>", ParagraphStyle('S', parent=body_style, alignment=2))
         
+        req_text = gap.get("gdpr_requires", "")
+        if len(req_text) > 250:
+            req_text = req_text[:247] + "..."
+            
+        policy_t = gap.get("your_policy", "")
+        if len(policy_t) > 250:
+            policy_t = policy_t[:247] + "..."
+
+        analysis_t = gap.get("analysis", "")
+        if len(analysis_t) > 250:
+            analysis_t = analysis_t[:247] + "..."
+
+        fix_t = gap.get("fix_required", "")
+        if len(fix_t) > 250:
+            fix_t = fix_t[:247] + "..."
+
         card_data = [
             [header_p, status_p],
-            [Paragraph("GDPR Requires:", bold_body), Paragraph(gap.get("gdpr_requires", ""), body_style)],
-            [Paragraph("Your Policy:", bold_body), Paragraph(gap.get("your_policy", ""), body_style)],
-            [Paragraph("Analysis:", bold_body), Paragraph(gap.get("analysis", ""), body_style)],
-            [Paragraph("Fix Required:", ParagraphStyle('R', parent=bold_body, textColor=v_color)), Paragraph(gap.get("fix_required", ""), body_style)],
+            [Paragraph("Mandate Requires:", bold_body), Paragraph(req_text, body_style)],
+            [Paragraph("Your Policy:", bold_body), Paragraph(policy_t, body_style)],
+            [Paragraph("Analysis:", bold_body), Paragraph(analysis_t, body_style)],
+            [Paragraph("Fix Required:", ParagraphStyle('R', parent=bold_body, textColor=v_color)), Paragraph(fix_t, body_style)],
         ]
         
         t_card = Table(card_data, colWidths=[100, 404])
@@ -218,7 +234,8 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
             ('PADDING', (0,0), (-1,-1), 5),
         ]))
         
-        elements.append(KeepTogether([t_card, Spacer(1, 10)]))
+        elements.append(t_card)
+        elements.append(Spacer(1, 10))
 
     elements.append(PageBreak())
     

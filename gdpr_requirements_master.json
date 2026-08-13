@@ -1,514 +1,893 @@
 [
   {
-    "id": "REQ-001",
+    "id": "REQ-GDPR-001",
+    "framework": "gdpr",
     "chapter_number": "I",
     "chapter_title": "General provisions",
     "article_number": "Art. 1",
     "article_title": "Subject-matter and objectives",
-    "atomic_requirement": "Sets rules protecting natural persons regarding personal-data processing and the free movement of such data."
+    "atomic_requirement": "Article 1 — Subject-matter and objectives: Sets rules protecting natural persons regarding personal-data processing and the free movement of such\ndata. Protects fundamental rights, especially the right to data protection. Free movement of personal data\nwithin the Union may not be restricted on data-protection grounds."
   },
   {
-    "id": "REQ-002",
+    "id": "REQ-GDPR-002",
+    "framework": "gdpr",
     "chapter_number": "I",
     "chapter_title": "General provisions",
     "article_number": "Art. 2",
     "article_title": "Material scope",
-    "atomic_requirement": "Applies to personal data processed wholly/partly by automated means and manual processing."
+    "atomic_requirement": "Article 2 — Material scope: Applies to personal data processed wholly/partly by automated means, and to manual processing that is\nor will be part of a filing system. Does not apply to: processing outside the scope of Union law; Member\nStates' common-foreign-and-security-policy activities; purely personal/household activity; or competent\nauthorities' crime-prevention/investigation/prosecution processing (covered by separate instruments).\n\nEU-institution processing is governed by Regulation (EC) 45/2001, which is to be aligned with GDPR\n(Art. 98)."
   },
   {
-    "id": "REQ-003",
+    "id": "REQ-GDPR-003",
+    "framework": "gdpr",
     "chapter_number": "I",
     "chapter_title": "General provisions",
     "article_number": "Art. 3",
     "article_title": "Territorial scope",
-    "atomic_requirement": "Applies to processing by a controller/processor established in the Union, regardless of where processing occurs."
+    "atomic_requirement": "Article 3 — Territorial scope: Applies to processing by a controller/processor established in the Union, regardless of where the\nprocessing itself occurs. Also applies to non-EU controllers/processors processing EU data subjects' data\nwhere the activity relates to (a) offering goods/services to those subjects, or (b) monitoring their\nbehaviour within the EU. Also applies where Member State law applies under public international law."
   },
   {
-    "id": "REQ-004",
+    "id": "REQ-GDPR-004",
+    "framework": "gdpr",
     "chapter_number": "I",
     "chapter_title": "General provisions",
     "article_number": "Art. 4",
     "article_title": "Definitions",
-    "atomic_requirement": "Personal data, processing, controller, processor, recipient, consent, personal data breach, biometrics"
+    "atomic_requirement": "Article 4 — Definitions: Key defined terms used throughout: personal data – any info relating to an identified/identifiable\nnatural person; processing – any operation on personal data (collection, storage, use, disclosure,\nerasure, etc.); restriction of processing – marking stored data to limit future use; profiling –\nautomated evaluation of personal aspects (performance, health, preferences, location, etc.);\npseudonymisation – processing so data can't be linked to a subject without separately-held extra info;\nfiling system – a structured, accessible set of personal data; controller – decides purposes/means of\nprocessing; processor – processes data on the controller's behalf; recipient – anyone data is disclosed\nto; third party – anyone other than the subject, controller, processor, or their authorised staff; consent\n– freely given, specific, informed, unambiguous agreement via clear affirmative action; personal data\nbreach – a security breach causing accidental/unlawful destruction, loss, alteration, or unauthorised\ndisclosure/access; genetic data, biometric data, data concerning health – special categories tied\nto physical/genetic/biometric/health characteristics; main establishment – place of central EU\nadministration (or wherever key processing decisions are made/implemented); representative – the\nEU-based contact designated under Art. 27; enterprise / group of undertakings – economic-activity\nentities and their corporate groupings; binding corporate rules – intra-group international-transfer\npolicies; supervisory authority and supervisory authority concerned – national regulators and\nthose affected by a given case; cross-border processing – processing spanning establishments or\nsubstantially affecting subjects in more than one Member State; relevant and reasoned objection –\na formal objection to a draft regulator decision showing significant risk; information society service\nand international organisation – as defined in the referenced EU instruments/international law.\nCHAPTER II — Principles (Articles 5–11)"
   },
   {
-    "id": "REQ-005",
-    "chapter_number": "I",
-    "chapter_title": "General provisions",
-    "article_number": "Art. 4",
-    "article_title": "Definitions",
-    "atomic_requirement": "CHAPTER II \u2014 Principles (Articles 5\u201311)"
-  },
-  {
-    "id": "REQ-006",
+    "id": "REQ-GDPR-005",
+    "framework": "gdpr",
     "chapter_number": "II",
     "chapter_title": "Principles",
     "article_number": "Art. 5",
     "article_title": "Principles relating to processing of personal data",
-    "atomic_requirement": "Personal data must be processed lawfully, fairly, transparently, for specified explicit purposes, limited to necessary data,\naccurate, kept identifiable no longer than necessary, with appropriate security."
+    "atomic_requirement": "Article 5 — Principles relating to processing of personal data: Personal data must be: (a) processed lawfully, fairly, transparently; (b) collected for specified, explicit,\nlegitimate purposes and not further processed incompatibly (archiving/research/statistics uses are not\nautomatically incompatible); (c) adequate, relevant, and limited to what's necessary (data minimisation);\n(d) accurate and kept up to date; (e) kept identifiable no longer than necessary (storage limitation,\nsubject to the archiving exception); (f) processed with appropriate security (integrity and confidentiality).\nThe controller is responsible for, and must be able to demonstrate, compliance with all of the above\n(accountability)."
   },
   {
-    "id": "REQ-007",
+    "id": "REQ-GDPR-006",
+    "framework": "gdpr",
     "chapter_number": "II",
     "chapter_title": "Principles",
     "article_number": "Art. 6",
     "article_title": "Lawfulness of processing",
-    "atomic_requirement": "Processing is lawful only if based on consent, contract necessity, legal obligation, vital interests, public interest, or legitimate\ninterests."
+    "atomic_requirement": "Article 6 — Lawfulness of processing: Processing is lawful only if at least one applies: (a) consent; (b) necessary for a contract with the data\nsubject; (c) necessary for a legal obligation; (d) necessary to protect vital interests; (e) necessary for a\npublic-interest/official-authority task; (f) necessary for legitimate interests not overridden by the\nsubject's rights (unavailable to public authorities acting in their official tasks). Member States may add\nspecificity for grounds (c)/(e). Where processing shifts to a new purpose without a fresh legal basis,\ncompatibility must be assessed against factors like the link to the original purpose, context, data\nsensitivity, consequences for the subject, and safeguards in place."
   },
   {
-    "id": "REQ-008",
+    "id": "REQ-GDPR-007",
+    "framework": "gdpr",
     "chapter_number": "II",
     "chapter_title": "Principles",
     "article_number": "Art. 7",
     "article_title": "Conditions for consent",
-    "atomic_requirement": "Controller must demonstrate consent was given"
+    "atomic_requirement": "Article 7 — Conditions for consent: Controllers must be able to demonstrate consent was given. Consent requests must be clearly\ndistinguishable, in plain language, and separate from other matters. Subjects can withdraw consent\nanytime, as easily as it was given, without affecting the lawfulness of prior processing. \"Freely given\"\nassessments must weigh whether contract performance was made conditional on consent to processing\nnot actually necessary for that contract."
   },
   {
-    "id": "REQ-009",
-    "chapter_number": "II",
-    "chapter_title": "Principles",
-    "article_number": "Art. 7",
-    "article_title": "Conditions for consent",
-    "atomic_requirement": "Consent requests must be in plain language"
-  },
-  {
-    "id": "REQ-010",
-    "chapter_number": "II",
-    "chapter_title": "Principles",
-    "article_number": "Art. 7",
-    "article_title": "Conditions for consent",
-    "atomic_requirement": "Data subject can withdraw\nconsent at any time."
-  },
-  {
-    "id": "REQ-011",
+    "id": "REQ-GDPR-008",
+    "framework": "gdpr",
     "chapter_number": "II",
     "chapter_title": "Principles",
     "article_number": "Art. 8",
-    "article_title": "Conditions applicable to child's consent",
-    "atomic_requirement": "Processing based on child's consent is lawful from age 16"
+    "article_title": "Conditions applicable to a child's consent for information society services",
+    "atomic_requirement": "Article 8 — Conditions applicable to a child's consent for information society services: Processing based on a child's own consent is lawful from age 16; below that, parental/guardian\nauthorisation is required (Member States may lower the threshold to no less than 13). Controllers must\nmake reasonable efforts to verify parental consent given available technology. Doesn't override Member\nStates' general contract law on validity/formation involving a child."
   },
   {
-    "id": "REQ-012",
-    "chapter_number": "II",
-    "chapter_title": "Principles",
-    "article_number": "Art. 8",
-    "article_title": "Conditions applicable to child's consent",
-    "atomic_requirement": "below that, parental authorization is required."
-  },
-  {
-    "id": "REQ-013",
+    "id": "REQ-GDPR-009",
+    "framework": "gdpr",
     "chapter_number": "II",
     "chapter_title": "Principles",
     "article_number": "Art. 9",
     "article_title": "Processing of special categories of personal data",
-    "atomic_requirement": "Prohibits processing revealing racial origin, political opinions, genetic/biometric data, health data unless explicit consent or\nlegal exception applies."
+    "atomic_requirement": "Article 9 — Processing of special categories of personal data: Processing revealing racial/ethnic origin, political opinions, religious/philosophical beliefs, trade union\nmembership, genetic data, biometric data used for unique ID, health data, or sex-life/orientation data is\nprohibited by default. Permitted only under specific exceptions: explicit consent; employment/social-\nsecurity-law necessity; vital-interest necessity; a not-for-profit body's legitimate activities toward its own\nmembers; data manifestly made public by the subject; legal-claims necessity; substantial public interest\n(with proportionate legal basis); preventive/occupational medicine and health/social care; public-health\nnecessity; or archiving/research/statistics purposes. Some grounds require added safeguards (e.g.,\nprofessional-secrecy obligations); Member States may add further conditions for\ngenetic/biometric/health data."
   },
   {
-    "id": "REQ-014",
+    "id": "REQ-GDPR-010",
+    "framework": "gdpr",
     "chapter_number": "II",
     "chapter_title": "Principles",
     "article_number": "Art. 10",
-    "article_title": "Processing of personal data relating to criminal convictions",
-    "atomic_requirement": "Permitted only under official authority control or Union/Member State law."
+    "article_title": "Processing of personal data relating to criminal convictions and offences",
+    "atomic_requirement": "Article 10 — Processing of personal data relating to criminal convictions and offences: Permitted only under official-authority control, or when authorised by Union/Member State law with\nappropriate safeguards. Comprehensive conviction registers may only be kept under official-authority\ncontrol."
   },
   {
-    "id": "REQ-015",
+    "id": "REQ-GDPR-011",
+    "framework": "gdpr",
     "chapter_number": "II",
     "chapter_title": "Principles",
     "article_number": "Art. 11",
     "article_title": "Processing which does not require identification",
-    "atomic_requirement": "Controller is not obliged to retain identifying information solely to comply with GDPR"
+    "atomic_requirement": "Article 11 — Processing which does not require identification: Controllers aren't obliged to acquire/retain identifying information solely to comply with GDPR if they\ndon't otherwise need it. If a controller can show it genuinely can't identify a subject, it must say so; in that\ncase the access/rectification/erasure/etc. rights (Arts. 15–20) don't apply unless the subject provides\nadditional info enabling identification.\n\nCHAPTER III — Rights of the data subject (Articles 12–23)\nSection 1 — Transparency and modalities"
   },
   {
-    "id": "REQ-016",
-    "chapter_number": "II",
-    "chapter_title": "Principles",
-    "article_number": "Art. 11",
-    "article_title": "Processing which does not require identification",
-    "atomic_requirement": "CHAPTER III \u2014 Rights of the Data Subject (Articles 12\u201323)"
-  },
-  {
-    "id": "REQ-017",
+    "id": "REQ-GDPR-012",
+    "framework": "gdpr",
     "chapter_number": "III",
     "chapter_title": "Rights of the data subject",
     "article_number": "Art. 12",
     "article_title": "Transparent information, communication and modalities",
-    "atomic_requirement": "Information must be provided concisely, transparently, intelligibly, and in plain language."
+    "atomic_requirement": "Article 12 — Transparent information, communication and modalities: Controllers must provide the Art. 13/14 information and handle Art. 15–22/34 requests concisely,\ntransparently, intelligibly, and in plain language (with extra care for children). Generally free of charge,\nthough a reasonable fee or refusal is allowed for manifestly unfounded/excessive (e.g., repetitive)\nrequests — the controller bears the burden of proving that. Must act within one month (extendable by\ntwo months for complex/numerous requests, with notice of the extension and reasons); must inform the\nsubject within one month if it won't act, including the reasons and complaint/remedy options. May\nrequest extra identity-verification info where reasonable doubt exists. Standardised icons may\nsupplement (not replace) the required information.\nSection 2 — Information and access to personal data"
   },
   {
-    "id": "REQ-018",
+    "id": "REQ-GDPR-013",
+    "framework": "gdpr",
     "chapter_number": "III",
     "chapter_title": "Rights of the data subject",
     "article_number": "Art. 13",
-    "article_title": "Information to be provided where data is collected from subject",
-    "atomic_requirement": "Disclose controller identity, DPO contact, processing purposes, legal basis, recipients, retention period, and subject rights."
+    "article_title": "Information to be provided where data is collected from the subject",
+    "atomic_requirement": "Article 13 — Information to be provided where data is collected from the subject: At collection, controllers must disclose: controller/representative identity and contact; DPO contact;\npurposes and legal basis; the legitimate interest pursued (if relying on Art. 6(1)(f)); recipients; any third-\ncountry transfer and its safeguards; retention period/criteria; the subject's rights (access, rectification,\nerasure, restriction, portability, objection, consent withdrawal, complaint to a regulator); whether\nproviding the data is a statutory/contractual requirement and the consequence of not providing it; and\nthe existence/logic/consequences of any automated decision-making. New processing purposes require\nadvance notice of the same kind."
   },
   {
-    "id": "REQ-019",
+    "id": "REQ-GDPR-014",
+    "framework": "gdpr",
     "chapter_number": "III",
     "chapter_title": "Rights of the data subject",
     "article_number": "Art. 14",
-    "article_title": "Information to be provided where data was not obtained from subject",
-    "atomic_requirement": "Same disclosures as Art"
+    "article_title": "Information to be provided where data was not obtained from the subject",
+    "atomic_requirement": "Article 14 — Information to be provided where data was not obtained from the subject: Same core disclosure list as Art. 13, plus the categories of data involved and the data's source. Must be\ngiven within a reasonable time (max one month), or at first contact with the subject, or at first disclosure\nto another recipient — whichever is soonest applicable. Exceptions apply where the subject already has\nthe info, providing it is impossible or disproportionately effortful (particularly for\narchiving/research/statistics, subject to safeguards), disclosure is legally mandated with its own\nprotective measures, or the data must stay confidential under a professional-secrecy obligation."
   },
   {
-    "id": "REQ-020",
-    "chapter_number": "III",
-    "chapter_title": "Rights of the data subject",
-    "article_number": "Art. 14",
-    "article_title": "Information to be provided where data was not obtained from subject",
-    "atomic_requirement": "13 plus categories of data and source."
-  },
-  {
-    "id": "REQ-021",
+    "id": "REQ-GDPR-015",
+    "framework": "gdpr",
     "chapter_number": "III",
     "chapter_title": "Rights of the data subject",
     "article_number": "Art. 15",
     "article_title": "Right of access by the data subject",
-    "atomic_requirement": "Right to obtain confirmation of processing, access to personal data, and details on processing logic."
+    "atomic_requirement": "Article 15 — Right of access by the data subject: Subjects can confirm whether their data is being processed and, if so, access it plus: purposes, data\ncategories, recipients (especially international ones), retention period/criteria, their rights, the data's\nsource (if not collected from them), and automated decision-making logic/consequences. International\ntransfers trigger a right to be informed of the applicable safeguards. Controllers must provide the first\ncopy free; further copies may carry a reasonable administrative fee; electronic requests get an electronic\nresponse by default. The right cannot adversely affect others' rights and freedoms.\n\nSection 3 — Rectification and erasure"
   },
   {
-    "id": "REQ-022",
+    "id": "REQ-GDPR-016",
+    "framework": "gdpr",
     "chapter_number": "III",
     "chapter_title": "Rights of the data subject",
     "article_number": "Art. 16",
     "article_title": "Right to rectification",
-    "atomic_requirement": "Inaccurate personal data must be corrected without undue delay."
+    "atomic_requirement": "Article 16 — Right to rectification: Subjects can have inaccurate data corrected without undue delay, and incomplete data completed\n(including via a supplementary statement)."
   },
   {
-    "id": "REQ-023",
+    "id": "REQ-GDPR-017",
+    "framework": "gdpr",
     "chapter_number": "III",
     "chapter_title": "Rights of the data subject",
     "article_number": "Art. 17",
-    "article_title": "Right to erasure ('right to be forgotten')",
-    "atomic_requirement": "Controller must erase personal data without undue delay when data is no longer necessary or consent is withdrawn."
+    "article_title": "Right to erasure (\"right to be forgotten\")",
+    "atomic_requirement": "Article 17 — Right to erasure (\"right to be forgotten\"): Controllers must erase data without undue delay where: it's no longer necessary for its original purpose;\nconsent is withdrawn with no other legal basis; the subject successfully objects (Art. 21); processing was\nunlawful; erasure is a legal obligation; or the data was collected from a child regarding information\nsociety services. If the data was made public, the controller must take reasonable steps (accounting for\ncost/technology) to inform other controllers processing it that erasure of links/copies has been\nrequested. Exceptions: freedom of expression/information; legal obligation or public-interest/official-\nauthority tasks; public-health grounds (Art. 9(2)(h)/(i)); archiving/research/statistics where erasure\nwould seriously impair the purpose; and legal claims."
   },
   {
-    "id": "REQ-024",
+    "id": "REQ-GDPR-018",
+    "framework": "gdpr",
     "chapter_number": "III",
     "chapter_title": "Rights of the data subject",
     "article_number": "Art. 18",
     "article_title": "Right to restriction of processing",
-    "atomic_requirement": "Right to restrict processing where accuracy is contested or processing is unlawful."
+    "atomic_requirement": "Article 18 — Right to restriction of processing: Available where: accuracy is contested (pending verification); processing is unlawful but the subject\nprefers restriction over erasure; the controller no longer needs the data but the subject needs it for legal\nclaims; or an Art. 21 objection is pending verification. Restricted data may only be stored, or otherwise\nprocessed with consent, for legal claims, to protect others' rights, or for important public interest. The\nsubject must be told before a restriction is lifted."
   },
   {
-    "id": "REQ-025",
+    "id": "REQ-GDPR-019",
+    "framework": "gdpr",
     "chapter_number": "III",
     "chapter_title": "Rights of the data subject",
     "article_number": "Art. 19",
-    "article_title": "Notification obligation regarding rectification or erasure",
-    "atomic_requirement": "Controller must notify recipients of data rectification or erasure."
+    "article_title": "Notification obligation regarding rectification, erasure or restriction",
+    "atomic_requirement": "Article 19 — Notification obligation regarding rectification, erasure or restriction: Controllers must notify every recipient the data was disclosed to of any rectification, erasure, or\nrestriction, unless impossible or disproportionately effortful, and must tell the subject who those\nrecipients were if asked."
   },
   {
-    "id": "REQ-026",
+    "id": "REQ-GDPR-020",
+    "framework": "gdpr",
     "chapter_number": "III",
     "chapter_title": "Rights of the data subject",
     "article_number": "Art. 20",
     "article_title": "Right to data portability",
-    "atomic_requirement": "Right to receive personal data in a structured, commonly used, machine-readable format and transmit to another controller."
+    "atomic_requirement": "Article 20 — Right to data portability: Where processing is based on consent or contract and carried out by automated means, subjects can\nreceive their provided data in a structured, machine-readable format and transmit it to another\ncontroller — directly between controllers where technically feasible. Without prejudice to Art. 17; doesn't\napply to public-interest/official-authority processing; can't adversely affect others' rights.\nSection 4 — Right to object and automated individual decision-making"
   },
   {
-    "id": "REQ-027",
+    "id": "REQ-GDPR-021",
+    "framework": "gdpr",
     "chapter_number": "III",
     "chapter_title": "Rights of the data subject",
     "article_number": "Art. 21",
     "article_title": "Right to object",
-    "atomic_requirement": "Right to object at any time to processing based on legitimate interests or direct marketing."
+    "atomic_requirement": "Article 21 — Right to object: Subjects can object anytime, on grounds relating to their particular situation, to processing based on\npublic-interest/official-authority or legitimate-interest grounds (Art. 6(1)(e)/(f)), including related\nprofiling — the controller must stop unless it demonstrates compelling overriding legitimate grounds, or\nthe processing is for legal claims. Objection to direct marketing (including related profiling) is\nabsolute — processing for that purpose must stop immediately. The right must be explicitly and\n\nseparately flagged at first contact. For information-society services, it can be exercised via automated\ntechnical means. For research/statistics, subjects can object on particular-situation grounds unless the\nprocessing is necessary for a public-interest task."
   },
   {
-    "id": "REQ-028",
+    "id": "REQ-GDPR-022",
+    "framework": "gdpr",
     "chapter_number": "III",
     "chapter_title": "Rights of the data subject",
     "article_number": "Art. 22",
     "article_title": "Automated individual decision-making, including profiling",
-    "atomic_requirement": "Right not to be subject to a decision based solely on automated processing/profiling."
+    "atomic_requirement": "Article 22 — Automated individual decision-making, including profiling: Subjects have the right not to be subject to a decision based solely on automated processing (including\nprofiling) that produces legal or similarly significant effects, except where: necessary for a contract;\nauthorised by law with safeguards; or based on explicit consent. Where the contract or consent exception\napplies, the controller must provide safeguards including human intervention, the right to express a view,\nand the right to contest the decision. Such decisions can't be based on special-category data unless\nexplicit consent or a substantial-public-interest ground applies, with safeguards.\nSection 5 — Restrictions"
   },
   {
-    "id": "REQ-029",
+    "id": "REQ-GDPR-023",
+    "framework": "gdpr",
     "chapter_number": "III",
     "chapter_title": "Rights of the data subject",
     "article_number": "Art. 23",
     "article_title": "Restrictions",
-    "atomic_requirement": "Member State law may restrict rights to safeguard national security, defence, public security"
+    "atomic_requirement": "Article 23 — Restrictions: Union/Member State law may restrict the scope of the Art. 12–22 and Art. 34 rights (and the related\nparts of Art. 5) via a legislative measure that respects the essence of fundamental rights and is\nnecessary/proportionate to safeguard things like national security, defence, public security, crime\nprevention/investigation/prosecution, other important public interests\n(economic/financial/monetary/tax/public-health/social-security), judicial independence, ethics-breach\ninvestigations for regulated professions, related monitoring/inspection/regulatory functions, protecting\nthe subject or others' rights, or civil-claim enforcement. Any such measure must specify its purposes, the\ndata categories covered, its scope, anti-abuse safeguards, the responsible controller(s), storage/safeguard\nperiods, the risks involved, and the subject's right to be informed of the restriction (unless that would\nundermine its purpose).\nCHAPTER IV — Controller and processor (Articles 24–43)\nSection 1 — General obligations"
   },
   {
-    "id": "REQ-030",
-    "chapter_number": "III",
-    "chapter_title": "Rights of the data subject",
-    "article_number": "Art. 23",
-    "article_title": "Restrictions",
-    "atomic_requirement": "CHAPTER IV \u2014 Controller and Processor (Articles 24\u201343)"
-  },
-  {
-    "id": "REQ-031",
+    "id": "REQ-GDPR-024",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 24",
     "article_title": "Responsibility of the controller",
-    "atomic_requirement": "Implement appropriate technical and organizational measures to demonstrate compliance."
+    "atomic_requirement": "Article 24 — Responsibility of the controller: Controllers must implement, and keep updated, appropriate technical/organisational measures to ensure\nand demonstrate GDPR-compliant processing, proportionate to the processing's\nnature/scope/context/risk — potentially including formal data-protection policies. Adherence to codes of\nconduct or certification can help demonstrate compliance."
   },
   {
-    "id": "REQ-032",
+    "id": "REQ-GDPR-025",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 25",
     "article_title": "Data protection by design and by default",
-    "atomic_requirement": "Build data protection principles into processing design from the outset."
+    "atomic_requirement": "Article 25 — Data protection by design and by default: Controllers must build data-protection principles (e.g., minimisation, pseudonymisation) into processing\ndesign from the outset, and ensure that, by default, only the personal data necessary for each specific\npurpose is processed — covering the amount collected, the extent of processing, storage duration, and\n\naccessibility. By default, data shouldn't be made accessible to an indefinite number of people without the\nindividual's action. Certification can help demonstrate compliance."
   },
   {
-    "id": "REQ-033",
+    "id": "REQ-GDPR-026",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 26",
     "article_title": "Joint controllers",
-    "atomic_requirement": "Joint controllers must transparently determine respective responsibilities."
+    "atomic_requirement": "Article 26 — Joint controllers: Where two or more controllers jointly determine the purposes/means of processing, they must\ntransparently allocate their respective responsibilities (especially for subject-rights handling and Art.\n13/14 disclosures) via an arrangement, unless law already determines this — the essence of that\narrangement must be made available to subjects. Subjects may exercise their rights against either or both\ncontrollers regardless of the arrangement's internal terms."
   },
   {
-    "id": "REQ-034",
+    "id": "REQ-GDPR-027",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 27",
-    "article_title": "Representatives of controllers not established in the Union",
-    "atomic_requirement": "Designate an EU representative where Art"
+    "article_title": "Representatives of non-EU controllers/processors",
+    "atomic_requirement": "Article 27 — Representatives of non-EU controllers/processors: Where Art. 3(2) applies, a written-designated EU representative is required, based in a Member State\nwhere the relevant data subjects are, and mandated to be the point of contact for regulators and subjects.\nExempt for occasional, small-scale, low-risk processing, or for public authorities. Designating a\nrepresentative doesn't shield the controller/processor from legal action."
   },
   {
-    "id": "REQ-035",
+    "id": "REQ-GDPR-028",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 28",
     "article_title": "Processor",
-    "atomic_requirement": "Processing by a processor must be governed by a binding contract specifying subject matter, duration, nature, and\nobligations."
+    "atomic_requirement": "Article 28 — Processor: Controllers may only use processors offering sufficient guarantees. Processors can't engage a sub-\nprocessor without prior specific or general written authorisation (with a right to object to changes under\ngeneral authorisation). Processing must be governed by a binding written contract specifying subject-\nmatter, duration, nature/purpose, data/subject types, and each party's obligations — requiring the\nprocessor to: act only on documented controller instructions; ensure staff confidentiality; implement Art.\n32 security; respect sub-processor conditions; help the controller respond to subject-rights requests and\nmeet Art. 32–36 obligations; delete/return data at contract end; and provide compliance\ninformation/allow audits (flagging any instruction it believes is unlawful). The same obligations must\nflow down to any sub-processor, with the initial processor remaining liable for the sub-processor's\nfailures. Commission- or regulator-approved standard contractual clauses may be used. A processor that\noversteps into determining its own purposes/means becomes a controller for that processing."
   },
   {
-    "id": "REQ-036",
+    "id": "REQ-GDPR-029",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 29",
-    "article_title": "Processing under authority of controller or processor",
-    "atomic_requirement": "Only process under instructions of controller."
+    "article_title": "Processing under the authority of the controller or processor",
+    "atomic_requirement": "Article 29 — Processing under the authority of the controller or processor: Anyone processing data under a controller's or processor's authority may do so only on instruction,\nunless legally required otherwise."
   },
   {
-    "id": "REQ-037",
+    "id": "REQ-GDPR-030",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 30",
     "article_title": "Records of processing activities",
-    "atomic_requirement": "Maintain detailed records of processing activities for organizations over 250 employees or high risk."
+    "atomic_requirement": "Article 30 — Records of processing activities: Controllers (and representatives) must maintain records covering: controller/DPO contact details,\npurposes, data-subject and data categories, recipient categories (including international), transfer\ndetails/safeguards, retention time limits, and a general description of security measures. Processors must\nkeep an analogous record of processing categories performed for each controller. Must be in writing\n(including electronic) and produced to regulators on request. Exempt for organisations under 250\nemployees unless the processing risks subject rights, is non-occasional, or involves special-\ncategory/criminal data."
   },
   {
-    "id": "REQ-038",
+    "id": "REQ-GDPR-031",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 31",
-    "article_title": "Cooperation with supervisory authority",
-    "atomic_requirement": "Cooperate with supervisory authorities on request."
+    "article_title": "Cooperation with the supervisory authority",
+    "atomic_requirement": "Article 31 — Cooperation with the supervisory authority: Controllers, processors, and their representatives must cooperate with a regulator on request.\nSection 2 — Security of personal data"
   },
   {
-    "id": "REQ-039",
+    "id": "REQ-GDPR-032",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 32",
     "article_title": "Security of processing",
-    "atomic_requirement": "Implement technical measures including encryption, confidentiality, resilience, and regular vulnerability testing."
+    "atomic_requirement": "Article 32 — Security of processing: Controllers and processors must implement risk-appropriate technical/organisational security measures,\nconsidering cost and context, including: pseudonymisation/encryption; ongoing confidentiality,\nintegrity, availability, and resilience of systems; the ability to restore access after an incident; and regular\ntesting/evaluation of those measures. Must account for risks like accidental/unlawful destruction, loss,\nalteration, or unauthorised disclosure/access. Code-of-conduct or certification adherence can help\ndemonstrate compliance. Anyone under the controller's/processor's authority may only process data on\ninstruction, unless legally required otherwise."
   },
   {
-    "id": "REQ-040",
+    "id": "REQ-GDPR-033",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 33",
-    "article_title": "Notification of personal data breach to supervisory authority",
-    "atomic_requirement": "Notify supervisory authority within 72 hours of becoming aware of a breach."
+    "article_title": "Notification of a personal data breach to the supervisory authority",
+    "atomic_requirement": "Article 33 — Notification of a personal data breach to the supervisory authority: Controllers must notify the competent regulator without undue delay, within 72 hours where feasible,\nunless the breach is unlikely to risk subjects' rights (late notice requires a justification). Processors must\nnotify controllers without undue delay upon becoming aware. The notification must cover: the breach's\nnature (data-subject/record categories and approximate numbers); DPO/contact details; likely\nconsequences; and mitigation measures taken/proposed — info can be phased if not all available at once.\nControllers must document every breach (facts, effects, remedial action) so regulators can verify\ncompliance."
   },
   {
-    "id": "REQ-041",
+    "id": "REQ-GDPR-034",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 34",
-    "article_title": "Communication of personal data breach to data subject",
-    "atomic_requirement": "Notify data subject without undue delay if breach risks high risk to rights."
+    "article_title": "Communication of a personal data breach to the data subject",
+    "atomic_requirement": "Article 34 — Communication of a personal data breach to the data subject: Required without undue delay where a breach is likely to result in a high risk to subjects' rights,\ndescribing the breach in plain language plus the mitigation/consequence details from Art. 33(3). Not\nrequired if: the affected data was protected by measures like encryption; the controller has since\nneutralised the high risk; or notifying individually would be disproportionately effortful (in which case a\npublic communication substitutes). Regulators can compel communication if the controller hasn't\nalready done it.\nSection 3 — Data protection impact assessment and prior consultation"
   },
   {
-    "id": "REQ-042",
+    "id": "REQ-GDPR-035",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 35",
     "article_title": "Data protection impact assessment (DPIA)",
-    "atomic_requirement": "Conduct DPIA prior to processing likely to result in high risk."
+    "atomic_requirement": "Article 35 — Data protection impact assessment (DPIA): Required before any processing (especially using new technologies) likely to result in high risk,\nconsidering nature/scope/context/purpose — one assessment can cover a set of similar high-risk\noperations. DPO advice must be sought where one is designated. Mandatory specifically for: systematic,\nextensive automated evaluation/profiling with legal or similarly significant effects; large-scale processing\nof special-category/criminal data; or large-scale systematic monitoring of public areas. Regulators must\npublish (and share with the EDPB) lists of processing types requiring — or exempt from — a DPIA. A\nDPIA must contain: a systematic description of the processing/purposes; a necessity/proportionality\nassessment; a risk assessment; and the measures (safeguards, security, compliance mechanisms)\n\naddressing those risks. Code-of-conduct adherence is a relevant factor. Subject/representative views\nshould be sought where appropriate. Exempted where an equivalent impact assessment already occurred\nat the legislative stage for an Art. 6(1)(c)/(e) legal basis (unless a Member State requires otherwise). Must\nbe reviewed if risk changes."
   },
   {
-    "id": "REQ-043",
+    "id": "REQ-GDPR-036",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 36",
     "article_title": "Prior consultation",
-    "atomic_requirement": "Consult supervisory authority prior to processing if DPIA indicates high unmitigated risk."
+    "atomic_requirement": "Article 36 — Prior consultation: Controllers must consult their regulator before processing if a DPIA shows unmitigated high risk. If the\nregulator believes the intended processing would infringe GDPR, it must give written advice within 8\nweeks (extendable by 6 for complexity) and may exercise its Art. 58 powers. The controller must supply:\nparty responsibilities, purposes/means, planned safeguards, DPO contact, the DPIA itself, and any other\nrequested information. Member States must also consult regulators on relevant legislative measures, and\nmay require prior authorisation for certain public-interest processing.\nSection 4 — Data protection officer"
   },
   {
-    "id": "REQ-044",
+    "id": "REQ-GDPR-037",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 37",
-    "article_title": "Designation of data protection officer (DPO)",
-    "atomic_requirement": "Mandatory DPO for public authorities or large scale monitoring/special category data."
+    "article_title": "Designation of the data protection officer (DPO)",
+    "atomic_requirement": "Article 37 — Designation of the data protection officer (DPO): Mandatory where: the controller/processor is a public authority (except courts acting judicially); its\ncore activities require regular, systematic, large-scale monitoring of subjects; or its core activities involve\nlarge-scale processing of special-category/criminal data. A shared DPO is allowed across a group of\nundertakings (if easily accessible from each establishment) or across multiple public bodies. Voluntary\ndesignation is otherwise possible (or may be required by Member State law). The DPO must be chosen\nfor professional quality and expert knowledge, can be internal staff or contracted, and contact details\nmust be published and shared with the regulator."
   },
   {
-    "id": "REQ-045",
+    "id": "REQ-GDPR-038",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 38",
-    "article_title": "Position of DPO",
-    "atomic_requirement": "DPO must be properly involved in data protection matters and report to highest management."
+    "article_title": "Position of the data protection officer",
+    "atomic_requirement": "Article 38 — Position of the data protection officer: The DPO must be involved properly and promptly in all data-protection matters, given adequate\nresources/access/training support, free from instructions regarding task performance, protected from\ndismissal/penalty for doing the job, and must report to the highest management level. Subjects may\ncontact the DPO on any related issue. The DPO is bound by confidentiality and may hold other roles only\nif free of conflicts of interest."
   },
   {
-    "id": "REQ-046",
+    "id": "REQ-GDPR-039",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 39",
-    "article_title": "Tasks of DPO",
-    "atomic_requirement": "Inform, advise, monitor compliance, and act as contact point for supervisory authority."
+    "article_title": "Tasks of the data protection officer",
+    "atomic_requirement": "Article 39 — Tasks of the data protection officer: At minimum: inform/advise the organisation and staff of their obligations; monitor compliance\n(including responsibility assignment, training, and audits); advise on and monitor DPIAs; cooperate with\nthe regulator; and act as its point of contact (including for prior consultation) — always with due regard\nto processing risk.\nSection 5 — Codes of conduct and certification"
   },
   {
-    "id": "REQ-047",
+    "id": "REQ-GDPR-040",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 40",
     "article_title": "Codes of conduct",
-    "atomic_requirement": "Encourage codes of conduct to contribute to proper GDPR application."
+    "atomic_requirement": "Article 40 — Codes of conduct: Regulators/EDPB/Commission must encourage codes of conduct, considering sector needs and those of\nsmall/medium enterprises. Associations may draft codes covering things like fair/transparent\n\nprocessing, legitimate interests, data collection, pseudonymisation, subject information, exercising\nsubject rights, child/parental-consent handling, Art. 24/25/32 measures, breach notification,\ninternational transfers, and dispute resolution. Approved codes can also serve non-EU-subject\ncontrollers as an Art. 46(2)(e) transfer safeguard via binding commitments. Codes need a compliance-\nmonitoring mechanism (Art. 41). Draft codes go to the competent regulator for approval (single Member\nState) or through the EDPB consistency mechanism (multi-Member-State), after which the Commission\nmay grant them general EU-wide validity. The EDPB maintains a public code register."
   },
   {
-    "id": "REQ-048",
+    "id": "REQ-GDPR-041",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 41",
     "article_title": "Monitoring of approved codes of conduct",
-    "atomic_requirement": "Monitoring delegated to accredited independent bodies."
+    "atomic_requirement": "Article 41 — Monitoring of approved codes of conduct: Monitoring may be delegated to an accredited body that has demonstrated independence, expertise,\neligibility/compliance-review procedures, transparent complaint-handling, and no conflict of interest —\naccreditation requirements go through the EDPB consistency mechanism. Such a body can\nsuspend/exclude non-compliant members (informing the regulator), and its accreditation is revoked if it\nstops meeting requirements or itself infringes GDPR. Doesn't apply to public-authority processing."
   },
   {
-    "id": "REQ-049",
+    "id": "REQ-GDPR-042",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 42",
     "article_title": "Certification",
-    "atomic_requirement": "Establish certification mechanisms, seals, and marks."
+    "atomic_requirement": "Article 42 — Certification: Regulators/EDPB/Commission are encouraged to establish certification mechanisms/seals/marks\ndemonstrating compliance, considering SME needs; approved certification can also serve as an Art. 46(2)\n(f) transfer safeguard for non-EU-subject entities via binding commitments. Certification is voluntary,\ntransparent, doesn't reduce the controller's/processor's own compliance responsibility, and doesn't limit\nregulator powers. Issued by accredited certification bodies (Art. 43) or the competent regulator, based on\napproved criteria (Board-approved criteria can produce the European Data Protection Seal). Valid up to\n3 years, renewable, and withdrawn if criteria are no longer met."
   },
   {
-    "id": "REQ-050",
+    "id": "REQ-GDPR-043",
+    "framework": "gdpr",
     "chapter_number": "IV",
     "chapter_title": "Controller and processor",
     "article_number": "Art. 43",
     "article_title": "Certification bodies",
-    "atomic_requirement": "Certification bodies must be accredited"
+    "atomic_requirement": "Article 43 — Certification bodies: Must be accredited (by the competent regulator and/or a national accreditation body under EN-ISO/IEC\n17065) based on demonstrated independence/expertise, commitment to approved certification criteria,\ndefined issuance/review/withdrawal procedures, transparent complaint-handling, and no conflict of\ninterest. Responsible for proper certification assessments (without reducing the certified entity's own\ncompliance responsibility). Accreditation lasts up to 5 years, renewable, and is revoked if requirements\naren't met or the body itself infringes GDPR.\nCHAPTER V — Transfers of personal data to third countries or\ninternational organisations (Articles 44–50)"
   },
   {
-    "id": "REQ-051",
-    "chapter_number": "IV",
-    "chapter_title": "Controller and processor",
-    "article_number": "Art. 43",
-    "article_title": "Certification bodies",
-    "atomic_requirement": "CHAPTER V \u2014 Transfers to Third Countries (Articles 44\u201350)"
-  },
-  {
-    "id": "REQ-052",
+    "id": "REQ-GDPR-044",
+    "framework": "gdpr",
     "chapter_number": "V",
     "chapter_title": "Transfers of personal data to third countries or international organisations",
     "article_number": "Art. 44",
     "article_title": "General principle for transfers",
-    "atomic_requirement": "Any transfer must satisfy conditions of Chapter V."
+    "atomic_requirement": "Article 44 — General principle for transfers: Any transfer (including onward transfers) to a third country or international organisation must satisfy\nthis Chapter's conditions, to ensure GDPR's protection level isn't undermined."
   },
   {
-    "id": "REQ-053",
+    "id": "REQ-GDPR-045",
+    "framework": "gdpr",
     "chapter_number": "V",
     "chapter_title": "Transfers of personal data to third countries or international organisations",
     "article_number": "Art. 45",
-    "article_title": "Transfers on basis of adequacy decision",
-    "atomic_requirement": "Allowed where EU Commission decides third country ensures adequate protection."
+    "article_title": "Transfers on the basis of an adequacy decision",
+    "atomic_requirement": "Article 45 — Transfers on the basis of an adequacy decision: Permitted without specific authorisation where the Commission has decided the destination\ncountry/sector/organisation ensures adequate protection — assessed via rule of law, relevant legislation\nand enforcement, effective independent regulator(s), and relevant international commitments. Adopted\nvia implementing act with periodic review (at least every four years); the Commission must monitor\nongoing developments and can amend/suspend/repeal the decision (including via an urgency procedure)\nif adequacy lapses, and must publish the current adequacy list. Loss of adequacy doesn't block transfers\nmade instead under Arts. 46–49."
   },
   {
-    "id": "REQ-054",
+    "id": "REQ-GDPR-046",
+    "framework": "gdpr",
     "chapter_number": "V",
     "chapter_title": "Transfers of personal data to third countries or international organisations",
     "article_number": "Art. 46",
     "article_title": "Transfers subject to appropriate safeguards",
-    "atomic_requirement": "Allowed with Standard Contractual Clauses (SCCs) or Binding Corporate Rules (BCRs)."
+    "atomic_requirement": "Article 46 — Transfers subject to appropriate safeguards: Absent an adequacy decision, transfers are allowed with appropriate safeguards plus enforceable\nrights/remedies for subjects. No specific regulator authorisation needed for: binding public-authority\ninstruments; binding corporate rules (Art. 47); Commission-adopted or regulator-adopted/Commission-\napproved standard contractual clauses; an approved code of conduct with binding commitments; or\napproved certification with binding commitments. Regulator authorisation is needed for ad hoc\ncontractual clauses or administrative arrangements between public bodies with enforceable rights."
   },
   {
-    "id": "REQ-055",
+    "id": "REQ-GDPR-047",
+    "framework": "gdpr",
     "chapter_number": "V",
     "chapter_title": "Transfers of personal data to third countries or international organisations",
     "article_number": "Art. 47",
     "article_title": "Binding corporate rules (BCRs)",
-    "atomic_requirement": "Approved rules for intra-group international data transfers."
+    "atomic_requirement": "Article 47 — Binding corporate rules (BCRs): Approved by the competent regulator via the EDPB consistency mechanism, provided the rules are\nlegally binding group-wide (including for employees), grant subjects enforceable rights, and specify:\ngroup structure/contacts; the data/transfers covered; their binding nature; how GDPR principles are\napplied; subject rights and how to exercise them; the EU member's liability for non-EU members'\nbreaches; how subjects are informed; the compliance-monitoring role (DPO or equivalent); complaint\nprocedures; audit/verification mechanisms; change-reporting mechanisms; the regulator-cooperation\nmechanism; reporting of conflicting third-country legal demands; and staff training."
   },
   {
-    "id": "REQ-056",
+    "id": "REQ-GDPR-048",
+    "framework": "gdpr",
     "chapter_number": "V",
     "chapter_title": "Transfers of personal data to third countries or international organisations",
     "article_number": "Art. 48",
-    "article_title": "Transfers not authorized by Union law",
-    "atomic_requirement": "Foreign court orders only enforceable if based on international agreements."
+    "article_title": "Transfers or disclosures not authorised by Union law",
+    "atomic_requirement": "Article 48 — Transfers or disclosures not authorised by Union law: A foreign court/authority order to transfer or disclose data is only recognisable/enforceable if grounded\nin an international agreement (e.g., a mutual legal assistance treaty) between the requesting country and\nthe EU/Member State — without prejudice to other Chapter V transfer grounds."
   },
   {
-    "id": "REQ-057",
+    "id": "REQ-GDPR-049",
+    "framework": "gdpr",
     "chapter_number": "V",
     "chapter_title": "Transfers of personal data to third countries or international organisations",
     "article_number": "Art. 49",
     "article_title": "Derogations for specific situations",
-    "atomic_requirement": "Derogations for explicit consent, contract performance, or public interest."
+    "atomic_requirement": "Article 49 — Derogations for specific situations: Absent an adequacy decision or Art. 46 safeguards, transfers are only allowed where: the subject gave\nexplicit, risk-informed consent to that specific transfer; it's necessary for contract performance/pre-\ncontractual steps; necessary for a contract in the subject's interest; necessary for important public-\ninterest reasons; necessary for legal claims; necessary to protect vital interests where consent is\nimpossible; or made from a public register under its normal access conditions (not covering the register\nwholesale). Failing all of those, a narrow residual derogation permits non-repetitive, limited-scope\ntransfers necessary for compelling controller interests not overridden by the subject's rights — requiring\na documented risk assessment, suitable safeguards, and notice to both the regulator and the data subject."
   },
   {
-    "id": "REQ-058",
+    "id": "REQ-GDPR-050",
+    "framework": "gdpr",
     "chapter_number": "V",
     "chapter_title": "Transfers of personal data to third countries or international organisations",
     "article_number": "Art. 50",
-    "article_title": "International cooperation for protection of personal data",
-    "atomic_requirement": "Build international enforcement cooperation mechanisms"
+    "article_title": "International cooperation for the protection of personal data",
+    "atomic_requirement": "Article 50 — International cooperation for the protection of personal data: The Commission and regulators must work to build international enforcement-cooperation mechanisms,\nprovide mutual assistance, engage relevant stakeholders, and promote the exchange of data-protection\nlaw/practice, including on cross-border jurisdictional conflicts.\nCHAPTER VI — Independent supervisory authorities (Articles\n51–59)\n(Chapter VI governs how national data-protection regulators are structured and empowered — mostly\nrelevant to regulators rather than to company policies, condensed accordingly.)\nSection 1 — Independent status"
   },
   {
-    "id": "REQ-059",
-    "chapter_number": "V",
-    "chapter_title": "Transfers of personal data to third countries or international organisations",
-    "article_number": "Art. 50",
-    "article_title": "International cooperation for protection of personal data",
-    "atomic_requirement": "CHAPTER VI to XI \u2014 Supervisory Authorities & Final Provisions (Articles\n51\u201399)"
-  },
-  {
-    "id": "REQ-060",
+    "id": "REQ-GDPR-051",
+    "framework": "gdpr",
     "chapter_number": "VI",
     "chapter_title": "Independent supervisory authorities",
     "article_number": "Art. 51",
     "article_title": "Supervisory authority",
-    "atomic_requirement": "Independent public authority to monitor GDPR compliance."
+    "atomic_requirement": "Article 51 — Supervisory authority: Each Member State must establish one or more independent regulators to monitor GDPR compliance\nand support free data flow, cooperating with each other under Chapter VII; multi-regulator states must\ndesignate a single EDPB representative."
   },
   {
-    "id": "REQ-061",
+    "id": "REQ-GDPR-052",
+    "framework": "gdpr",
+    "chapter_number": "VI",
+    "chapter_title": "Independent supervisory authorities",
+    "article_number": "Art. 52",
+    "article_title": "Independence",
+    "atomic_requirement": "Article 52 — Independence: Regulators must act with complete independence, free of outside instruction, with adequate resources,\nindependent staff, and financial controls that don't compromise that independence."
+  },
+  {
+    "id": "REQ-GDPR-053",
+    "framework": "gdpr",
+    "chapter_number": "VI",
+    "chapter_title": "Independent supervisory authorities",
+    "article_number": "Art. 53",
+    "article_title": "General conditions for members",
+    "atomic_requirement": "Article 53 — General conditions for members: Members are appointed via a transparent procedure (parliament, government, head of state, or an\nindependent body), must have relevant qualifications, and can only be dismissed for serious misconduct\nor failure to meet eligibility conditions."
+  },
+  {
+    "id": "REQ-GDPR-054",
+    "framework": "gdpr",
+    "chapter_number": "VI",
+    "chapter_title": "Independent supervisory authorities",
+    "article_number": "Art. 54",
+    "article_title": "Rules on establishment",
+    "atomic_requirement": "Article 54 — Rules on establishment: Member States must legislate on establishment, member qualifications, appointment procedures, term\nlength (at least four years, with a staggered-first-term exception), reappointment rules, and conduct\nobligations; members/staff are bound by professional secrecy.\nSection 2 — Competence, tasks and powers"
+  },
+  {
+    "id": "REQ-GDPR-055",
+    "framework": "gdpr",
+    "chapter_number": "VI",
+    "chapter_title": "Independent supervisory authorities",
+    "article_number": "Art. 55",
+    "article_title": "Competence",
+    "atomic_requirement": "Article 55 — Competence: Regulators are competent within their own Member State, with a special rule for certain public-authority\nprocessing; courts acting judicially are outside regulator supervision."
+  },
+  {
+    "id": "REQ-GDPR-056",
+    "framework": "gdpr",
+    "chapter_number": "VI",
+    "chapter_title": "Independent supervisory authorities",
+    "article_number": "Art. 56",
+    "article_title": "Competence of the lead supervisory authority",
+    "atomic_requirement": "Article 56 — Competence of the lead supervisory authority: For cross-border processing, the regulator where the controller/processor has its main/single EU\nestablishment acts as lead authority, following the Art. 60 cooperation procedure — with an exception\nallowing a purely local regulator to handle matters affecting only its own territory/subjects, subject to\nlead-authority sign-off."
+  },
+  {
+    "id": "REQ-GDPR-057",
+    "framework": "gdpr",
+    "chapter_number": "VI",
+    "chapter_title": "Independent supervisory authorities",
+    "article_number": "Art. 57",
+    "article_title": "Tasks",
+    "atomic_requirement": "Article 57 — Tasks: Includes enforcing GDPR, raising public/child awareness, advising government, informing subjects of\ntheir rights, handling and investigating complaints, cooperating with other regulators, conducting\ninvestigations, adopting standard contractual clauses, maintaining DPIA-requirement lists, approving\ncodes of conduct/certification criteria, accrediting monitoring/certification bodies, approving BCRs, and\ncontributing to the EDPB — generally free of charge to the complainant (fees/refusal allowed for\nunfounded or excessive requests)."
+  },
+  {
+    "id": "REQ-GDPR-058",
+    "framework": "gdpr",
+    "chapter_number": "VI",
+    "chapter_title": "Independent supervisory authorities",
+    "article_number": "Art. 58",
+    "article_title": "Powers",
+    "atomic_requirement": "Article 58 — Powers: Investigative: order information, conduct audits, review certifications, access data/premises.\nCorrective: warn, reprimand, order compliance with subject-rights requests or with GDPR generally,\norder breach communication, impose processing bans/limits, order rectification/erasure/restriction,\nwithdraw certification, impose administrative fines (Art. 83), suspend third-country data flows.\nAuthorisation/advisory: advise on prior consultation, issue public opinions, authorise\nprocessing/clauses/arrangements, approve codes of conduct/certification/BCRs. All subject to judicial-\nremedy and due-process safeguards; regulators must also be able to refer infringements to courts."
+  },
+  {
+    "id": "REQ-GDPR-059",
+    "framework": "gdpr",
+    "chapter_number": "VI",
+    "chapter_title": "Independent supervisory authorities",
+    "article_number": "Art. 59",
+    "article_title": "Activity reports",
+    "atomic_requirement": "Article 59 — Activity reports: Regulators must publish annual activity reports, shared with national bodies, the Commission, and the\nEDPB.\nCHAPTER VII — Cooperation and consistency (Articles 60–76)\n(Chapter VII governs how national regulators and the EDPB coordinate on cross-border cases — inter-\nregulator process, condensed heavily as it rarely constrains a company's own policies directly.)\nSection 1 — Cooperation"
+  },
+  {
+    "id": "REQ-GDPR-060",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 60",
+    "article_title": "Cooperation between the lead and concerned supervisory authorities",
+    "atomic_requirement": "Article 60 — Cooperation between the lead and concerned supervisory authorities: The lead regulator must share information and draft decisions with other \"concerned\" regulators, aim for\nconsensus, and take their views into account; unresolved reasoned objections escalate to the Art. 63\nconsistency mechanism. Final decisions are formally notified to the controller/processor and other\nregulators/EDPB/complainants, with the controller/processor required to report back on compliance\nmeasures taken."
+  },
+  {
+    "id": "REQ-GDPR-061",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 61",
+    "article_title": "Mutual assistance",
+    "atomic_requirement": "Article 61 — Mutual assistance: Regulators must provide each other relevant information and assistance (info requests, inspections,\ninvestigations) within about a month, usable only for its stated purpose; refusal is allowed only for lack of\ncompetence or legal conflict."
+  },
+  {
+    "id": "REQ-GDPR-062",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 62",
+    "article_title": "Joint operations",
+    "atomic_requirement": "Article 62 — Joint operations: Regulators may run joint investigations/enforcement actions; participation rights and staff liability\nfollow the host regulator's Member State law, with cross-state liability/reimbursement rules for any\ndamage caused.\nSection 2 — Consistency"
+  },
+  {
+    "id": "REQ-GDPR-063",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 63",
+    "article_title": "Consistency mechanism",
+    "atomic_requirement": "Article 63 — Consistency mechanism: Regulators cooperate with each other and the Commission through this mechanism to keep GDPR\napplication consistent EU-wide."
+  },
+  {
+    "id": "REQ-GDPR-064",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 64",
+    "article_title": "Opinion of the Board",
+    "atomic_requirement": "Article 64 — Opinion of the Board: The EDPB must give an opinion before a regulator adopts certain EU-wide-impact decisions (DPIA lists,\ncode-of-conduct/certification approvals, standard contractual clauses, BCR approvals), and can be asked\nto weigh in on other general or multi-state matters; opinions come within about 8 weeks (extendable by\n6), and the regulator must give the opinion \"utmost account,\" reporting back on whether it will follow it."
+  },
+  {
+    "id": "REQ-GDPR-065",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 65",
+    "article_title": "Dispute resolution by the Board",
+    "atomic_requirement": "Article 65 — Dispute resolution by the Board: The EDPB issues binding decisions to resolve unresolved reasoned objections, lead-authority\ncompetence disputes, or a regulator's failure to follow an Art. 64 opinion — within about a month\n(extendable), by a two-thirds (or fallback simple) majority, binding on all regulators involved."
+  },
+  {
+    "id": "REQ-GDPR-066",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 66",
+    "article_title": "Urgency procedure",
+    "atomic_requirement": "Article 66 — Urgency procedure: In exceptional urgent circumstances, a regulator may adopt short-lived (max 3-month) local provisional\nmeasures outside the normal consistency process, and may request an urgent EDPB opinion/binding\ndecision (turned around within 2 weeks) for final measures."
+  },
+  {
+    "id": "REQ-GDPR-067",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 67",
+    "article_title": "Exchange of information",
+    "atomic_requirement": "Article 67 — Exchange of information: The Commission may specify standardised electronic formats for regulator-to-regulator and regulator-to-\nEDPB information exchange.\nSection 3 — European Data Protection Board"
+  },
+  {
+    "id": "REQ-GDPR-068",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 68",
+    "article_title": "European Data Protection Board (EDPB)",
+    "atomic_requirement": "Article 68 — European Data Protection Board (EDPB): An EU body with legal personality, composed of one representative per Member State regulator plus the\nEuropean Data Protection Supervisor; the Commission participates without voting rights."
+  },
+  {
+    "id": "REQ-GDPR-069",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 69",
+    "article_title": "Independence",
+    "atomic_requirement": "Article 69 — Independence: The EDPB acts independently, without seeking or taking outside instructions (aside from Commission\nrequests it may act on)."
+  },
+  {
+    "id": "REQ-GDPR-070",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 70",
+    "article_title": "Tasks of the Board",
+    "atomic_requirement": "Article 70 — Tasks of the Board: Ensures consistent GDPR application; advises the Commission on data-protection issues/amendments;\nissues wide-ranging guidelines, recommendations, and best practices (on erasure, profiling, breach\nnotification/high-risk criteria, BCR requirements, international-transfer criteria, fine-setting guidance,\nwhistleblower procedures, etc.); approves certification criteria and maintains public registers; opines on\nthird-country adequacy and Union-level codes of conduct; issues Art. 64/65 opinions and binding\ndecisions; and promotes regulator cooperation, training, and international knowledge exchange."
+  },
+  {
+    "id": "REQ-GDPR-071",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 71",
+    "article_title": "Reports",
+    "atomic_requirement": "Article 71 — Reports: The EDPB must publish an annual report reviewing guideline application and binding decisions, sent to\nthe Parliament, Council, and Commission."
+  },
+  {
+    "id": "REQ-GDPR-072",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 72",
+    "article_title": "Procedure",
+    "atomic_requirement": "Article 72 — Procedure: Decisions by simple majority unless stated otherwise; procedural rules adopted by a two-thirds majority."
+  },
+  {
+    "id": "REQ-GDPR-073",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 73",
+    "article_title": "Chair",
+    "atomic_requirement": "Article 73 — Chair: A Chair and two deputy chairs are elected for renewable five-year terms."
+  },
+  {
+    "id": "REQ-GDPR-074",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 74",
+    "article_title": "Tasks of the Chair",
+    "atomic_requirement": "Article 74 — Tasks of the Chair: Convenes meetings, sets agendas, notifies Art. 65 decisions, and ensures timely performance of the\nconsistency mechanism."
+  },
+  {
+    "id": "REQ-GDPR-075",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 75",
+    "article_title": "Secretariat",
+    "atomic_requirement": "Article 75 — Secretariat: Provided by the European Data Protection Supervisor's office, handling day-to-day administration,\ncommunications, translation, and drafting/publishing EDPB opinions and decisions."
+  },
+  {
+    "id": "REQ-GDPR-076",
+    "framework": "gdpr",
+    "chapter_number": "VII",
+    "chapter_title": "Cooperation and consistency",
+    "article_number": "Art. 76",
+    "article_title": "Confidentiality",
+    "atomic_requirement": "Article 76 — Confidentiality: EDPB discussions may be confidential per its own procedural rules; document access follows the general\nEU public-access regulation.\n\nCHAPTER VIII — Remedies, liability and penalties (Articles 77–\n84)"
+  },
+  {
+    "id": "REQ-GDPR-077",
+    "framework": "gdpr",
     "chapter_number": "VIII",
     "chapter_title": "Remedies, liability and penalties",
     "article_number": "Art. 77",
-    "article_title": "Right to lodge a complaint",
-    "atomic_requirement": "Right to lodge complaint with supervisory authority."
+    "article_title": "Right to lodge a complaint with a supervisory authority",
+    "atomic_requirement": "Article 77 — Right to lodge a complaint with a supervisory authority: Subjects can complain to a regulator (typically of their residence, workplace, or the alleged\ninfringement's location), without prejudice to other remedies; the regulator must keep them informed of\nprogress and outcome."
   },
   {
-    "id": "REQ-062",
+    "id": "REQ-GDPR-078",
+    "framework": "gdpr",
+    "chapter_number": "VIII",
+    "chapter_title": "Remedies, liability and penalties",
+    "article_number": "Art. 78",
+    "article_title": "Right to an effective judicial remedy against a supervisory authority",
+    "atomic_requirement": "Article 78 — Right to an effective judicial remedy against a supervisory authority: Available against a binding regulator decision, or against a regulator's failure to handle/update on a\ncomplaint within three months — brought before that regulator's own Member State courts."
+  },
+  {
+    "id": "REQ-GDPR-079",
+    "framework": "gdpr",
+    "chapter_number": "VIII",
+    "chapter_title": "Remedies, liability and penalties",
+    "article_number": "Art. 79",
+    "article_title": "Right to an effective judicial remedy against a controller or processor",
+    "atomic_requirement": "Article 79 — Right to an effective judicial remedy against a controller or processor: Available where GDPR-infringing processing has affected the subject's rights, without prejudice to the\nArt. 77 complaint route — brought where the controller/processor is established, or (subject's choice)\nwhere the subject habitually resides, except against a public authority acting officially."
+  },
+  {
+    "id": "REQ-GDPR-080",
+    "framework": "gdpr",
+    "chapter_number": "VIII",
+    "chapter_title": "Remedies, liability and penalties",
+    "article_number": "Art. 80",
+    "article_title": "Representation of data subjects",
+    "atomic_requirement": "Article 80 — Representation of data subjects: Subjects may mandate a qualified not-for-profit body (public-interest mission, active in the data-\nprotection field) to lodge complaints and exercise Arts. 77–79 rights on their behalf, and — where\nMember State law allows — to claim compensation too. Member States may also let such bodies act\nindependently of a specific mandate."
+  },
+  {
+    "id": "REQ-GDPR-081",
+    "framework": "gdpr",
+    "chapter_number": "VIII",
+    "chapter_title": "Remedies, liability and penalties",
+    "article_number": "Art. 81",
+    "article_title": "Suspension of proceedings",
+    "atomic_requirement": "Article 81 — Suspension of proceedings: Courts handling the same subject matter, controller, or processor as a parallel case in another Member\nState must coordinate, and may suspend or (at first instance) decline jurisdiction in favour of the court\nfirst seized."
+  },
+  {
+    "id": "REQ-GDPR-082",
+    "framework": "gdpr",
+    "chapter_number": "VIII",
+    "chapter_title": "Remedies, liability and penalties",
+    "article_number": "Art. 82",
+    "article_title": "Right to compensation and liability",
+    "atomic_requirement": "Article 82 — Right to compensation and liability: Anyone suffering material or non-material damage from a GDPR infringement can claim compensation\nfrom the controller or processor. Controllers are liable for infringing processing generally; processors are\nliable only for breaching processor-specific obligations or acting outside/against controller instructions\n— either can be exempted by proving no responsibility for the triggering event. Multiple liable parties are\njointly and severally liable to ensure the subject is fully compensated, with internal reallocation of costs\nbased on responsibility share afterward."
+  },
+  {
+    "id": "REQ-GDPR-083",
+    "framework": "gdpr",
     "chapter_number": "VIII",
     "chapter_title": "Remedies, liability and penalties",
     "article_number": "Art. 83",
     "article_title": "General conditions for imposing administrative fines",
-    "atomic_requirement": "Fines up to \u20ac20M or 4% global annual turnover."
+    "atomic_requirement": "Article 83 — General conditions for imposing administrative fines: Fines must be effective, proportionate, and dissuasive, weighed against factors like the infringement's\nnature/gravity/duration/scope, intent vs. negligence, mitigation steps taken, technical/organisational\nmeasures already in place, prior infringements, cooperation with the regulator, data sensitivity, how the\nbreach came to light (including self-reporting), and code/certification adherence. Combined\n\ninfringements from the same/linked processing are capped at the gravest infringement's maximum.\nLower tier (up to €10M or 2% global annual turnover, whichever is higher): breaches of\ncontroller/processor obligations under Arts. 8, 11, 25–39, 42–43, plus certification/monitoring-body\nobligations. Upper tier (up to €20M or 4% global annual turnover, whichever is higher): breaches of the\ncore principles/consent conditions (Arts. 5, 6, 7, 9), data-subject rights (Arts. 12–22), international-\ntransfer rules (Arts. 44–49), Chapter IX Member State-law obligations, and non-compliance with\nregulator orders. Subject to judicial-remedy/due-process safeguards; Member States without\nadministrative fining powers use an equivalent court-based process instead."
   },
   {
-    "id": "REQ-063",
+    "id": "REQ-GDPR-084",
+    "framework": "gdpr",
+    "chapter_number": "VIII",
+    "chapter_title": "Remedies, liability and penalties",
+    "article_number": "Art. 84",
+    "article_title": "Penalties",
+    "atomic_requirement": "Article 84 — Penalties: Member States must set other effective/proportionate/dissuasive penalties for infringements not covered\nby Art. 83 fines, and notify the relevant provisions to the Commission.\nCHAPTER IX — Provisions relating to specific processing\nsituations (Articles 85–91)"
+  },
+  {
+    "id": "REQ-GDPR-085",
+    "framework": "gdpr",
+    "chapter_number": "IX",
+    "chapter_title": "Provisions relating to specific processing situations",
+    "article_number": "Art. 85",
+    "article_title": "Processing and freedom of expression and information",
+    "atomic_requirement": "Article 85 — Processing and freedom of expression and information: Member States must reconcile data protection with freedom of expression (including journalism and\nacademic/artistic/literary expression) by law, providing necessary exemptions from Chapters II, III, IV,\nV, VI, VII, and IX where needed."
+  },
+  {
+    "id": "REQ-GDPR-086",
+    "framework": "gdpr",
+    "chapter_number": "IX",
+    "chapter_title": "Provisions relating to specific processing situations",
+    "article_number": "Art. 86",
+    "article_title": "Processing and public access to official documents",
+    "atomic_requirement": "Article 86 — Processing and public access to official documents: Personal data in official documents may be disclosed by public authorities/bodies (or private bodies\nperforming public-interest tasks) under Union/Member State law that reconciles public-access rules with\ndata protection."
+  },
+  {
+    "id": "REQ-GDPR-087",
+    "framework": "gdpr",
+    "chapter_number": "IX",
+    "chapter_title": "Provisions relating to specific processing situations",
+    "article_number": "Art. 87",
+    "article_title": "Processing of the national identification number",
+    "atomic_requirement": "Article 87 — Processing of the national identification number: Member States may set specific conditions for processing national ID numbers or similar identifiers,\nsubject to appropriate safeguards."
+  },
+  {
+    "id": "REQ-GDPR-088",
+    "framework": "gdpr",
+    "chapter_number": "IX",
+    "chapter_title": "Provisions relating to specific processing situations",
+    "article_number": "Art. 88",
+    "article_title": "Processing in the context of employment",
+    "atomic_requirement": "Article 88 — Processing in the context of employment: Member States may set more specific rules (by law or collective agreement) for employment-related\nprocessing (recruitment, contract performance, management, equality, health & safety, property\nprotection, termination, etc.), including safeguards for dignity, transparency, intra-group transfers, and\nworkplace monitoring."
+  },
+  {
+    "id": "REQ-GDPR-089",
+    "framework": "gdpr",
+    "chapter_number": "IX",
+    "chapter_title": "Provisions relating to specific processing situations",
+    "article_number": "Art. 89",
+    "article_title": "Safeguards and derogations for archiving, research and statistics",
+    "atomic_requirement": "Article 89 — Safeguards and derogations for archiving, research and statistics: Such processing requires appropriate safeguards, particularly technical/organisational measures\nsupporting data minimisation (e.g., pseudonymisation or non-identifying alternatives where feasible).\nUnion/Member State law may derogate from certain subject rights (varying slightly between the\n\nresearch/statistics and archiving contexts) where those rights would seriously impair achieving the\npurpose and the derogation is necessary."
+  },
+  {
+    "id": "REQ-GDPR-090",
+    "framework": "gdpr",
+    "chapter_number": "IX",
+    "chapter_title": "Provisions relating to specific processing situations",
+    "article_number": "Art. 90",
+    "article_title": "Obligations of secrecy",
+    "atomic_requirement": "Article 90 — Obligations of secrecy: Member States may set specific rules limiting certain regulator investigative powers toward\ncontrollers/processors bound by legal/professional secrecy, where necessary to reconcile data protection\nwith that secrecy obligation — limited to data received under it."
+  },
+  {
+    "id": "REQ-GDPR-091",
+    "framework": "gdpr",
+    "chapter_number": "X",
+    "chapter_title": "Delegated and implementing acts",
+    "article_number": "Art. 91",
+    "article_title": "Existing data protection rules of churches and religious associations",
+    "atomic_requirement": "Article 91 — Existing data protection rules of churches and religious associations: Pre-existing comprehensive data-protection rules of churches/religious associations may continue if\naligned with GDPR, subject to supervision by an independent regulator meeting Chapter VI's conditions.\nCHAPTER X — Delegated and implementing acts (Articles 92–\n93)"
+  },
+  {
+    "id": "REQ-GDPR-092",
+    "framework": "gdpr",
+    "chapter_number": "X",
+    "chapter_title": "Delegated and implementing acts",
+    "article_number": "Art. 92",
+    "article_title": "Exercise of the delegation",
+    "atomic_requirement": "Article 92 — Exercise of the delegation: The Commission's power to adopt delegated acts (for Art. 12(8) icons and Art. 43(8) certification\nrequirements) runs indefinitely from 24 May 2016, is revocable anytime by Parliament/Council\n(prospectively only), and any adopted act must be notified to both bodies and only enters into force if\nneither objects within three months (extendable by three more)."
+  },
+  {
+    "id": "REQ-GDPR-093",
+    "framework": "gdpr",
+    "chapter_number": "X",
+    "chapter_title": "Delegated and implementing acts",
+    "article_number": "Art. 93",
+    "article_title": "Committee procedure",
+    "atomic_requirement": "Article 93 — Committee procedure: The Commission is assisted by a standing committee, using standard or urgency examination procedures\nas referenced elsewhere in the Regulation.\nCHAPTER XI — Final provisions (Articles 94–99)"
+  },
+  {
+    "id": "REQ-GDPR-094",
+    "framework": "gdpr",
+    "chapter_number": "XI",
+    "chapter_title": "Final provisions",
+    "article_number": "Art. 94",
+    "article_title": "Repeal of Directive 95/46/EC",
+    "atomic_requirement": "Article 94 — Repeal of Directive 95/46/EC: The prior Data Protection Directive is repealed from 25 May 2018; references to it (and to the former Art.\n29 Working Party) are read as references to GDPR (and the EDPB, respectively)."
+  },
+  {
+    "id": "REQ-GDPR-095",
+    "framework": "gdpr",
+    "chapter_number": "XI",
+    "chapter_title": "Final provisions",
+    "article_number": "Art. 95",
+    "article_title": "Relationship with Directive 2002/58/EC",
+    "atomic_requirement": "Article 95 — Relationship with Directive 2002/58/EC: GDPR doesn't add extra obligations for public electronic-communications processing already covered by\nequivalent obligations under the ePrivacy Directive."
+  },
+  {
+    "id": "REQ-GDPR-096",
+    "framework": "gdpr",
+    "chapter_number": "XI",
+    "chapter_title": "Final provisions",
+    "article_number": "Art. 96",
+    "article_title": "Relationship with previously concluded agreements",
+    "atomic_requirement": "Article 96 — Relationship with previously concluded agreements: International data-transfer agreements predating 24 May 2016 that complied with prior EU law remain\nvalid until amended/replaced/revoked."
+  },
+  {
+    "id": "REQ-GDPR-097",
+    "framework": "gdpr",
+    "chapter_number": "XI",
+    "chapter_title": "Final provisions",
+    "article_number": "Art. 97",
+    "article_title": "Commission reports",
+    "atomic_requirement": "Article 97 — Commission reports: The Commission must report on GDPR's evaluation/review to Parliament and Council by 25 May 2020\nand every four years after, focusing particularly on Chapter V (transfers) and Chapter VII\n(cooperation/consistency), and may propose amendments as needed."
+  },
+  {
+    "id": "REQ-GDPR-098",
+    "framework": "gdpr",
+    "chapter_number": "XI",
+    "chapter_title": "Final provisions",
+    "article_number": "Art. 98",
+    "article_title": "Review of other Union legal acts on data protection",
+    "atomic_requirement": "Article 98 — Review of other Union legal acts on data protection: The Commission must, where appropriate, propose amendments to other EU data-protection\ninstruments (especially covering EU institutions) to keep protection consistent."
+  },
+  {
+    "id": "REQ-GDPR-099",
+    "framework": "gdpr",
     "chapter_number": "XI",
     "chapter_title": "Final provisions",
     "article_number": "Art. 99",
     "article_title": "Entry into force and application",
-    "atomic_requirement": "Applied from 25 May 2018"
-  },
-  {
-    "id": "REQ-064",
-    "chapter_number": "XI",
-    "chapter_title": "Final provisions",
-    "article_number": "Art. 99",
-    "article_title": "Entry into force and application",
-    "atomic_requirement": "directly applicable across all Member States."
+    "atomic_requirement": "Article 99 — Entry into force and application: Entered into force 20 days after Official Journal publication; applied from 25 May 2018; binding and\ndirectly applicable across all Member States."
   }
 ]

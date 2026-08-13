@@ -100,3 +100,5 @@ class SupabaseManager:
             return {}
 
 supabase_db = SupabaseManager()
+
+supabase_db = SupabaseManager()

@@ -11,6 +11,7 @@ import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from agents.chapter_agents import ChapterSubAgent
 from db.supabase_client import supabase_db
+from ingestion.catalog_manager import catalog_manager, FRAMEWORKS
 
 class SupervisorAgent:
     def __init__(self):
@@ -170,29 +171,30 @@ class SupervisorAgent:
             "p3_medium": p3[:5]
         }
 
-    def _evaluate_chapter(self, ch_num: str, reqs: list, policy_text: str) -> list:
-        ch_title = reqs[0].get("chapter_title", f"Chapter {ch_num}") if reqs else f"Chapter {ch_num}"
-        sub_agent = ChapterSubAgent(ch_num, ch_title)
+    def _evaluate_chapter(self, ch_num: str, reqs: list, policy_text: str, framework_id: str = "gdpr") -> list:
+        ch_title = reqs[0].get("chapter_title", f"Domain {ch_num}") if reqs else f"Domain {ch_num}"
+        sub_agent = ChapterSubAgent(ch_num, ch_title, framework_id=framework_id)
         return sub_agent.evaluate_requirements(reqs, policy_text)
 
-    def run_analysis(self, company_name: str, policy_name: str, policy_text: str, reqs_catalog: list) -> dict:
+    def run_analysis(self, company_name: str, policy_name: str, policy_text: str, reqs_catalog: list, framework_id: str = "gdpr") -> dict:
         """
-        Main orchestration entry point: executes Chapter Sub-Agents IN PARALLEL and aggregates master JSON.
+        Main orchestration entry point: executes Sub-Agents IN PARALLEL and aggregates master JSON.
         """
-        print(f"[INFO] Starting LexMesh Parallel Gap Analysis for '{company_name}' ({policy_name})...")
+        fw_info = catalog_manager.get_framework_info(framework_id)
+        print(f"[INFO] Starting LexMesh Parallel Gap Analysis for '{company_name}' ({policy_name}) under {fw_info['name']}...")
         
-        # Group requirements by chapter
+        # Group requirements by chapter/domain
         chapter_reqs_map = {}
         for req in reqs_catalog:
-            ch = req.get("chapter_number", "II")
+            ch = req.get("chapter_number", "I")
             chapter_reqs_map.setdefault(ch, []).append(req)
 
         detailed_gaps = []
 
         # EXECUTE SUB-AGENTS IN PARALLEL USING THREAD POOL
-        with ThreadPoolExecutor(max_workers=11) as executor:
+        with ThreadPoolExecutor(max_workers=max(1, len(chapter_reqs_map))) as executor:
             future_to_ch = {
-                executor.submit(self._evaluate_chapter, ch_num, reqs, policy_text): ch_num
+                executor.submit(self._evaluate_chapter, ch_num, reqs, policy_text, framework_id): ch_num
                 for ch_num, reqs in chapter_reqs_map.items()
             }
             for future in as_completed(future_to_ch):
