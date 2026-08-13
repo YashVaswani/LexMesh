@@ -10,6 +10,11 @@ from config import config
 
 class SupabaseManager:
     def __init__(self):
+        # Fix httpx NO_PROXY IPv6 parsing bug on Windows
+        for k in ["NO_PROXY", "no_proxy", "HTTP_PROXY", "http_proxy", "HTTPS_PROXY", "https_proxy", "ALL_PROXY", "all_proxy"]:
+            if k in os.environ:
+                os.environ[k] = os.environ[k].replace("::1,", "").replace(",::1", "").replace("::1", "")
+                
         self.url = config.SUPABASE_URL
         self.key = config.SUPABASE_KEY
         self.client: Client = None
@@ -23,10 +28,10 @@ class SupabaseManager:
     def is_connected(self) -> bool:
         return self.client is not None
 
-    def store_gdpr_requirement(self, req_data: dict) -> bool:
+    def store_gdpr_requirement(self, req_data: dict, framework_id: str = "gdpr") -> bool:
         """
-        Stores an atomic GDPR requirement with rich metadata and vector embedding
-        into the `gdpr_requirements` table.
+        Stores an atomic requirement with rich metadata and vector embedding
+        into Supabase.
         """
         if not self.is_connected():
             return False
@@ -40,7 +45,12 @@ class SupabaseManager:
                 "atomic_requirement": req_data.get("atomic_requirement"),
                 "embedding": req_data.get("embedding")
             }
-            res = self.client.table("gdpr_requirements").upsert(payload).execute()
+            # Attempt framework table first, fallback to gdpr_requirements
+            table_name = f"{framework_id.lower()}_requirements" if framework_id.lower() in ["hipaa", "rbi", "soc2"] else "gdpr_requirements"
+            try:
+                res = self.client.table(table_name).upsert(payload).execute()
+            except Exception:
+                res = self.client.table("gdpr_requirements").upsert(payload).execute()
             return True
         except Exception as e:
             print(f"[ERROR] Failed to store requirement {req_data.get('id')}: {e}")
