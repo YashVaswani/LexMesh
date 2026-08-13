@@ -68,6 +68,8 @@ def extract_metadata_from_pdf(pdf_bytes: bytes) -> tuple:
     except Exception:
         return "", ""
 
+from ingestion.catalog_manager import catalog_manager, FRAMEWORKS
+
 # SIDEBAR CONFIGURATION & UPLOAD
 with st.sidebar:
     st.header("⚙️ Configuration & Upload")
@@ -80,7 +82,22 @@ with st.sidebar:
     st.write(f"🔹 Orchestration: ✅ Google ADK Supervisor Active (Parallel Pool)")
     
     st.divider()
-    st.subheader("Document Input")
+    st.subheader("1. Compliance Standard")
+    
+    fw_options = {
+        "🇪🇺 EU GDPR": "gdpr",
+        "🏥 US HIPAA": "hipaa",
+        "🏦 RBI Cyber Framework": "rbi",
+        "🛡️ SOC 2 Type II": "soc2"
+    }
+    selected_fw_label = st.selectbox("Select Target Framework", list(fw_options.keys()))
+    selected_fw_id = fw_options[selected_fw_label]
+    fw_info = catalog_manager.get_framework_info(selected_fw_id)
+
+    st.caption(f"**Selected Standard:** {fw_info['full_name']}")
+
+    st.divider()
+    st.subheader("2. Document Input")
     
     uploaded_file = st.file_uploader("Upload Company Policy PDF", type=["pdf"])
     
@@ -120,7 +137,7 @@ if uploaded_file and run_btn and pdf_bytes:
     final_company = company_name.strip() if company_name.strip() else "Uploaded Organization"
     final_policy = policy_name.strip() if policy_name.strip() else "Privacy Policy Document"
 
-    st.info("Ingesting company policy PDF and initializing Parallel Sub-Agents...")
+    st.info(f"Ingesting company policy PDF for **{fw_info['name']}** and initializing Parallel Sub-Agents...")
     
     # Extract PDF text
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
@@ -130,22 +147,14 @@ if uploaded_file and run_btn and pdf_bytes:
         
     st.success(f"Successfully extracted {len(policy_text)} characters from '{uploaded_file.name}'.")
     
-    # Load requirements catalog
-    sample_reqs_path = "gdpr_requirements_master.json"
-    if os.path.exists(sample_reqs_path):
-        with open(sample_reqs_path, 'r', encoding='utf-8') as f:
-            reqs_catalog = json.load(f)
-    else:
-        reqs_catalog = [
-            {"id": "REQ-001", "chapter_number": "II", "chapter_title": "Principles", "article_number": "Art. 5(1)(a)", "article_title": "Lawfulness, fairness & transparency", "atomic_requirement": "Personal data must be processed lawfully, fairly, and transparently"},
-            {"id": "REQ-002", "chapter_number": "II", "chapter_title": "Principles", "article_number": "Art. 7(3)", "article_title": "Consent withdrawal", "atomic_requirement": "Data subject must be able to withdraw consent at any time as easily as giving consent"},
-            {"id": "REQ-003", "chapter_number": "III", "chapter_title": "Rights of data subject", "article_number": "Art. 12(1)", "article_title": "Transparent communication", "atomic_requirement": "Information must be provided in concise, transparent, intelligible form"},
-            {"id": "REQ-004", "chapter_number": "III", "chapter_title": "Rights of data subject", "article_number": "Art. 13(1)(e)", "article_title": "Recipient disclosure", "atomic_requirement": "Recipients or categories of recipients of data must be disclosed"},
-            {"id": "REQ-005", "chapter_number": "III", "chapter_title": "Rights of data subject", "article_number": "Art. 17(1)", "article_title": "Right to erasure", "atomic_requirement": "Data subject has the right to erasure without undue delay"}
-        ]
+    # Load requirements catalog dynamically for selected framework
+    reqs_catalog = catalog_manager.load_catalog(selected_fw_id)
+    if not reqs_catalog:
+        st.warning(f"Catalog for {fw_info['name']} was empty or missing. Loading default GDPR catalog.")
+        reqs_catalog = catalog_manager.load_catalog("gdpr")
         
-    with st.spinner("Running Gap Analysis..."):
-        report_json = adk_supervisor.run_adk_pipeline(final_company, final_policy, policy_text, reqs_catalog)
+    with st.spinner(f"Running Parallel Gap Analysis under {fw_info['name']}..."):
+        report_json = adk_supervisor.run_adk_pipeline(final_company, final_policy, policy_text, reqs_catalog, framework_id=selected_fw_id)
         st.session_state["active_report"] = report_json
 
 # DISPLAY REPORT DASHBOARD IF AVAILABLE

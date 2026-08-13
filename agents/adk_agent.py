@@ -45,12 +45,12 @@ class GoogleADKSupervisorAgent(GoogleADKAgentPrimitive):
             self.sub_agents[chapter_number] = GoogleADKChapterSubAgent(chapter_number, chapter_title)
         return self.sub_agents[chapter_number]
 
-    def run_adk_pipeline(self, company_name: str, policy_name: str, policy_text: str, reqs_catalog: list) -> dict:
+    def run_adk_pipeline(self, company_name: str, policy_name: str, policy_text: str, reqs_catalog: list, framework_id: str = "gdpr") -> dict:
         """
         Executes Google ADK hierarchical agent delegation workflow.
         """
-        print(f"[ADK] Starting Google ADK Agentic Workflow for '{company_name}'...")
-        return supervisor.run_analysis(company_name, policy_name, policy_text, reqs_catalog)
+        print(f"[ADK] Starting Google ADK Agentic Workflow for '{company_name}' under {framework_id.upper()}...")
+        return supervisor.run_analysis(company_name, policy_name, policy_text, reqs_catalog, framework_id=framework_id)
 
 # Global Google ADK Orchestrator instance
 adk_supervisor = GoogleADKSupervisorAgent()
