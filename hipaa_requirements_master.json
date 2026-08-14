@@ -1,0 +1,389 @@
+[
+  {
+    "id": "REQ-HIPAA-001",
+    "framework": "hipaa",
+    "chapter_number": "V",
+    "chapter_title": "Appendices & Guidance",
+    "article_number": "Reference",
+    "article_title": "1. Purpose & Scope",
+    "atomic_requirement": "1. Purpose & Scope\nThe HIPAA Security Rule (45 CFR Part 160 and Part 164, Subparts A and C) requires safeguarding the\nconfidentiality, integrity, and availability (CIA) of electronic protected health information\n(ePHI). This guide operationalizes the Rule's requirements into standards and implementation\nspecifications that regulated entities must address.\nCore CIA definitions (§164.304):\nConfidentiality — data/information is not made available or disclosed to unauthorized persons or\nprocesses.\nIntegrity — data/information has not been altered or destroyed in an unauthorized manner.\nAvailability — data/information is accessible and usable on demand by an authorized person."
+  },
+  {
+    "id": "REQ-HIPAA-002",
+    "framework": "hipaa",
+    "chapter_number": "V",
+    "chapter_title": "Appendices & Guidance",
+    "article_number": "Reference",
+    "article_title": "2. Applicability — Regulated Entities",
+    "atomic_requirement": "2. Applicability — Regulated Entities\nEntity Type\nDefinition\nCovered Healthcare\nProvider\nProvider of medical/health services or supplies who transmits health info electronically\nfor a transaction with an HHS-adopted standard\nHealth Plan\nIndividual/group plan that provides or pays for medical care (incl. Medicare, Medicaid,\ngroup health plans)\nHealthcare\nClearinghouse\nPublic/private entity that converts health data between standard and non-standard\nformats\nBusiness Associate\nPerson/entity performing functions involving PHI on behalf of a covered entity;\nindependently liable for its own Security Rule violations\nCovered entities and business associates must obtain written satisfactory assurances (Business\nAssociate Agreements, BAAs) that PHI will be protected; BAAs may impose stricter requirements than\nthe Rule's minimum."
+  },
+  {
+    "id": "REQ-HIPAA-003",
+    "framework": "hipaa",
+    "chapter_number": "V",
+    "chapter_title": "Appendices & Guidance",
+    "article_number": "Reference",
+    "article_title": "3. Structure of the Security Rule",
+    "atomic_requirement": "3. Structure of the Security Rule\nSix main sections:"
+  },
+  {
+    "id": "REQ-HIPAA-004",
+    "framework": "hipaa",
+    "chapter_number": "V",
+    "chapter_title": "Appendices & Guidance",
+    "article_number": "Reference",
+    "article_title": "1. General Rules — baseline requirements, flexibility of approach",
+    "atomic_requirement": "1. General Rules — baseline requirements, flexibility of approach, R/A framework"
+  },
+  {
+    "id": "REQ-HIPAA-005",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "2. Administrative Safeguards (§164.308)",
+    "atomic_requirement": "2. Administrative Safeguards (§164.308)"
+  },
+  {
+    "id": "REQ-HIPAA-006",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Physical Safeguards",
+    "article_number": "§ 164.310",
+    "article_title": "3. Physical Safeguards (§164.310)",
+    "atomic_requirement": "3. Physical Safeguards (§164.310)"
+  },
+  {
+    "id": "REQ-HIPAA-007",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Technical Safeguards",
+    "article_number": "§ 164.312",
+    "article_title": "4. Technical Safeguards (§164.312)",
+    "atomic_requirement": "4. Technical Safeguards (§164.312)"
+  },
+  {
+    "id": "REQ-HIPAA-008",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "5. Organizational Requirements (§164.314)",
+    "atomic_requirement": "5. Organizational Requirements (§164.314)"
+  },
+  {
+    "id": "REQ-HIPAA-009",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Physical Safeguards",
+    "article_number": "§ 164.310",
+    "article_title": "6. Policies, Procedures & Documentation Requirements (§164.316)",
+    "atomic_requirement": "6. Policies, Procedures & Documentation Requirements (§164.316)\nRequired (R) vs. Addressable (A) implementation specifications:\nRequired — must be implemented, no exceptions, like a standard itself.\nAddressable — the entity must (i) assess whether the specification is reasonable and appropriate for\nits environment, then (ii) either implement it, or document why not and implement an equivalent,\nreasonable alternative safeguard. \"Addressable\" never means optional.\nWhere a standard has no listed implementation specifications (e.g., Assigned Security Responsibility,\nEvaluation), compliance with the standard itself is mandatory.\nAll decisions/assessments regarding addressable specifications must be documented."
+  },
+  {
+    "id": "REQ-HIPAA-010",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "5. Administrative Safeguards — Key Activities by Standard",
+    "atomic_requirement": "5. Administrative Safeguards — Key Activities by Standard"
+  },
+  {
+    "id": "REQ-HIPAA-011",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "5.1 Security Management Process (164.308(a)(1)) — Foundational st",
+    "atomic_requirement": "5.1 Security Management Process (164.308(a)(1)) — Foundational standard: implement\npolicies/procedures to prevent, detect, contain, and correct security violations.\nRisk Analysis (R): conduct accurate, thorough assessment of risks/vulnerabilities to ePHI CIA (see §9\nbelow).\nRisk Management (R): implement sufficient security measures to reduce risk to a\nreasonable/appropriate level.\nSanction Policy (R): apply sanctions against workforce members who fail to comply.\nInformation System Activity Review (R): regularly review audit logs, access reports, security incident\ntracking."
+  },
+  {
+    "id": "REQ-HIPAA-012",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "5.2 Assigned Security Responsibility (164.308(a)(2)) — Designate ",
+    "atomic_requirement": "5.2 Assigned Security Responsibility (164.308(a)(2)) — Designate one individual as Security\nOfficial with final responsibility for security policies/procedures; document the assignment and job\ndescription."
+  },
+  {
+    "id": "REQ-HIPAA-013",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "5.3 Workforce Security (164.308(a)(3)) — Ensure appropriate acces",
+    "atomic_requirement": "5.3 Workforce Security (164.308(a)(3)) — Ensure appropriate access, prevent unauthorized access.\nAuthorization/Supervision (A), Workforce Clearance Procedure (A), Termination Procedures (A, incl.\nseparate voluntary/involuntary processes)."
+  },
+  {
+    "id": "REQ-HIPAA-014",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "5.4 Information Access Management (164.308(a)(4))",
+    "atomic_requirement": "5.4 Information Access Management (164.308(a)(4))\nIsolate Healthcare Clearinghouse Function (R) if part of a larger organization.\nAccess Authorization (A) and Access Establishment/Modification (A): implement least-privilege,\nrole-based access policies with separation of duties."
+  },
+  {
+    "id": "REQ-HIPAA-015",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "5.5 Security Awareness and Training (164.308(a)(5)) — Training pr",
+    "atomic_requirement": "5.5 Security Awareness and Training (164.308(a)(5)) — Training program for all workforce\nmembers (including management).\nSecurity Reminders (A), Protection from Malicious Software (A), Log-in Monitoring (A), Password\nManagement (A).\nIncludes needs assessment, developing/approving a training strategy, delivery, and periodic\nevaluation/updates."
+  },
+  {
+    "id": "REQ-HIPAA-016",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "5.6 Security Incident Procedures (164.308(a)(6))",
+    "atomic_requirement": "5.6 Security Incident Procedures (164.308(a)(6))\nResponse and Reporting (R): identify and respond to suspected/known incidents, mitigate harmful\neffects, document incidents and outcomes, incorporate post-incident analysis (lessons learned) into\npolicy updates."
+  },
+  {
+    "id": "REQ-HIPAA-017",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "5.7 Contingency Plan (164.308(a)(7)) — Establish policies/procedu",
+    "atomic_requirement": "5.7 Contingency Plan (164.308(a)(7)) — Establish policies/procedures for responding to\nemergencies (fire, vandalism, system failure, natural disaster) that damage systems containing ePHI.\nData Backup Plan (R), Disaster Recovery Plan (R), Emergency Mode Operation Plan (R).\nTesting and Revision Procedure (A), Applications and Data Criticality Analysis (A).\nRecommended process: contingency planning policy → business impact/criticality analysis →\nidentify preventive measures → recovery strategy → backup/DR plan → emergency-mode plan →\nperiodic testing."
+  },
+  {
+    "id": "REQ-HIPAA-018",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "5.8 Evaluation (164.308(a)(8)) — Periodic technical/nontechnical ",
+    "atomic_requirement": "5.8 Evaluation (164.308(a)(8)) — Periodic technical/nontechnical evaluation of security measures,\ntriggered by environmental/operational changes affecting ePHI security, to confirm continued\ncompliance. Determine internal vs. external evaluator, set standards/measurements, conduct, document\nfindings, repeat periodically."
+  },
+  {
+    "id": "REQ-HIPAA-019",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "5.9 Business Associate Contracts and Other Arrangements (164.308(",
+    "atomic_requirement": "5.9 Business Associate Contracts and Other Arrangements (164.308(b)(1)) — Written\nContract or Other Arrangement (R): obtain satisfactory assurances (BAAs) that the business associate\nwill appropriately safeguard ePHI."
+  },
+  {
+    "id": "REQ-HIPAA-020",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Physical Safeguards",
+    "article_number": "§ 164.310",
+    "article_title": "6. Physical Safeguards — Key Activities by Standard",
+    "atomic_requirement": "6. Physical Safeguards — Key Activities by Standard"
+  },
+  {
+    "id": "REQ-HIPAA-021",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Physical Safeguards",
+    "article_number": "§ 164.310",
+    "article_title": "6.1 Facility Access Controls (164.310(a)(1)) — Limit physical acc",
+    "atomic_requirement": "6.1 Facility Access Controls (164.310(a)(1)) — Limit physical access to facilities/equipment\nhousing ePHI while ensuring authorized access.\n\nContingency Operations (A): access procedures supporting data restoration under the Disaster\nRecovery/Emergency Mode plans.\nFacility Security Plan (A): safeguard the facility and equipment from unauthorized physical access,\ntampering, theft.\nAccess Control and Validation Procedures (A): control/validate a person's access based on role or\nfunction, incl. visitor control.\nMaintenance Records (A): document repairs/modifications to physical security components (locks,\ndoors, walls)."
+  },
+  {
+    "id": "REQ-HIPAA-022",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Physical Safeguards",
+    "article_number": "§ 164.310",
+    "article_title": "6.2 Workstation Use (164.310(b)) — (R) Policies/procedures specif",
+    "atomic_requirement": "6.2 Workstation Use (164.310(b)) — (R) Policies/procedures specifying proper functions, manner of\nperformance, and physical surroundings for workstations that access ePHI."
+  },
+  {
+    "id": "REQ-HIPAA-023",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Physical Safeguards",
+    "article_number": "§ 164.310",
+    "article_title": "6.3 Workstation Security (164.310(c)) — (R) Physical safeguards f",
+    "atomic_requirement": "6.3 Workstation Security (164.310(c)) — (R) Physical safeguards for all workstations accessing\nePHI to restrict access to authorized users (e.g., positioning screens away from public view, physical\nlocks)."
+  },
+  {
+    "id": "REQ-HIPAA-024",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Physical Safeguards",
+    "article_number": "§ 164.310",
+    "article_title": "6.4 Device and Media Controls (164.310(d)(1)) — Govern receipt/re",
+    "atomic_requirement": "6.4 Device and Media Controls (164.310(d)(1)) — Govern receipt/removal of hardware/electronic\nmedia containing ePHI in/out of a facility.\nDisposal (R): final disposal of ePHI and/or the hardware/media on which it resides.\nMedia Re-use (R): remove ePHI before media is made available for reuse.\nAccountability (A): maintain a record of hardware/media movements and the responsible person.\nData Backup and Storage (A): create a retrievable, exact copy of ePHI before equipment is moved."
+  },
+  {
+    "id": "REQ-HIPAA-025",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Technical Safeguards",
+    "article_number": "§ 164.312",
+    "article_title": "7. Technical Safeguards — Key Activities by Standard",
+    "atomic_requirement": "7. Technical Safeguards — Key Activities by Standard"
+  },
+  {
+    "id": "REQ-HIPAA-026",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Technical Safeguards",
+    "article_number": "§ 164.312",
+    "article_title": "7.1 Access Control (164.312(a)(1)) — Technical policies/procedure",
+    "atomic_requirement": "7.1 Access Control (164.312(a)(1)) — Technical policies/procedures allowing access only to\nauthorized persons/software.\nUnique User Identification (R): assign a unique name/number to track each user's identity.\nEmergency Access Procedure (R): procedures for obtaining necessary ePHI during an emergency.\nAutomatic Logoff (A): terminate sessions after a period of inactivity.\nEncryption and Decryption (A): mechanism to encrypt/decrypt ePHI."
+  },
+  {
+    "id": "REQ-HIPAA-027",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Technical Safeguards",
+    "article_number": "§ 164.312",
+    "article_title": "7.2 Audit Controls (164.312(b)) — (R) Hardware, software, and/or ",
+    "atomic_requirement": "7.2 Audit Controls (164.312(b)) — (R) Hardware, software, and/or procedural mechanisms that\nrecord and examine activity in systems containing/using ePHI."
+  },
+  {
+    "id": "REQ-HIPAA-028",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Technical Safeguards",
+    "article_number": "§ 164.312",
+    "article_title": "7.3 Integrity (164.312(c)(1)) — Protect ePHI from improper altera",
+    "atomic_requirement": "7.3 Integrity (164.312(c)(1)) — Protect ePHI from improper alteration/destruction.\nMechanism to Authenticate ePHI (A): electronic mechanisms to corroborate ePHI has not been\naltered/destroyed in an unauthorized manner."
+  },
+  {
+    "id": "REQ-HIPAA-029",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Technical Safeguards",
+    "article_number": "§ 164.312",
+    "article_title": "7.4 Person or Entity Authentication (164.312(d)) — (R) Verify tha",
+    "atomic_requirement": "7.4 Person or Entity Authentication (164.312(d)) — (R) Verify that a person/entity seeking access\nto ePHI is who they claim to be."
+  },
+  {
+    "id": "REQ-HIPAA-030",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Technical Safeguards",
+    "article_number": "§ 164.312",
+    "article_title": "7.5 Transmission Security (164.312(e)(1)) — Guard against unautho",
+    "atomic_requirement": "7.5 Transmission Security (164.312(e)(1)) — Guard against unauthorized access to ePHI\ntransmitted over a network.\n\nIntegrity Controls (A): ensure electronically transmitted ePHI is not improperly modified without\ndetection.\nEncryption (A): encrypt ePHI whenever deemed appropriate."
+  },
+  {
+    "id": "REQ-HIPAA-031",
+    "framework": "hipaa",
+    "chapter_number": "III",
+    "chapter_title": "Organizational Requirements",
+    "article_number": "§ 164.314",
+    "article_title": "8. Organizational Requirements — §164.314",
+    "atomic_requirement": "8. Organizational Requirements — §164.314\nBusiness Associate Contracts (164.314(a)): contracts must require the BA to implement\nsafeguards, report security incidents, ensure subcontractors agree to the same protections, and\nauthorize contract termination if the BA violates a material term.\nGroup Health Plan Requirements (164.314(b)): plan documents must be amended to require\nthe plan sponsor to reasonably/appropriately safeguard ePHI, ensure adequate separation between\nthe plan and sponsor, and ensure agents follow the same safeguards."
+  },
+  {
+    "id": "REQ-HIPAA-032",
+    "framework": "hipaa",
+    "chapter_number": "III",
+    "chapter_title": "Policies, Procedures & Documentation",
+    "article_number": "§ 164.316",
+    "article_title": "9. Policies, Procedures & Documentation — §164.316",
+    "atomic_requirement": "9. Policies, Procedures & Documentation — §164.316\nPolicies and Procedures (164.316(a)): (R) implement reasonable/appropriate policies and\nprocedures to comply with the Rule; policies may be changed at any time provided changes are\ndocumented and implemented per the Documentation standard.\nDocumentation (164.316(b)): maintain written (may be electronic) records of policies,\nprocedures, actions, activities, or assessments.\nTime Limit (R): retain documentation for 6 years from creation date or last effective date,\nwhichever is later.\nAvailability (R): make documentation available to those responsible for implementing the\nreferenced policies/procedures.\nUpdates (R): periodically review and update documentation in response to\nenvironmental/operational changes affecting ePHI security."
+  },
+  {
+    "id": "REQ-HIPAA-033",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "10. Risk Assessment Methodology (Section 3)",
+    "atomic_requirement": "10. Risk Assessment Methodology (Section 3)\nHHS OCR does not mandate a specific methodology; the Rule requires Risk Analysis (R) under\n164.308(a)(1)(ii)(A) — an accurate and thorough assessment of potential risks/vulnerabilities to ePHI\nCIA. NIST recommends (based on IR 8286A / SP 800-30 / SP 800-37) the following non-sequential\nsteps:"
+  },
+  {
+    "id": "REQ-HIPAA-034",
+    "framework": "hipaa",
+    "chapter_number": "V",
+    "chapter_title": "Appendices & Guidance",
+    "article_number": "Reference",
+    "article_title": "1. Prepare — map where ePHI is created, received, stored, process",
+    "atomic_requirement": "1. Prepare — map where ePHI is created, received, stored, processed, transmitted (incl. cloud/third\nparties, remote/teleworkers, removable media, IoT medical devices); identify existing controls; scope\ncovers physical + logical boundaries."
+  },
+  {
+    "id": "REQ-HIPAA-035",
+    "framework": "hipaa",
+    "chapter_number": "V",
+    "chapter_title": "Appendices & Guidance",
+    "article_number": "Reference",
+    "article_title": "2. Identify reasonably anticipated threats — natural, human (inte",
+    "atomic_requirement": "2. Identify reasonably anticipated threats — natural, human (intentional/unintentional),\nenvironmental threat sources and events (e.g., phishing, ransomware, insider threat)."
+  },
+  {
+    "id": "REQ-HIPAA-036",
+    "framework": "hipaa",
+    "chapter_number": "V",
+    "chapter_title": "Appendices & Guidance",
+    "article_number": "Reference",
+    "article_title": "3. Identify vulnerabilities and predisposing conditions — weaknes",
+    "atomic_requirement": "3. Identify vulnerabilities and predisposing conditions — weaknesses a threat could exploit; use\ninternal (past assessments, pen tests, audits) and external (NVD, vendor data) sources."
+  },
+  {
+    "id": "REQ-HIPAA-037",
+    "framework": "hipaa",
+    "chapter_number": "V",
+    "chapter_title": "Appendices & Guidance",
+    "article_number": "Reference",
+    "article_title": "4. Determine likelihood — rate likelihood of threat occurrence co",
+    "atomic_requirement": "4. Determine likelihood — rate likelihood of threat occurrence combined with likelihood of\nsuccessfully exploiting a vulnerability (qualitative scale: Very Low → Very High)."
+  },
+  {
+    "id": "REQ-HIPAA-038",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "5. Determine impact — rate the impact to confidentiality, integri",
+    "atomic_requirement": "5. Determine impact — rate the impact to confidentiality, integrity, and/or availability if exploited;\nconsider harm to operations, assets, individuals, other organizations, or the nation."
+  },
+  {
+    "id": "REQ-HIPAA-039",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Physical Safeguards",
+    "article_number": "§ 164.310",
+    "article_title": "6. Determine risk level — combine likelihood × impact via a risk ",
+    "atomic_requirement": "6. Determine risk level — combine likelihood × impact via a risk matrix (Low/Moderate/High or a 5-\nlevel scale)."
+  },
+  {
+    "id": "REQ-HIPAA-040",
+    "framework": "hipaa",
+    "chapter_number": "II",
+    "chapter_title": "Security Rule — Technical Safeguards",
+    "article_number": "§ 164.312",
+    "article_title": "7. Document results — record all threat/vulnerability pairs, rati",
+    "atomic_requirement": "7. Document results — record all threat/vulnerability pairs, ratings, and overall risk, ideally in a risk\nregister; share with leadership.\nKey terms: threat event, threat source, vulnerability, predisposing condition, likelihood,\nimpact, risk. Risk assessment is not a one-time task — it must be updated periodically as threats and\nthe environment change (feeds directly into Risk Management, Section 4).\nThe HHS Security Risk Assessment (SRA) Tool is a free questionnaire-based aid, mainly for\nsmall/medium entities, but it cannot detect technical vulnerabilities and must be paired with a fuller\nmethodology (e.g., vulnerability scanning). Using the SRA tool does not by itself equal compliance."
+  },
+  {
+    "id": "REQ-HIPAA-041",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "11. Risk Management Guidance (Section 4)",
+    "atomic_requirement": "11. Risk Management Guidance (Section 4)\nRequired under Risk Management (R) — 164.308(a)(1)(ii)(B): implement security measures\nsufficient to reduce risks/vulnerabilities to a reasonable and appropriate level (164.306(a)).\nRisk appetite (enterprise-level guidepost for acceptable risk) vs. risk tolerance (specific, more\ngranular acceptable-performance-risk threshold within that appetite) — concepts from NIST IR\n8286A.\nAfter implementing standards/required/addressable specifications, the entity must re-assess whether\neach unacceptable threat/vulnerability pair has been brought within organizational risk tolerance.\nIf existing Security Rule specifications are insufficient, implement additional security controls\n(beyond the Rule's explicit list) to reach tolerance — conduct a cost-benefit analysis; if risk still can't\nbe reduced cost-effectively, the entity may need to revisit its risk tolerance or redesign the\nsystems/process handling ePHI.\nDocument all risk management decisions, rationale, and remediation status (e.g., in the same risk\nregister used for the risk assessment)."
+  },
+  {
+    "id": "REQ-HIPAA-042",
+    "framework": "hipaa",
+    "chapter_number": "I",
+    "chapter_title": "Security Rule — Administrative Safeguards",
+    "article_number": "§ 164.308",
+    "article_title": "12. Key Definitions (Glossary Highlights — full glossary in",
+    "atomic_requirement": "12. Key Definitions (Glossary Highlights — full glossary in\nAppendix B of the source)\nTerm\nDefinition (§ citation)\nAddressable\nImplementation specification requiring assessment + either implementation or a\ndocumented, reasonable alternative (§164.306(d)(3))\nAdministrative\nsafeguards\nAdministrative actions/policies/procedures managing selection, development,\nimplementation, maintenance of security measures + workforce conduct (§164.304)\nBusiness associate\nPerson/entity performing PHI-related functions/services on behalf of a covered\nentity (not a workforce member); independently liable (§160.103)\nCovered entity\nHealth plan, healthcare clearinghouse, or healthcare provider who transmits health\ninfo electronically for a covered transaction (§160.103)\nePHI\nElectronic protected health information — PHI transmitted or maintained in\nelectronic media (§160.103)\nConfidentiality /\nIntegrity / Availability\nSee Section 1 above (§164.304)\nWorkforce\nEmployees, volunteers, trainees, and other persons under the direct control of a\ncovered entity/business associate\nPhysical safeguards\nPhysical measures, policies, procedures protecting electronic information\nsystems/buildings/equipment from hazards and unauthorized intrusion (§164.304)\nTechnical safeguards\nTechnology + policies/procedures for its use that protect ePHI and control access to\nit (§164.304)"
+  },
+  {
+    "id": "REQ-HIPAA-043",
+    "framework": "hipaa",
+    "chapter_number": "V",
+    "chapter_title": "Appendices & Guidance",
+    "article_number": "Reference",
+    "article_title": "13. Appendices Not Reproduced Here",
+    "atomic_requirement": "13. Appendices Not Reproduced Here\nAppendix A — Symbols/Abbreviations/Acronyms list.\nAppendix C — Extended risk assessment worked tables (sample threat sources,\nlikelihood/impact/risk matrices — condensed versions included in Section 10 above).\nAppendix D — Crosswalk of Security Rule standards to NIST Cybersecurity Framework\nSubcategories and SP 800-53 controls. Note: in the source document this mapping is maintained\nonline via the NIST Cybersecurity and Privacy Reference Tool (CPRT), not embedded in the PDF\nitself.\nAppendix E — National Online Informative References (OLIR) Program description.\nAppendix F — Curated external resource list (guidance, templates, tools); maintained online as\nsupplemental material, not embedded in the PDF.\nAppendix G — Change log vs. the prior SP 800-66r1 (2008).\nCondensed from NIST SP 800-66r2 (122 pages) to this ~13-page structured reference for RAG\ningestion. All standards, implementation specifications (R/A), and CFR citations from the original have\n\nbeen preserved; narrative explanation, worked examples, and footnotes have been condensed."
+  }
+]

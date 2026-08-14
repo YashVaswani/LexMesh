@@ -1,7 +1,7 @@
 """
 Google ADK (Agent Development Kit) Integration Module
 Provides official Google ADK agent primitives and hierarchical routing
-for ComplianceIQ (Supervisor Agent -> Chapter Sub-Agents).
+for LexMesh (Supervisor Agent -> Policy Domain & Framework Sub-Agents).
 """
 
 import json
@@ -16,41 +16,36 @@ class GoogleADKAgentPrimitive:
         self.role = role
         self.description = description
 
-class GoogleADKChapterSubAgent(GoogleADKAgentPrimitive):
-    """Google ADK Sub-Agent bound to a specific GDPR Chapter domain."""
-    def __init__(self, chapter_number: str, chapter_title: str):
+class GoogleADKPolicySubAgent(GoogleADKAgentPrimitive):
+    """Google ADK Sub-Agent bound to a specific policy domain & compliance standard."""
+    def __init__(self, domain_id: str, domain_title: str, framework_id: str = "gdpr"):
         super().__init__(
-            name=f"GoogleADK_Chapter_{chapter_number}_Agent",
-            role=f"GDPR Chapter {chapter_number} Compliance Auditor",
-            description=f"Specialized Google ADK sub-agent evaluating Chapter {chapter_number}: '{chapter_title}'."
+            name=f"GoogleADK_{framework_id.upper()}_{domain_id}_Agent",
+            role=f"{framework_id.upper()} {domain_title} Compliance Auditor",
+            description=f"Specialized Google ADK sub-agent evaluating {domain_title} under {framework_id.upper()}."
         )
-        self.core_agent = ChapterSubAgent(chapter_number, chapter_title)
+        self.core_agent = ChapterSubAgent(domain_id, domain_title, framework_id=framework_id)
 
     def execute(self, reqs: list, policy_text: str) -> list:
         print(f"[ADK] Executing {self.name} for {len(reqs)} requirements...")
         return self.core_agent.evaluate_requirements(reqs, policy_text)
 
 class GoogleADKSupervisorAgent(GoogleADKAgentPrimitive):
-    """Google ADK Supervisor/Router Agent overseeing dynamic sub-agent delegation."""
+    """Google ADK Supervisor/Router Agent overseeing dynamic sub-agent delegation across all frameworks."""
     def __init__(self):
         super().__init__(
             name="GoogleADK_Supervisor_Agent",
-            role="Hierarchical RAG Pipeline Supervisor & Policy Router",
-            description="Supervises policy chunk classification, delegates to Chapter Sub-Agents, and aggregates master JSON reports."
+            role="Multi-Framework Hierarchical RAG Pipeline Supervisor & Policy Router",
+            description="Supervises multi-framework policy classification, delegates to parallel sub-agents across GDPR, HIPAA, RBI, SOC 2, and aggregates master JSON reports."
         )
         self.sub_agents = {}
 
-    def get_sub_agent(self, chapter_number: str, chapter_title: str) -> GoogleADKChapterSubAgent:
-        if chapter_number not in self.sub_agents:
-            self.sub_agents[chapter_number] = GoogleADKChapterSubAgent(chapter_number, chapter_title)
-        return self.sub_agents[chapter_number]
-
-    def run_adk_pipeline(self, company_name: str, policy_name: str, policy_text: str, reqs_catalog: list) -> dict:
+    def run_adk_pipeline(self, company_name: str, policy_name: str, policy_text: str, reqs_catalog: list = None, framework_id: str = "all") -> dict:
         """
-        Executes Google ADK hierarchical agent delegation workflow.
+        Executes Google ADK hierarchical agent delegation workflow across all compliance frameworks simultaneously.
         """
-        print(f"[ADK] Starting Google ADK Agentic Workflow for '{company_name}'...")
-        return supervisor.run_analysis(company_name, policy_name, policy_text, reqs_catalog)
+        print(f"[ADK] Starting Google ADK Multi-Framework Workflow for '{company_name}'...")
+        return supervisor.run_multi_framework_analysis(company_name, policy_name, policy_text)
 
 # Global Google ADK Orchestrator instance
 adk_supervisor = GoogleADKSupervisorAgent()

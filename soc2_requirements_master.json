@@ -1,0 +1,551 @@
+[
+  {
+    "id": "REQ-SOC2-001",
+    "framework": "soc2",
+    "chapter_number": "CC1",
+    "chapter_title": "Common Criteria — Control Environment",
+    "article_number": "CC1.1",
+    "article_title": "Entity demonstrates commitment to integrity and ethical values",
+    "atomic_requirement": "CC1.1 Entity demonstrates commitment to integrity and ethical values"
+  },
+  {
+    "id": "REQ-SOC2-002",
+    "framework": "soc2",
+    "chapter_number": "CC1",
+    "chapter_title": "Common Criteria — Control Environment",
+    "article_number": "CC1.2",
+    "article_title": "Board demonstrates independence from management and exercises oversight of internal control",
+    "atomic_requirement": "CC1.2 Board demonstrates independence from management and exercises oversight of internal control"
+  },
+  {
+    "id": "REQ-SOC2-003",
+    "framework": "soc2",
+    "chapter_number": "CC1",
+    "chapter_title": "Common Criteria — Control Environment",
+    "article_number": "CC1.3",
+    "article_title": "Management establishes (with board oversight) structures, reporting lines, authorities, and responsibilities",
+    "atomic_requirement": "CC1.3 Management establishes (with board oversight) structures, reporting lines, authorities, and responsibilities"
+  },
+  {
+    "id": "REQ-SOC2-004",
+    "framework": "soc2",
+    "chapter_number": "CC1",
+    "chapter_title": "Common Criteria — Control Environment",
+    "article_number": "CC1.4",
+    "article_title": "Entity demonstrates commitment to attract, develop, and retain competent individuals",
+    "atomic_requirement": "CC1.4 Entity demonstrates commitment to attract, develop, and retain competent individuals"
+  },
+  {
+    "id": "REQ-SOC2-005",
+    "framework": "soc2",
+    "chapter_number": "CC1",
+    "chapter_title": "Common Criteria — Control Environment",
+    "article_number": "CC1.5",
+    "article_title": "Entity holds individuals accountable for their internal control responsibilities",
+    "atomic_requirement": "CC1.5 Entity holds individuals accountable for their internal control responsibilities"
+  },
+  {
+    "id": "REQ-SOC2-006",
+    "framework": "soc2",
+    "chapter_number": "CC2",
+    "chapter_title": "Common Criteria — Information & Communication",
+    "article_number": "CC2.1",
+    "article_title": "Entity obtains/generates and uses relevant, quality information to support internal control",
+    "atomic_requirement": "CC2.1 Entity obtains/generates and uses relevant, quality information to support internal control"
+  },
+  {
+    "id": "REQ-SOC2-007",
+    "framework": "soc2",
+    "chapter_number": "CC2",
+    "chapter_title": "Common Criteria — Information & Communication",
+    "article_number": "CC2.2",
+    "article_title": "Entity internally communicates information (incl. objectives/responsibilities) necessary for internal",
+    "atomic_requirement": "CC2.2 Entity internally communicates information (incl. objectives/responsibilities) necessary for internal: control"
+  },
+  {
+    "id": "REQ-SOC2-008",
+    "framework": "soc2",
+    "chapter_number": "CC2",
+    "chapter_title": "Common Criteria — Information & Communication",
+    "article_number": "CC2.3",
+    "article_title": "Entity communicates with external parties regarding matters affecting internal control",
+    "atomic_requirement": "CC2.3 Entity communicates with external parties regarding matters affecting internal control"
+  },
+  {
+    "id": "REQ-SOC2-009",
+    "framework": "soc2",
+    "chapter_number": "CC3",
+    "chapter_title": "Common Criteria — Risk Assessment",
+    "article_number": "CC3.1",
+    "article_title": "Entity specifies objectives with sufficient clarity to enable risk identification/assessment",
+    "atomic_requirement": "CC3.1 Entity specifies objectives with sufficient clarity to enable risk identification/assessment"
+  },
+  {
+    "id": "REQ-SOC2-010",
+    "framework": "soc2",
+    "chapter_number": "CC3",
+    "chapter_title": "Common Criteria — Risk Assessment",
+    "article_number": "CC3.2",
+    "article_title": "Entity identifies risks to objectives across the entity and analyzes risks as a basis for managing them",
+    "atomic_requirement": "CC3.2 Entity identifies risks to objectives across the entity and analyzes risks as a basis for managing them"
+  },
+  {
+    "id": "REQ-SOC2-011",
+    "framework": "soc2",
+    "chapter_number": "CC3",
+    "chapter_title": "Common Criteria — Risk Assessment",
+    "article_number": "CC3.3",
+    "article_title": "Entity considers potential for fraud in assessing risk",
+    "atomic_requirement": "CC3.3 Entity considers potential for fraud in assessing risk"
+  },
+  {
+    "id": "REQ-SOC2-012",
+    "framework": "soc2",
+    "chapter_number": "CC3",
+    "chapter_title": "Common Criteria — Risk Assessment",
+    "article_number": "CC3.4",
+    "article_title": "Entity identifies and assesses changes that could significantly impact the system of internal control",
+    "atomic_requirement": "CC3.4 Entity identifies and assesses changes that could significantly impact the system of internal control"
+  },
+  {
+    "id": "REQ-SOC2-013",
+    "framework": "soc2",
+    "chapter_number": "CC4",
+    "chapter_title": "Common Criteria — Monitoring Activities",
+    "article_number": "CC4.1",
+    "article_title": "Entity selects, develops, and performs ongoing/separate evaluations of internal control components",
+    "atomic_requirement": "CC4.1 Entity selects, develops, and performs ongoing/separate evaluations of internal control components"
+  },
+  {
+    "id": "REQ-SOC2-014",
+    "framework": "soc2",
+    "chapter_number": "CC4",
+    "chapter_title": "Common Criteria — Monitoring Activities",
+    "article_number": "CC4.2",
+    "article_title": "Entity evaluates and communicates internal control deficiencies timely to responsible parties, incl.",
+    "atomic_requirement": "CC4.2 Entity evaluates and communicates internal control deficiencies timely to responsible parties, incl.: senior management/board"
+  },
+  {
+    "id": "REQ-SOC2-015",
+    "framework": "soc2",
+    "chapter_number": "CC5",
+    "chapter_title": "Common Criteria — Control Activities",
+    "article_number": "CC5.1",
+    "article_title": "Entity selects/develops control activities that mitigate risks to acceptable levels",
+    "atomic_requirement": "CC5.1 Entity selects/develops control activities that mitigate risks to acceptable levels"
+  },
+  {
+    "id": "REQ-SOC2-016",
+    "framework": "soc2",
+    "chapter_number": "CC5",
+    "chapter_title": "Common Criteria — Control Activities",
+    "article_number": "CC5.2",
+    "article_title": "Entity selects/develops general control activities over technology",
+    "atomic_requirement": "CC5.2 Entity selects/develops general control activities over technology"
+  },
+  {
+    "id": "REQ-SOC2-017",
+    "framework": "soc2",
+    "chapter_number": "CC5",
+    "chapter_title": "Common Criteria — Control Activities",
+    "article_number": "CC5.3",
+    "article_title": "Entity deploys control activities via policies (what's expected) and procedures (putting policies into action)",
+    "atomic_requirement": "CC5.3 Entity deploys control activities via policies (what's expected) and procedures (putting policies into action)"
+  },
+  {
+    "id": "REQ-SOC2-018",
+    "framework": "soc2",
+    "chapter_number": "CC6",
+    "chapter_title": "Common Criteria — Logical & Physical Access Controls",
+    "article_number": "CC6.1",
+    "article_title": "Entity implements logical access security software/infrastructure/architectures over protected",
+    "atomic_requirement": "CC6.1 Entity implements logical access security software/infrastructure/architectures over protected: information assets"
+  },
+  {
+    "id": "REQ-SOC2-019",
+    "framework": "soc2",
+    "chapter_number": "CC6",
+    "chapter_title": "Common Criteria — Logical & Physical Access Controls",
+    "article_number": "CC6.2",
+    "article_title": "Entity registers/authorizes new users prior to issuing credentials/access; removes credentials when",
+    "atomic_requirement": "CC6.2 Entity registers/authorizes new users prior to issuing credentials/access; removes credentials when: access no longer authorized"
+  },
+  {
+    "id": "REQ-SOC2-020",
+    "framework": "soc2",
+    "chapter_number": "CC6",
+    "chapter_title": "Common Criteria — Logical & Physical Access Controls",
+    "article_number": "CC6.3",
+    "article_title": "Entity authorizes, modifies, or removes access based on roles/responsibilities/design, applying least",
+    "atomic_requirement": "CC6.3 Entity authorizes, modifies, or removes access based on roles/responsibilities/design, applying least: privilege and segregation of duties"
+  },
+  {
+    "id": "REQ-SOC2-021",
+    "framework": "soc2",
+    "chapter_number": "CC6",
+    "chapter_title": "Common Criteria — Logical & Physical Access Controls",
+    "article_number": "CC6.4",
+    "article_title": "Entity restricts physical access to facilities and protected information assets to authorized personnel",
+    "atomic_requirement": "CC6.4 Entity restricts physical access to facilities and protected information assets to authorized personnel"
+  },
+  {
+    "id": "REQ-SOC2-022",
+    "framework": "soc2",
+    "chapter_number": "CC6",
+    "chapter_title": "Common Criteria — Logical & Physical Access Controls",
+    "article_number": "CC6.5",
+    "article_title": "Entity discontinues logical/physical protections over assets only after data/software recoverability is",
+    "atomic_requirement": "CC6.5 Entity discontinues logical/physical protections over assets only after data/software recoverability is: properly eliminated"
+  },
+  {
+    "id": "REQ-SOC2-023",
+    "framework": "soc2",
+    "chapter_number": "CC6",
+    "chapter_title": "Common Criteria — Logical & Physical Access Controls",
+    "article_number": "CC6.6",
+    "article_title": "Entity implements logical access security measures against threats from outside system boundaries",
+    "atomic_requirement": "CC6.6 Entity implements logical access security measures against threats from outside system boundaries"
+  },
+  {
+    "id": "REQ-SOC2-024",
+    "framework": "soc2",
+    "chapter_number": "CC6",
+    "chapter_title": "Common Criteria — Logical & Physical Access Controls",
+    "article_number": "CC6.7",
+    "article_title": "Entity restricts transmission/movement/removal of information to authorized users/processes and protects it in transit",
+    "atomic_requirement": "CC6.7 Entity restricts transmission/movement/removal of information to authorized users/processes and protects it in transit"
+  },
+  {
+    "id": "REQ-SOC2-025",
+    "framework": "soc2",
+    "chapter_number": "CC6",
+    "chapter_title": "Common Criteria — Logical & Physical Access Controls",
+    "article_number": "CC6.8",
+    "article_title": "Entity implements controls to prevent, detect, and act upon unauthorized or malicious software",
+    "atomic_requirement": "CC6.8 Entity implements controls to prevent, detect, and act upon unauthorized or malicious software"
+  },
+  {
+    "id": "REQ-SOC2-026",
+    "framework": "soc2",
+    "chapter_number": "CC7",
+    "chapter_title": "Common Criteria — System Operations",
+    "article_number": "CC7.1",
+    "article_title": "Entity uses detection/monitoring procedures to identify configuration changes introducing",
+    "atomic_requirement": "CC7.1 Entity uses detection/monitoring procedures to identify configuration changes introducing: vulnerabilities and new vulnerability susceptibilities"
+  },
+  {
+    "id": "REQ-SOC2-027",
+    "framework": "soc2",
+    "chapter_number": "CC7",
+    "chapter_title": "Common Criteria — System Operations",
+    "article_number": "CC7.2",
+    "article_title": "Entity monitors system components/operations for anomalies indicative of malicious acts, disasters, or errors; analyzes anomalies for security events",
+    "atomic_requirement": "CC7.2 Entity monitors system components/operations for anomalies indicative of malicious acts, disasters, or errors; analyzes anomalies for security events"
+  },
+  {
+    "id": "REQ-SOC2-028",
+    "framework": "soc2",
+    "chapter_number": "CC7",
+    "chapter_title": "Common Criteria — System Operations",
+    "article_number": "CC7.3",
+    "article_title": "Entity evaluates security events to determine if they constitute security incidents and takes action",
+    "atomic_requirement": "CC7.3 Entity evaluates security events to determine if they constitute security incidents and takes action"
+  },
+  {
+    "id": "REQ-SOC2-029",
+    "framework": "soc2",
+    "chapter_number": "CC7",
+    "chapter_title": "Common Criteria — System Operations",
+    "article_number": "CC7.4",
+    "article_title": "Entity responds to identified security incidents via a defined incident-response program (understand,",
+    "atomic_requirement": "CC7.4 Entity responds to identified security incidents via a defined incident-response program (understand,: contain, remediate, communicate)"
+  },
+  {
+    "id": "REQ-SOC2-030",
+    "framework": "soc2",
+    "chapter_number": "CC7",
+    "chapter_title": "Common Criteria — System Operations",
+    "article_number": "CC7.5",
+    "article_title": "Entity identifies, develops, and implements activities to recover from identified security incidents",
+    "atomic_requirement": "CC7.5 Entity identifies, develops, and implements activities to recover from identified security incidents"
+  },
+  {
+    "id": "REQ-SOC2-031",
+    "framework": "soc2",
+    "chapter_number": "CC8",
+    "chapter_title": "Common Criteria — Change Management",
+    "article_number": "CC8.1",
+    "article_title": "Entity authorizes, designs, develops/acquires, configures, documents, tests, approves, and implements",
+    "atomic_requirement": "CC8.1 Entity authorizes, designs, develops/acquires, configures, documents, tests, approves, and implements: changes to infrastructure, data, software, and procedures"
+  },
+  {
+    "id": "REQ-SOC2-032",
+    "framework": "soc2",
+    "chapter_number": "CC9",
+    "chapter_title": "Common Criteria — Risk Mitigation",
+    "article_number": "CC9.1",
+    "article_title": "Entity identifies, selects, and develops risk mitigation activities for risks from potential business",
+    "atomic_requirement": "CC9.1 Entity identifies, selects, and develops risk mitigation activities for risks from potential business: disruptions"
+  },
+  {
+    "id": "REQ-SOC2-033",
+    "framework": "soc2",
+    "chapter_number": "CC9",
+    "chapter_title": "Common Criteria — Risk Mitigation",
+    "article_number": "CC9.2",
+    "article_title": "Entity assesses and manages risks associated with vendors and business partners",
+    "atomic_requirement": "CC9.2 Entity assesses and manages risks associated with vendors and business partners"
+  },
+  {
+    "id": "REQ-SOC2-034",
+    "framework": "soc2",
+    "chapter_number": "A1",
+    "chapter_title": "Availability Criteria — DR & Capacity",
+    "article_number": "A1.1",
+    "article_title": "Entity maintains/monitors/evaluates current processing capacity and system component usage to manage",
+    "atomic_requirement": "A1.1 Entity maintains/monitors/evaluates current processing capacity and system component usage to manage: capacity demand"
+  },
+  {
+    "id": "REQ-SOC2-035",
+    "framework": "soc2",
+    "chapter_number": "A1",
+    "chapter_title": "Availability Criteria — DR & Capacity",
+    "article_number": "A1.2",
+    "article_title": "Entity authorizes/designs/implements/operates/maintains/monitors environmental protections, backup",
+    "atomic_requirement": "A1.2 Entity authorizes/designs/implements/operates/maintains/monitors environmental protections, backup: processes, and recovery infrastructure"
+  },
+  {
+    "id": "REQ-SOC2-036",
+    "framework": "soc2",
+    "chapter_number": "A1",
+    "chapter_title": "Availability Criteria — DR & Capacity",
+    "article_number": "A1.3",
+    "article_title": "Entity tests recovery plan procedures supporting system recovery",
+    "atomic_requirement": "A1.3 Entity tests recovery plan procedures supporting system recovery"
+  },
+  {
+    "id": "REQ-SOC2-037",
+    "framework": "soc2",
+    "chapter_number": "C1",
+    "chapter_title": "Confidentiality Criteria — Data Handling & Disposal",
+    "article_number": "C1.1",
+    "article_title": "Entity identifies and maintains confidential information to meet confidentiality objectives",
+    "atomic_requirement": "C1.1 Entity identifies and maintains confidential information to meet confidentiality objectives"
+  },
+  {
+    "id": "REQ-SOC2-038",
+    "framework": "soc2",
+    "chapter_number": "C1",
+    "chapter_title": "Confidentiality Criteria — Data Handling & Disposal",
+    "article_number": "C1.2",
+    "article_title": "Entity disposes of confidential information to meet confidentiality objectives",
+    "atomic_requirement": "C1.2 Entity disposes of confidential information to meet confidentiality objectives"
+  },
+  {
+    "id": "REQ-SOC2-039",
+    "framework": "soc2",
+    "chapter_number": "PI1",
+    "chapter_title": "Processing Integrity Criteria",
+    "article_number": "PI1.1",
+    "article_title": "Entity obtains/generates, uses, and communicates relevant quality information re: processing objectives",
+    "atomic_requirement": "PI1.1 Entity obtains/generates, uses, and communicates relevant quality information re: processing objectives: (data definitions, product/service specs)"
+  },
+  {
+    "id": "REQ-SOC2-040",
+    "framework": "soc2",
+    "chapter_number": "PI1",
+    "chapter_title": "Processing Integrity Criteria",
+    "article_number": "PI1.2",
+    "article_title": "Entity implements policies/procedures over system inputs, incl. completeness/accuracy controls",
+    "atomic_requirement": "PI1.2 Entity implements policies/procedures over system inputs, incl. completeness/accuracy controls"
+  },
+  {
+    "id": "REQ-SOC2-041",
+    "framework": "soc2",
+    "chapter_number": "PI1",
+    "chapter_title": "Processing Integrity Criteria",
+    "article_number": "PI1.3",
+    "article_title": "Entity implements policies/procedures over system processing to meet product/service/reporting",
+    "atomic_requirement": "PI1.3 Entity implements policies/procedures over system processing to meet product/service/reporting: objectives"
+  },
+  {
+    "id": "REQ-SOC2-042",
+    "framework": "soc2",
+    "chapter_number": "PI1",
+    "chapter_title": "Processing Integrity Criteria",
+    "article_number": "PI1.4",
+    "article_title": "Entity implements policies/procedures to deliver output completely, accurately, and timely per",
+    "atomic_requirement": "PI1.4 Entity implements policies/procedures to deliver output completely, accurately, and timely per: specifications"
+  },
+  {
+    "id": "REQ-SOC2-043",
+    "framework": "soc2",
+    "chapter_number": "PI1",
+    "chapter_title": "Processing Integrity Criteria",
+    "article_number": "PI1.5",
+    "article_title": "Entity implements policies/procedures to store inputs, in-process items, and outputs",
+    "atomic_requirement": "PI1.5 Entity implements policies/procedures to store inputs, in-process items, and outputs: completely/accurately/timely"
+  },
+  {
+    "id": "REQ-SOC2-044",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Notice & Consent",
+    "article_number": "P1.1",
+    "article_title": "Entity provides notice to data subjects about privacy practices; updates/communicates changes timely",
+    "atomic_requirement": "P1.1 Entity provides notice to data subjects about privacy practices; updates/communicates changes timely"
+  },
+  {
+    "id": "REQ-SOC2-045",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Choice & Consent",
+    "article_number": "P2.1",
+    "article_title": "Entity communicates choices re: collection/use/retention/disclosure/disposal of PI; obtains explicit",
+    "atomic_requirement": "P2.1 Entity communicates choices re: collection/use/retention/disclosure/disposal of PI; obtains explicit: consent where required; documents basis for implicit consent"
+  },
+  {
+    "id": "REQ-SOC2-046",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Collection & Retain",
+    "article_number": "P3.1",
+    "article_title": "Personal information is collected consistent with privacy objectives",
+    "atomic_requirement": "P3.1 Personal information is collected consistent with privacy objectives"
+  },
+  {
+    "id": "REQ-SOC2-047",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Collection & Retain",
+    "article_number": "P3.2",
+    "article_title": "For info requiring explicit consent, entity communicates the need/consequences and obtains consent",
+    "atomic_requirement": "P3.2 For info requiring explicit consent, entity communicates the need/consequences and obtains consent: before collection"
+  },
+  {
+    "id": "REQ-SOC2-048",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Access & Correction",
+    "article_number": "P4.1",
+    "article_title": "Entity limits use of PI to purposes identified in its privacy objectives",
+    "atomic_requirement": "P4.1 Entity limits use of PI to purposes identified in its privacy objectives"
+  },
+  {
+    "id": "REQ-SOC2-049",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Access & Correction",
+    "article_number": "P4.2",
+    "article_title": "Entity retains PI consistent with privacy objectives",
+    "atomic_requirement": "P4.2 Entity retains PI consistent with privacy objectives"
+  },
+  {
+    "id": "REQ-SOC2-050",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Access & Correction",
+    "article_number": "P4.3",
+    "article_title": "Entity securely disposes of PI to meet privacy objectives",
+    "atomic_requirement": "P4.3 Entity securely disposes of PI to meet privacy objectives"
+  },
+  {
+    "id": "REQ-SOC2-051",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Disclosure to Third Parties",
+    "article_number": "P5.1",
+    "article_title": "Entity grants identified/authenticated data subjects access to their PI for review; provides copies on request; informs of denial+reason if denied",
+    "atomic_requirement": "P5.1 Entity grants identified/authenticated data subjects access to their PI for review; provides copies on request; informs of denial+reason if denied"
+  },
+  {
+    "id": "REQ-SOC2-052",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Disclosure to Third Parties",
+    "article_number": "P5.2",
+    "article_title": "Entity corrects/amends/appends PI per data subject requests and communicates updates to relevant",
+    "atomic_requirement": "P5.2 Entity corrects/amends/appends PI per data subject requests and communicates updates to relevant: third parties; informs of denial+reason if denied"
+  },
+  {
+    "id": "REQ-SOC2-053",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Security for Privacy",
+    "article_number": "P6.1",
+    "article_title": "Entity discloses PI to third parties only with data subjects' explicit consent, obtained prior to disclosure",
+    "atomic_requirement": "P6.1 Entity discloses PI to third parties only with data subjects' explicit consent, obtained prior to disclosure"
+  },
+  {
+    "id": "REQ-SOC2-054",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Security for Privacy",
+    "article_number": "P6.2",
+    "article_title": "Entity creates/retains a complete, accurate, timely record of authorized disclosures of PI",
+    "atomic_requirement": "P6.2 Entity creates/retains a complete, accurate, timely record of authorized disclosures of PI"
+  },
+  {
+    "id": "REQ-SOC2-055",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Security for Privacy",
+    "article_number": "P6.3",
+    "article_title": "Entity creates/retains a complete, accurate, timely record of detected/reported unauthorized",
+    "atomic_requirement": "P6.3 Entity creates/retains a complete, accurate, timely record of detected/reported unauthorized: disclosures (incl. breaches) of PI"
+  },
+  {
+    "id": "REQ-SOC2-056",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Security for Privacy",
+    "article_number": "P6.4",
+    "article_title": "Entity obtains privacy commitments from vendors/third parties with PI access; assesses compliance",
+    "atomic_requirement": "P6.4 Entity obtains privacy commitments from vendors/third parties with PI access; assesses compliance: periodically; takes corrective action"
+  },
+  {
+    "id": "REQ-SOC2-057",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Security for Privacy",
+    "article_number": "P6.5",
+    "article_title": "Entity obtains vendor/third-party commitments to notify the entity of actual/suspected unauthorized PI",
+    "atomic_requirement": "P6.5 Entity obtains vendor/third-party commitments to notify the entity of actual/suspected unauthorized PI: disclosures; acts per incident-response procedures"
+  },
+  {
+    "id": "REQ-SOC2-058",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Security for Privacy",
+    "article_number": "P6.6",
+    "article_title": "Entity provides breach/incident notification to affected data subjects, regulators, and others",
+    "atomic_requirement": "P6.6 Entity provides breach/incident notification to affected data subjects, regulators, and others"
+  },
+  {
+    "id": "REQ-SOC2-059",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Security for Privacy",
+    "article_number": "P6.7",
+    "article_title": "Entity provides data subjects an accounting of PI held and disclosures made, upon request",
+    "atomic_requirement": "P6.7 Entity provides data subjects an accounting of PI held and disclosures made, upon request"
+  },
+  {
+    "id": "REQ-SOC2-060",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Quality & Accuracy",
+    "article_number": "P7.1",
+    "article_title": "Entity collects/maintains accurate, up-to-date, complete, and relevant PI",
+    "atomic_requirement": "P7.1 Entity collects/maintains accurate, up-to-date, complete, and relevant PI"
+  },
+  {
+    "id": "REQ-SOC2-061",
+    "framework": "soc2",
+    "chapter_number": "P",
+    "chapter_title": "Privacy Criteria — Monitoring & Enforcement",
+    "article_number": "P8.1",
+    "article_title": "Entity implements a process for receiving, addressing, resolving, and communicating resolution of inquiries, complaints, and disputes.",
+    "atomic_requirement": "Entity implements a process for receiving, addressing, resolving, and communicating resolution of privacy inquiries, complaints, and disputes, monitors compliance, and remediates deficiencies in a timely manner."
+  }
+]

@@ -1,0 +1,839 @@
+[
+  {
+    "id": "REQ-RBI-001",
+    "framework": "rbi",
+    "chapter_number": "I",
+    "chapter_title": "KYC — Chapter I: Preliminary",
+    "article_number": "Cl. 1",
+    "article_title": "Short Title & Commencement",
+    "atomic_requirement": "Cl. 1 Short Title & Commencement: Called the KYC Directions, 2016; effective from date of publication on RBI's website."
+  },
+  {
+    "id": "REQ-RBI-002",
+    "framework": "rbi",
+    "chapter_number": "I",
+    "chapter_title": "KYC — Chapter I: Preliminary",
+    "article_number": "Cl. 2",
+    "article_title": "Applicability",
+    "atomic_requirement": "Cl. 2 Applicability: Applies to all RBI-regulated entities (REs), including foreign branches/subsidiaries, subject to local law."
+  },
+  {
+    "id": "REQ-RBI-003",
+    "framework": "rbi",
+    "chapter_number": "I",
+    "chapter_title": "KYC — Chapter I: Preliminary",
+    "article_number": "Cl. 3",
+    "article_title": "Definitions",
+    "atomic_requirement": "Cl. 3 Definitions: Terms take meaning from PMLA 2002 and PML Rules unless defined otherwise; several amendments (2023, 2025)."
+  },
+  {
+    "id": "REQ-RBI-004",
+    "framework": "rbi",
+    "chapter_number": "I",
+    "chapter_title": "KYC — Chapter II: General",
+    "article_number": "Cl. 4",
+    "article_title": "KYC Policy",
+    "atomic_requirement": "Cl. 4 KYC Policy: Board (or delegated committee) must approve a KYC policy; groups need group-wide AML policies."
+  },
+  {
+    "id": "REQ-RBI-005",
+    "framework": "rbi",
+    "chapter_number": "I",
+    "chapter_title": "KYC — Chapter II: General",
+    "article_number": "Cl. 5",
+    "article_title": "KYC Policy Elements",
+    "atomic_requirement": "Cl. 5 KYC Policy Elements: Must cover Customer Acceptance Policy, Risk Management, CDD/CIP, and Transaction Monitoring; REs must periodically assess ML/TF risk across clients, geographies, products, and delivery channels."
+  },
+  {
+    "id": "REQ-RBI-006",
+    "framework": "rbi",
+    "chapter_number": "I",
+    "chapter_title": "KYC — Chapter II: General",
+    "article_number": "Cl. 6",
+    "article_title": "Designated Director",
+    "atomic_requirement": "Cl. 6 Designated Director: Board-nominated person accountable for PMLA compliance; details reported to FIU- IND."
+  },
+  {
+    "id": "REQ-RBI-007",
+    "framework": "rbi",
+    "chapter_number": "I",
+    "chapter_title": "KYC — Chapter II: General",
+    "article_number": "Cl. 7",
+    "article_title": "Principal Officer",
+    "atomic_requirement": "Cl. 7 Principal Officer: Responsible for compliance, transaction monitoring, and regulatory reporting; details reported to FIU-IND."
+  },
+  {
+    "id": "REQ-RBI-008",
+    "framework": "rbi",
+    "chapter_number": "I",
+    "chapter_title": "KYC — Chapter II: General",
+    "article_number": "Cl. 8",
+    "article_title": "Compliance of KYC Policy",
+    "atomic_requirement": "Cl. 8 Compliance of KYC Policy: Requires defined Senior Management roles and clear allocation of implementation responsibility."
+  },
+  {
+    "id": "REQ-RBI-009",
+    "framework": "rbi",
+    "chapter_number": "I",
+    "chapter_title": "KYC — Chapter III: Customer Acceptance Policy",
+    "article_number": "Cl. 9",
+    "article_title": "CAP Requirement",
+    "atomic_requirement": "Cl. 9 CAP Requirement: REs must frame a Customer Acceptance Policy (see source for sub-clauses)."
+  },
+  {
+    "id": "REQ-RBI-010",
+    "framework": "rbi",
+    "chapter_number": "I",
+    "chapter_title": "KYC — Chapter III: Customer Acceptance Policy",
+    "article_number": "Cl. 10",
+    "article_title": "CAP Content",
+    "atomic_requirement": "Cl. 10 CAP Content: No anonymous/benami accounts; no account if CDD can't be completed due to non- cooperation or unreliable info."
+  },
+  {
+    "id": "REQ-RBI-011",
+    "framework": "rbi",
+    "chapter_number": "I",
+    "chapter_title": "KYC — Chapter III: Customer Acceptance Policy",
+    "article_number": "Cl. 11",
+    "article_title": "Non-Discrimination",
+    "atomic_requirement": "Cl. 11 Non-Discrimination: CAP must not deny banking access to disadvantaged groups, incl. PwDs; no rejection without reasoned review."
+  },
+  {
+    "id": "REQ-RBI-012",
+    "framework": "rbi",
+    "chapter_number": "I",
+    "chapter_title": "KYC — Chapter IV: Risk Management",
+    "article_number": "Cl. 12",
+    "article_title": "Risk-Based Approach",
+    "atomic_requirement": "Cl. 12 Risk-Based Approach: Customers categorized low/medium/high risk based on identity, financial status, business nature, geography, and product/channel risk."
+  },
+  {
+    "id": "REQ-RBI-013",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 13",
+    "article_title": "When ID Required",
+    "atomic_requirement": "Cl. 13 When ID Required: At account opening and for non-account-holder international money transfers."
+  },
+  {
+    "id": "REQ-RBI-014",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 14",
+    "article_title": "Third-Party CDD Reliance",
+    "atomic_requirement": "Cl. 14 Third-Party CDD Reliance: REs may rely on third-party CDD (incl. via CKYCR) for transactions ≥₹50,000 or account opening, subject to conditions."
+  },
+  {
+    "id": "REQ-RBI-015",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 16",
+    "article_title": "Individual CDD",
+    "atomic_requirement": "Cl. 16 Individual CDD: Requires Aadhaar (or offline verification/OVD) and PAN/Form 60 for account-based relationships and for BOs/signatories/POA holders."
+  },
+  {
+    "id": "REQ-RBI-016",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 17",
+    "article_title": "Aadhaar OTP e-KYC",
+    "atomic_requirement": "Cl. 17 Aadhaar OTP e-KYC: Non-face-to-face onboarding allowed with explicit OTP consent; alerts sent only to Aadhaar-registered mobile; board policy needed for mobile-number change requests; deposit balance caps apply."
+  },
+  {
+    "id": "REQ-RBI-017",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 18",
+    "article_title": "V-CIP",
+    "atomic_requirement": "Cl. 18 V-CIP: Permitted for onboarding individuals, proprietors, authorised signatories, and BOs of legal entities; proprietorship also needs activity proof documents."
+  },
+  {
+    "id": "REQ-RBI-018",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 23",
+    "article_title": "Small Accounts",
+    "atomic_requirement": "Cl. 23 Small Accounts: Alternative to full CDD; annual credit cap of ₹1 lakh plus other limitations."
+  },
+  {
+    "id": "REQ-RBI-019",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 24",
+    "article_title": "Simplified NBFC Accounts",
+    "atomic_requirement": "Cl. 24 Simplified NBFC Accounts: NBFCs may open accounts without standard docs if self-attested photo obtained and designated officer certifies signature/thumb impression."
+  },
+  {
+    "id": "REQ-RBI-020",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 26",
+    "article_title": "KYC Portability",
+    "atomic_requirement": "Cl. 26 KYC Portability: Prior branch-verified KYC is valid on transfer to another branch of the same RE if not due for periodic update."
+  },
+  {
+    "id": "REQ-RBI-021",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 27",
+    "article_title": "Sole Proprietorship CDD",
+    "atomic_requirement": "Cl. 27 Sole Proprietorship CDD: Individual (proprietor) CDD required; plus any two (or, if genuinely unavailable, one, with contact-point verification) business-proof documents."
+  },
+  {
+    "id": "REQ-RBI-022",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 28",
+    "article_title": "Sole Proprietorship CDD",
+    "atomic_requirement": "Cl. 28 Sole Proprietorship CDD: Individual (proprietor) CDD required; plus any two (or, if genuinely unavailable, one, with contact-point verification) business-proof documents."
+  },
+  {
+    "id": "REQ-RBI-023",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 29",
+    "article_title": "Sole Proprietorship CDD",
+    "atomic_requirement": "Cl. 29 Sole Proprietorship CDD: Individual (proprietor) CDD required; plus any two (or, if genuinely unavailable, one, with contact-point verification) business-proof documents."
+  },
+  {
+    "id": "REQ-RBI-024",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 30",
+    "article_title": "Company Accounts",
+    "atomic_requirement": "Cl. 30 Company Accounts: Requires incorporation certificate, MOA/AOA, company PAN, and board resolution/POA for authorised signatories."
+  },
+  {
+    "id": "REQ-RBI-025",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 31",
+    "article_title": "Partnership Accounts",
+    "atomic_requirement": "Cl. 31 Partnership Accounts: Requires registration certificate, partnership deed, firm PAN, BO/authorised-person documents, partner names, and business address."
+  },
+  {
+    "id": "REQ-RBI-026",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 32",
+    "article_title": "Trust Accounts",
+    "atomic_requirement": "Cl. 32 Trust Accounts: Requires registration certificate, trust deed, PAN/Form 60, BO/authorised-person documents, and names of beneficiaries/trustees/settlor/protector."
+  },
+  {
+    "id": "REQ-RBI-027",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 34",
+    "article_title": "Legal Person BO Identification",
+    "atomic_requirement": "Cl. 34 Legal Person BO Identification: BO identification required; exemption for listed entities/their subsidiaries meeting specified conditions."
+  },
+  {
+    "id": "REQ-RBI-028",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 35",
+    "article_title": "Ongoing Due Diligence",
+    "atomic_requirement": "Cl. 35 Ongoing Due Diligence: Transactions must be checked against customer profile, business, and source of funds/wealth."
+  },
+  {
+    "id": "REQ-RBI-029",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 36",
+    "article_title": "Monitored Transaction Types",
+    "atomic_requirement": "Cl. 36 Monitored Transaction Types: Includes large/complex transactions (e.g., RTGS) and those inconsistent with expected activity."
+  },
+  {
+    "id": "REQ-RBI-030",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 37",
+    "article_title": "Risk-Based Monitoring",
+    "atomic_requirement": "Cl. 37 Risk-Based Monitoring: Risk categorization reviewed at least every six months; MLM company accounts need close monitoring."
+  },
+  {
+    "id": "REQ-RBI-031",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter V: Customer Identification Procedure (CIP)",
+    "article_number": "Cl. 38",
+    "article_title": "Periodic KYC Updation",
+    "atomic_requirement": "Cl. 38 Periodic KYC Updation: Risk-based; at minimum every 2 years (high risk), 8 years (medium), 10 years (low)."
+  },
+  {
+    "id": "REQ-RBI-032",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter VI: Simplified KYC Procedures",
+    "article_number": "Cl. 39",
+    "article_title": "PAN/Form 60 for Existing Customers",
+    "atomic_requirement": "Cl. 39 PAN/Form 60 for Existing Customers: Must be obtained by notified date; failure triggers temporary account freeze."
+  },
+  {
+    "id": "REQ-RBI-033",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter VI: Simplified KYC Procedures",
+    "article_number": "Cl. 40",
+    "article_title": "EDD for Non-Face-to-Face Onboarding",
+    "atomic_requirement": "Cl. 40 EDD for Non-Face-to-Face Onboarding: Applies to digital (CKYCR, DigiLocker, e-documents) and non- digital (NRI/PIO certified OVD) channels."
+  },
+  {
+    "id": "REQ-RBI-034",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter VI: Simplified KYC Procedures",
+    "article_number": "Cl. 41",
+    "article_title": "PEP Accounts",
+    "atomic_requirement": "Cl. 41 PEP Accounts: Allowed with enhanced due diligence — risk systems to flag PEPs, source-of-funds checks, senior-management approval, and ongoing monitoring."
+  },
+  {
+    "id": "REQ-RBI-035",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter VI: Simplified KYC Procedures",
+    "article_number": "Cl. 42",
+    "article_title": "Professional Intermediary Client Accounts",
+    "atomic_requirement": "Cl. 42 Professional Intermediary Client Accounts: Client identification required when intermediary opens account for a single client."
+  },
+  {
+    "id": "REQ-RBI-036",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter VI: Simplified KYC Procedures",
+    "article_number": "Cl. 43",
+    "article_title": "SHG Simplified Norms",
+    "atomic_requirement": "Cl. 43 SHG Simplified Norms: Full member CDD not required at account opening; office-bearer CDD sufficient; member CDD may occur at credit-linking stage."
+  },
+  {
+    "id": "REQ-RBI-037",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "KYC — Chapter VI: Simplified KYC Procedures",
+    "article_number": "Cl. 44",
+    "article_title": "Foreign Student Accounts",
+    "atomic_requirement": "Cl. 44 Foreign Student Accounts: NRO account may be opened using passport, visa/immigration endorsement, photo, and admission letter."
+  },
+  {
+    "id": "REQ-RBI-038",
+    "framework": "rbi",
+    "chapter_number": "II",
+    "chapter_title": "KYC — Chapter VII: Record Management",
+    "article_number": "Cl. 45",
+    "article_title": "FPI Simplified KYC",
+    "atomic_requirement": "Cl. 45 FPI Simplified KYC: SEBI-registered FPIs onboarded per Annex IV documents, subject to FATCA/CRS rules and an undertaking for exempted documents."
+  },
+  {
+    "id": "REQ-RBI-039",
+    "framework": "rbi",
+    "chapter_number": "II",
+    "chapter_title": "KYC — Chapter VII: Record Management",
+    "article_number": "Cl. 46",
+    "article_title": "Record Retention",
+    "atomic_requirement": "Cl. 46 Record Retention: Transaction records kept ≥5 years from transaction date; identification/address records kept ≥5 years after relationship ends."
+  },
+  {
+    "id": "REQ-RBI-040",
+    "framework": "rbi",
+    "chapter_number": "II",
+    "chapter_title": "KYC — Chapter VII: Record Management",
+    "article_number": "Cl. 47",
+    "article_title": "Reporting Obligation",
+    "atomic_requirement": "Cl. 47 Reporting Obligation: REs must furnish PML Rules-mandated information to FIU-IND Director."
+  },
+  {
+    "id": "REQ-RBI-041",
+    "framework": "rbi",
+    "chapter_number": "II",
+    "chapter_title": "KYC — Chapter VII: Record Management",
+    "article_number": "Cl. 48",
+    "article_title": "Reporting Formats/Tools",
+    "atomic_requirement": "Cl. 48 Reporting Formats/Tools: Use FIU-IND prescribed formats and CTR/STR utilities."
+  },
+  {
+    "id": "REQ-RBI-042",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter VIII: Reporting to FIU-IND",
+    "article_number": "Cl. 49",
+    "article_title": "Reporting Delays",
+    "atomic_requirement": "Cl. 49 Reporting Delays: Each day of delay/misreporting is a separate violation; STR filing alone must not restrict account operations."
+  },
+  {
+    "id": "REQ-RBI-043",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter VIII: Reporting to FIU-IND",
+    "article_number": "Cl. 50",
+    "article_title": "Alert Systems",
+    "atomic_requirement": "Cl. 50 Alert Systems: REs need software generating alerts for transactions inconsistent with risk profile."
+  },
+  {
+    "id": "REQ-RBI-044",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter VIII: Reporting to FIU-IND",
+    "article_number": "Cl. 51",
+    "article_title": "UAPA Obligations",
+    "atomic_requirement": "Cl. 51 UAPA Obligations: No accounts for individuals/entities on UNSC terrorist-link lists under Section 51A UAPA."
+  },
+  {
+    "id": "REQ-RBI-045",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter VIII: Reporting to FIU-IND",
+    "article_number": "Cl. 52",
+    "article_title": "WMD Act Obligations",
+    "atomic_requirement": "Cl. 52 WMD Act Obligations: Compliance with WMD Act 2005 procedures per Sept 2023 Finance Ministry order."
+  },
+  {
+    "id": "REQ-RBI-046",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter VIII: Reporting to FIU-IND",
+    "article_number": "Cl. 53",
+    "article_title": "UNSCR 1718 List",
+    "atomic_requirement": "Cl. 53 UNSCR 1718 List: Daily verification against the DPRK sanctions list."
+  },
+  {
+    "id": "REQ-RBI-047",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter VIII: Reporting to FIU-IND",
+    "article_number": "Cl. 54",
+    "article_title": "High-Risk Jurisdictions",
+    "atomic_requirement": "Cl. 54 High-Risk Jurisdictions: REs must consider FATF statements on non-compliant jurisdictions."
+  },
+  {
+    "id": "REQ-RBI-048",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 55",
+    "article_title": "Secrecy Obligations",
+    "atomic_requirement": "Cl. 55 Secrecy Obligations: Customer info confidential; not shared for cross-selling without customer consent."
+  },
+  {
+    "id": "REQ-RBI-049",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 56",
+    "article_title": "CKYCR Sharing",
+    "atomic_requirement": "Cl. 56 CKYCR Sharing: CERSAI authorised as CKYCR; REs share/upload CDD data accordingly."
+  },
+  {
+    "id": "REQ-RBI-050",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 57",
+    "article_title": "FATCA/CRS Reporting",
+    "atomic_requirement": "Cl. 57 FATCA/CRS Reporting: REs assess Reporting FI status under IT Rules 114F–114H and register/report accordingly."
+  },
+  {
+    "id": "REQ-RBI-051",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 58",
+    "article_title": "Instrument Presentation Period",
+    "atomic_requirement": "Cl. 58 Instrument Presentation Period: Cheques/drafts/pay orders invalid for payment beyond 3 months from issue."
+  },
+  {
+    "id": "REQ-RBI-052",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 59",
+    "article_title": "Money Mule Prevention",
+    "atomic_requirement": "Cl. 59 Money Mule Prevention: Diligence and monitoring required to prevent accounts being used as money mules."
+  },
+  {
+    "id": "REQ-RBI-053",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 60",
+    "article_title": "Account Payee Cheque Collection",
+    "atomic_requirement": "Cl. 60 Account Payee Cheque Collection: Restricted to the named payee, with a narrow co-operative credit society exception (≤₹50,000)."
+  },
+  {
+    "id": "REQ-RBI-054",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 61",
+    "article_title": "UCIC",
+    "atomic_requirement": "Cl. 61 UCIC: Unique Customer Identification Code required for individual customers; optional for occasional walk- ins unless they transact frequently."
+  },
+  {
+    "id": "REQ-RBI-055",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 62",
+    "article_title": "New Technology Risk",
+    "atomic_requirement": "Cl. 62 New Technology Risk: REs must assess ML/TF risk from new products, delivery channels, and technologies."
+  },
+  {
+    "id": "REQ-RBI-056",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 63",
+    "article_title": "Correspondent Banking",
+    "atomic_requirement": "Cl. 63 Correspondent Banking: Board-approved policy needed for cross-border correspondent relationships."
+  },
+  {
+    "id": "REQ-RBI-057",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 64",
+    "article_title": "Wire Transfers",
+    "atomic_requirement": "Cl. 64 Wire Transfers: Cross-border wire transfers require complete originator/beneficiary details (name, account, address/ID, etc.)."
+  },
+  {
+    "id": "REQ-RBI-058",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 65",
+    "article_title": "Demand Drafts etc.",
+    "atomic_requirement": "Cl. 65 Demand Drafts etc.: Instruments ≥₹50,000 must be issued by debit to account/cheque, not cash; purchaser's name shown on the instrument."
+  },
+  {
+    "id": "REQ-RBI-059",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 66",
+    "article_title": "PAN Quoting",
+    "atomic_requirement": "Cl. 66 PAN Quoting: PAN (or Form 60) required and verified per Income Tax Rule 114B."
+  },
+  {
+    "id": "REQ-RBI-060",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 67",
+    "article_title": "Third-Party Product Sales",
+    "atomic_requirement": "Cl. 67 Third-Party Product Sales: Walk-in customer ID verification for sales >₹50,000; records maintained per"
+  },
+  {
+    "id": "REQ-RBI-061",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 68",
+    "article_title": "At-Par Cheque Facility",
+    "atomic_requirement": "Cl. 68 At-Par Cheque Facility: Arrangements with co-operative banks monitored for credit/reputational risk; banks retain audit rights."
+  },
+  {
+    "id": "REQ-RBI-062",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 69",
+    "article_title": "PPI Issuance",
+    "atomic_requirement": "Cl. 69 PPI Issuance: Must follow RBI's PPI Master Direction."
+  },
+  {
+    "id": "REQ-RBI-063",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "KYC — Chapter X: Other Instructions & Compliance",
+    "article_number": "Cl. 70",
+    "article_title": "Employee Screening/Training",
+    "atomic_requirement": "Cl. 70 Employee Screening/Training: Know-Your-Employee screening and ongoing AML/CFT training required."
+  },
+  {
+    "id": "REQ-RBI-064",
+    "framework": "rbi",
+    "chapter_number": "II",
+    "chapter_title": "Payment Data Localization Mandate",
+    "article_number": "Cl. 2",
+    "article_title": "Data Localization Mandate",
+    "atomic_requirement": "Cl. 2 Data Localization Mandate: System providers, their vendors/intermediaries, and other ecosystem entities must store payment system data in India to ensure RBI supervisory access."
+  },
+  {
+    "id": "REQ-RBI-065",
+    "framework": "rbi",
+    "chapter_number": "II",
+    "chapter_title": "IT Governance & Cyber Resilience Framework",
+    "article_number": "Cl. 3",
+    "article_title": "Legal Basis",
+    "atomic_requirement": "Cl. 3 Legal Basis: Issued under Section 10(2) read with Section 18 of the Payment and Settlement Systems Act, 2007. 3. IT Governance — RBI (IT Governance, Risk, Controls and Assurance Practices) Directions, 2023"
+  },
+  {
+    "id": "REQ-RBI-066",
+    "framework": "rbi",
+    "chapter_number": "II",
+    "chapter_title": "IT Governance & Cyber Resilience Framework",
+    "article_number": "Cl. 32",
+    "article_title": "Interpretation clause.\nAnnex",
+    "atomic_requirement": "Cl. 32 Interpretation clause.\nAnnex: Acronyms and supporting reference material. (Note: source pack provided this chapter as a table of contents; substantive sub-clause text should be pulled from the full Direction when detail beyond section titles is needed.)"
+  },
+  {
+    "id": "REQ-RBI-067",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 3",
+    "article_title": "Phased Implementation",
+    "atomic_requirement": "Cl. 3 Phased Implementation: Large PSOs by Apr 1 2025; Medium by Apr 1 2026; Small by Apr 1 2028."
+  },
+  {
+    "id": "REQ-RBI-068",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 4",
+    "article_title": "Applicability",
+    "atomic_requirement": "Cl. 4 Applicability: All authorised non-bank PSOs."
+  },
+  {
+    "id": "REQ-RBI-069",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 5",
+    "article_title": "Third-Party/Unregulated Entity Coverage",
+    "atomic_requirement": "Cl. 5 Third-Party/Unregulated Entity Coverage: PSOs must extend these standards (via board-approved policy) to unregulated ecosystem partners, subject to mutual agreement."
+  },
+  {
+    "id": "REQ-RBI-070",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 6",
+    "article_title": "Objective",
+    "atomic_requirement": "Cl. 6 Objective: Strengthen payment-system safety through cyber resilience. Section II – Governance Controls"
+  },
+  {
+    "id": "REQ-RBI-071",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 14",
+    "article_title": "Inventory Management",
+    "atomic_requirement": "Cl. 14 Inventory Management: Maintain asset/process/vendor inventory and network/data-flow diagrams."
+  },
+  {
+    "id": "REQ-RBI-072",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 15",
+    "article_title": "Identity & Access Management",
+    "atomic_requirement": "Cl. 15 Identity & Access Management: Access-privilege policies; digital identity assigned and monitored per individual."
+  },
+  {
+    "id": "REQ-RBI-073",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 16",
+    "article_title": "Network Security",
+    "atomic_requirement": "Cl. 16 Network Security: Periodic device security checks; SOC for centralized monitoring; automated detection tools."
+  },
+  {
+    "id": "REQ-RBI-074",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 17",
+    "article_title": "Application Security Life Cycle",
+    "atomic_requirement": "Cl. 17 Application Security Life Cycle: Secure-by-design/S-SDLC approach; multi-tier architecture with DB-layer segregation."
+  },
+  {
+    "id": "REQ-RBI-075",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 18",
+    "article_title": "Security Testing",
+    "atomic_requirement": "Cl. 18 Security Testing: Annual (minimum) code review/VA/PT by qualified professionals; vendor certification if code not owned by PSO."
+  },
+  {
+    "id": "REQ-RBI-076",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 19",
+    "article_title": "Vendor Risk Management",
+    "atomic_requirement": "Cl. 19 Vendor Risk Management: Follow RBI's Outsourcing Framework (Aug 2021); controls to prevent vendor- network infiltration."
+  },
+  {
+    "id": "REQ-RBI-077",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 20",
+    "article_title": "Data Security",
+    "atomic_requirement": "Cl. 20 Data Security: Data-leak prevention policy covering data in transit/at rest, incl. at vendor sites; traceability mechanisms."
+  },
+  {
+    "id": "REQ-RBI-078",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 21",
+    "article_title": "Patch & Change Management",
+    "atomic_requirement": "Cl. 21 Patch & Change Management: Documented patching policy with defined timeframes."
+  },
+  {
+    "id": "REQ-RBI-079",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 22",
+    "article_title": "Incident Response",
+    "atomic_requirement": "Cl. 22 Incident Response: Board-approved mechanism to notify management, staff, and regulators of cyber incidents."
+  },
+  {
+    "id": "REQ-RBI-080",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 23",
+    "article_title": "Business Continuity Plan",
+    "atomic_requirement": "Cl. 23 Business Continuity Plan: Scenario-based BCP, reviewed annually, with incident/recovery playbook."
+  },
+  {
+    "id": "REQ-RBI-081",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 24",
+    "article_title": "API Security",
+    "atomic_requirement": "Cl. 24 API Security: Authentication/authorisation, confidentiality, integrity, and availability controls for APIs."
+  },
+  {
+    "id": "REQ-RBI-082",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 25",
+    "article_title": "Employee Awareness/Training",
+    "atomic_requirement": "Cl. 25 Employee Awareness/Training: Periodic training and awareness evaluation for staff and vendors."
+  },
+  {
+    "id": "REQ-RBI-083",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 26",
+    "article_title": "Cloud Security",
+    "atomic_requirement": "Cl. 26 Cloud Security: Board-approved cloud policy covering CSP roles, data localisation, and recoverability."
+  },
+  {
+    "id": "REQ-RBI-084",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 27",
+    "article_title": "Other Security Measures",
+    "atomic_requirement": "Cl. 27 Other Security Measures: MFA mandatory for electronic debit transactions; secure IT infrastructure configuration. Section IV – Specific Digital Payment Security Controls"
+  },
+  {
+    "id": "REQ-RBI-085",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 28",
+    "article_title": "Alert Mechanisms",
+    "atomic_requirement": "Cl. 28 Alert Mechanisms: Online alerts based on failed transactions, velocity, geo/IP anomalies, behavioral biometrics, etc."
+  },
+  {
+    "id": "REQ-RBI-086",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 29",
+    "article_title": "Customer Notifications",
+    "atomic_requirement": "Cl. 29 Customer Notifications: Mask sensitive account/card data in alerts; show merchant name (not gateway) and amount."
+  },
+  {
+    "id": "REQ-RBI-087",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 30",
+    "article_title": "Fraud-Flagging Facility",
+    "atomic_requirement": "Cl. 30 Fraud-Flagging Facility: App/website feature for customers to mark fraudulent transactions instantly."
+  },
+  {
+    "id": "REQ-RBI-088",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 31",
+    "article_title": "Mobile Payment Security",
+    "atomic_requirement": "Cl. 31 Mobile Payment Security: Anomaly-free apps; maintain encrypted session integrity throughout interactions."
+  },
+  {
+    "id": "REQ-RBI-089",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 32",
+    "article_title": "Terminal Validation",
+    "atomic_requirement": "Cl. 32 Terminal Validation: Card-capture terminals validated under PCI-P2PE; PIN-entry PoS terminals under PCI-PTS."
+  },
+  {
+    "id": "REQ-RBI-090",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 33",
+    "article_title": "Transaction Limits",
+    "atomic_requirement": "Cl. 33 Transaction Limits: Card networks to enable limits at card/BIN/issuer level."
+  },
+  {
+    "id": "REQ-RBI-091",
+    "framework": "rbi",
+    "chapter_number": "IV",
+    "chapter_title": "Cyber Resilience & Payment Security (Non-Bank PSOs)",
+    "article_number": "Cl. 34",
+    "article_title": "Vernacular Alerts",
+    "atomic_requirement": "Cl. 34 Vernacular Alerts: PPI issuers encouraged to send OTP/alerts in customers' preferred language."
+  },
+  {
+    "id": "REQ-RBI-092",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "Reserve Bank Integrated Ombudsman Scheme",
+    "article_number": "Cl. 35",
+    "article_title": "PPI Cooling Period",
+    "atomic_requirement": "Cl. 35 PPI Cooling Period: Mandatory cooling period before fund transfer/cash withdrawal after electronic loading. 5. Grievance Redressal — RB-IOS 2021 (Reserve Bank Integrated Ombudsman Scheme)"
+  },
+  {
+    "id": "REQ-RBI-093",
+    "framework": "rbi",
+    "chapter_number": "III",
+    "chapter_title": "Reserve Bank Integrated Ombudsman Scheme",
+    "article_number": "Cl. 1",
+    "article_title": "Complaint Admissibility Conditions",
+    "atomic_requirement": "Cl. 1 Complaint Admissibility Conditions: 1. A written complaint must first be made to the concerned Regulated Entity. 2. The Ombudsman complaint is admissible only if the RE rejected it (wholly/partly) and the complainant is dissatisfied, or the RE gave no reply within 30 days. 3. Must be filed within 1 year of the RE's reply (or 1 year + 30 days if no reply received). 4. Not admissible if it concerns the same cause of action already covered elsewhere (remainder of conditions in source text). Coverage Note This file condenses the already-summarized project pack into shorter, atomic, per-clause entries suitable for chunked RAG ingestion (each bullet is a natural retrieval unit). For full sub-clause detail, statutory cross-references, and annex tables, consult the original RBI Master Directions on rbi.org.in."
+  }
+]

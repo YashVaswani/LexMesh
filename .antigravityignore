@@ -1,0 +1,19 @@
+# Heavy System & Dependency Folders
+node_modules/
+venv/
+.venv/
+env/
+bin/
+obj/
+dist/
+build/
+
+# Media, Binary, and System Files
+*.pdf
+*.zip
+*.tar.gz
+*.exe
+*.dll
+.git/
+.idea/
+.vscode/
