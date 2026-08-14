@@ -92,7 +92,7 @@ def generate_gdpr_reference_pdf(output_path: str = "gdpr_condensed.pdf"):
         ("CHAPTER V — Transfers to Third Countries (Articles 44–50)", [
             (44, "General principle for transfers", "Any transfer must satisfy conditions of Chapter V."),
             (45, "Transfers on basis of adequacy decision", "Allowed where EU Commission decides third country ensures adequate protection."),
-            (46, "Transfers subject to appropriate safeguards", "Allowed with Standard Contractual Clauses (SCCs) or Binding Corporate Rules (BCRs)."),
+            (46, "Transfers subject to appropriate safeguards", "Allowed with Compliance Contractual Clauses (SCCs) or Binding Corporate Rules (BCRs)."),
             (47, "Binding corporate rules (BCRs)", "Approved rules for intra-group international data transfers."),
             (48, "Transfers not authorized by Union law", "Foreign court orders only enforceable if based on international agreements."),
             (49, "Derogations for specific situations", "Derogations for explicit consent, contract performance, or public interest."),

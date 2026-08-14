@@ -89,7 +89,7 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
     meta_data = [
         [Paragraph("Organization", bold_body), Paragraph(meta.get("company_name", "N/A"), body_style)],
         [Paragraph("Policy Analyzed", bold_body), Paragraph(meta.get("policy_name", "N/A"), body_style)],
-        [Paragraph("Standards Evaluated", bold_body), Paragraph("EU GDPR, US HIPAA, RBI Cyber Framework, SOC 2 Type II", body_style)],
+        [Paragraph("Compliances Evaluated", bold_body), Paragraph("EU GDPR, US HIPAA, RBI Cyber Framework, SOC 2 Type II", body_style)],
         [Paragraph("Analysis Date", bold_body), Paragraph(meta.get("analysis_date", "N/A"), body_style)],
         [Paragraph("Audit Engine", bold_body), Paragraph(meta.get("generated_by", "LexMesh Multi-Framework Engine v2.0"), body_style)],
     ]
@@ -183,7 +183,7 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
     
     # PAGE 3: DETAILED POLICY GAPS FOR ALL 4 COMPLIANCE STANDARDS
     elements.append(Paragraph("Detailed Policy Gap Analysis — Multi-Framework Audit Cards", h1))
-    elements.append(Paragraph("Requirement-by-requirement audit findings with specific policy fixes across all standards.", sub_title))
+    elements.append(Paragraph("Requirement-by-requirement audit findings with specific policy fixes across all compliances.", sub_title))
     elements.append(HRFlowable(width="100%", thickness=1, color=PRIMARY, spaceAfter=8))
     
     all_gaps = report_json.get("all_gaps_flat", report_json.get("detailed_gaps", []))
@@ -196,7 +196,7 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
             gaps_by_fw[fw].append(gap)
 
     fw_display_names = [
-        ("gdpr", "🇪🇺 EU GDPR — Detailed Audit Findings & Policy Fixes"),
+        ("gdpr", " EU GDPR — Detailed Audit Findings & Policy Fixes"),
         ("hipaa", "🏥 US HIPAA — Detailed Audit Findings & Policy Fixes"),
         ("rbi", "🏦 RBI Cyber Framework — Detailed Audit Findings & Policy Fixes"),
         ("soc2", "🛡️ SOC 2 Type II — Detailed Audit Findings & Policy Fixes")
@@ -271,22 +271,23 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
         p1_rows = [["#", "Policy Domain", "Regulation", "Action Required", "Status"]]
         for idx, item in enumerate(p1_items, 1):
             dom_t = item.get("Policy Domain") or item.get("policy_domain", "")
-            fw_t = item.get("Framework Standard") or item.get("framework_tag", item.get("gdpr_article", ""))
+            fw_t = item.get("Framework Compliance") or item.get("Framework compliance") or item.get("Framework Standard") or item.get("framework_tag", item.get("gdpr_article", ""))
             act_t = item.get("Action Required") or item.get("action_required", "")
             stat_t = item.get("Current Status") or item.get("current_status", "")
             p1_rows.append([
                 str(idx),
                 Paragraph(dom_t, body_style),
-                fw_t,
+                Paragraph(fw_t, body_style),
                 Paragraph(act_t, body_style),
                 Paragraph(f"<font color='#DC2626'>{stat_t}</font>", body_style)
             ])
         
         elements.append(Paragraph(f"🚨 P1 CRITICAL PRIORITY ({len(p1_items)} items)", ParagraphStyle('P1', parent=bold_body, textColor=colors.white, backColor=COLOR_NOT, spaceBefore=4, spaceAfter=4)))
-        t_p1 = Table(p1_rows, colWidths=[20, 110, 90, 214, 70])
+        t_p1 = Table(p1_rows, colWidths=[20, 105, 110, 199, 70])
         t_p1.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,0), COLOR_NOT),
             ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
             ('GRID', (0,0), (-1,-1), 0.5, BORDER_COLOR),
             ('PADDING', (0,0), (-1,-1), 4),
         ]))
@@ -299,22 +300,23 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
         p2_rows = [["#", "Policy Domain", "Regulation", "Action Required", "Status"]]
         for idx, item in enumerate(p2_items, 1):
             dom_t = item.get("Policy Domain") or item.get("policy_domain", "")
-            fw_t = item.get("Framework Standard") or item.get("framework_tag", item.get("gdpr_article", ""))
+            fw_t = item.get("Framework Compliance") or item.get("Framework compliance") or item.get("Framework Standard") or item.get("framework_tag", item.get("gdpr_article", ""))
             act_t = item.get("Action Required") or item.get("action_required", "")
             stat_t = item.get("Current Status") or item.get("current_status", "")
             p2_rows.append([
                 str(idx),
                 Paragraph(dom_t, body_style),
-                fw_t,
+                Paragraph(fw_t, body_style),
                 Paragraph(act_t, body_style),
                 Paragraph(f"<font color='#D97706'>{stat_t}</font>", body_style)
             ])
         
         elements.append(Paragraph(f"⚠️ P2 HIGH PRIORITY ({len(p2_items)} items)", ParagraphStyle('P2', parent=bold_body, textColor=colors.white, backColor=COLOR_PARTIAL, spaceBefore=4, spaceAfter=4)))
-        t_p2 = Table(p2_rows, colWidths=[20, 110, 90, 214, 70])
+        t_p2 = Table(p2_rows, colWidths=[20, 105, 110, 199, 70])
         t_p2.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,0), COLOR_PARTIAL),
             ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
             ('GRID', (0,0), (-1,-1), 0.5, BORDER_COLOR),
             ('PADDING', (0,0), (-1,-1), 4),
         ]))
@@ -327,22 +329,23 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
         p3_rows = [["#", "Policy Domain", "Regulation", "Action Required", "Status"]]
         for idx, item in enumerate(p3_items, 1):
             dom_t = item.get("Policy Domain") or item.get("policy_domain", "")
-            fw_t = item.get("Framework Standard") or item.get("framework_tag", item.get("gdpr_article", ""))
+            fw_t = item.get("Framework Compliance") or item.get("Framework compliance") or item.get("Framework Standard") or item.get("framework_tag", item.get("gdpr_article", ""))
             act_t = item.get("Action Required") or item.get("action_required", "")
             stat_t = item.get("Current Status") or item.get("current_status", "")
             p3_rows.append([
                 str(idx),
                 Paragraph(dom_t, body_style),
-                fw_t,
+                Paragraph(fw_t, body_style),
                 Paragraph(act_t, body_style),
                 Paragraph(f"<font color='#16A34A'>{stat_t}</font>", body_style)
             ])
         
         elements.append(Paragraph(f"ℹ️ P3 MEDIUM PRIORITY ({len(p3_items)} items)", ParagraphStyle('P3', parent=bold_body, textColor=colors.white, backColor=SECONDARY, spaceBefore=4, spaceAfter=4)))
-        t_p3 = Table(p3_rows, colWidths=[20, 110, 90, 214, 70])
+        t_p3 = Table(p3_rows, colWidths=[20, 105, 110, 199, 70])
         t_p3.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,0), SECONDARY),
             ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
             ('GRID', (0,0), (-1,-1), 0.5, BORDER_COLOR),
             ('PADDING', (0,0), (-1,-1), 4),
         ]))

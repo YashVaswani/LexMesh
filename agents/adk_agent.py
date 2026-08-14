@@ -17,7 +17,7 @@ class GoogleADKAgentPrimitive:
         self.description = description
 
 class GoogleADKPolicySubAgent(GoogleADKAgentPrimitive):
-    """Google ADK Sub-Agent bound to a specific policy domain & compliance standard."""
+    """Google ADK Sub-Agent bound to a specific policy domain & compliance ."""
     def __init__(self, domain_id: str, domain_title: str, framework_id: str = "gdpr"):
         super().__init__(
             name=f"GoogleADK_{framework_id.upper()}_{domain_id}_Agent",
