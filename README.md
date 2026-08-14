@@ -1,26 +1,37 @@
-# 🛡️ LexMesh — Enterprise Agentic RAG Compliance Engine
+# 🛡️ LexMesh — Policy-Centric Multi-Framework Compliance Engine
 
-[![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![Framework](https://img.shields.io/badge/Orchestration-Google%20ADK-green.svg)](https://ai.google.dev/)
-[![Database](https://img.shields.io/badge/VectorDB-Supabase%20pgvector-emerald.svg)](https://supabase.com/)
-[![LLM](https://img.shields.io/badge/LLM-Gemini%203.6%20Flash%20%7C%20Groq%20Llama%203.3-orange.svg)](https://groq.com/)
+[![SDK](https://img.shields.io/badge/Google%20GenAI-v2.18.1-4285F4.svg)](https://github.com/googleapis/python-genai)
+[![Database](https://img.shields.io/badge/Database-Supabase%20Cloud-emerald.svg)](https://supabase.com/)
+[![LLM](https://img.shields.io/badge/LLMs-Gemini%20Flash%20%7C%20Groq%20Llama%203.3-orange.svg)](https://groq.com/)
 [![UI](https://img.shields.io/badge/UI-Streamlit-ff4b4b.svg)](https://streamlit.io/)
 [![PDF Engine](https://img.shields.io/badge/Exporter-ReportLab-darkblue.svg)](https://www.reportlab.com/)
 
-**LexMesh** is an enterprise-grade, zero-cost-stack **Agentic RAG (Retrieval-Augmented Generation)** compliance engine that automates legal regulatory gap analysis. Built using Google ADK orchestration primitives, LexMesh evaluates company policy documents against all 99 Articles and 11 Chapters of the **EU General Data Protection Regulation (GDPR)** in **under 15 seconds**.
+**LexMesh** is an enterprise-grade, policy-centric **Multi-Framework Compliance & Legal Audit Engine**. Powered by Google ADK orchestration primitives, LexMesh simultaneously evaluates company policy documents against **250+ atomic, testable statutory requirements** across four major global regulatory standards:
+
+1. 🇪🇺 **EU GDPR** — General Data Protection Regulation (Art. 1–99)
+2. 🏥 **US HIPAA** — Health Insurance Portability and Accountability Act (45 CFR § 160 & 164)
+3. 🏦 **RBI Cyber Framework** — Reserve Bank of India Cyber Security & KYC Master Directions
+4. 🛡️ **SOC 2 Type II** — AICPA Trust Services Criteria (Security, Availability, Confidentiality, Processing Integrity, Privacy)
 
 ---
 
 ## 🌟 Key Features & Capabilities
 
-- 🤖 **Google ADK Hierarchical Orchestration**: Uses a **Supervisor Router Agent** to oversee policy ingestion and delegate evaluation tasks in parallel to **11 Chapter Sub-Agents (Chapters I–XI)** via Python `ThreadPoolExecutor`.
-- ⚡ **High-Speed Chapter Batching (< 15s)**: Optimizes multi-agent RAG execution from 10 minutes down to **~10–15 seconds total** by evaluating requirements in chapter batches.
-- 🎯 **Deterministic Audit Engine (`temperature=0.0`)**: Enforces greedy decoding across Gemini 3.6 Flash and Groq Llama 3.3 70B, delivering 100% stable, repeatable, and audit-grade compliance reports.
-- ☁️ **Cloud Vector Store & Pre-filtering**: Stores 64 atomic requirement chunks with 384-dimensional vector embeddings in **Supabase Cloud (`pgvector` + `jsonb`)**, using SQL pre-filtering (`.eq("chapter_number", chapter)`).
-- ⚖️ **Official GDPR Article 83 Statutory Fine Calculator**: Automatically evaluates Tier 1 (€10M or 2% revenue) vs Tier 2 (€20M or 4% revenue) statutory fine exposure based on failing chapters and articles.
-- 📂 **Auto-Metadata PDF Extractor**: Parses Page 1 of uploaded company policy PDFs to automatically extract Company Name and Policy Version/Title.
-- 📋 **Prioritized Action Plan (P1 / P2 / P3)**: Automatically prioritizes severe `Conflicting` legal contradictions at the top of **P1 Critical Priority**, followed by `Not Met` omissions and `Partially Met` operational fixes.
-- 📄 **Audit-Grade ReportLab PDF Exporter**: Exports complete 8-page compliance PDFs featuring cover score gauges, status legend boxes, requirement cards with cited policy quotes, and action plans.
+- 🤖 **Google ADK Supervisor Architecture**: Uses a **Supervisor Router Agent** to oversee policy ingestion and delegate audit evaluations in parallel to **Chapter Sub-Agents** via a thread-paced execution pool.
+- 🌐 **Multi-Framework Statutory Engine**: Audits company policies against pre-curated statutory catalogs (250+ requirements) covering EU GDPR, US HIPAA, RBI Cyber, and SOC 2 Type II simultaneously.
+- 🎯 **Targeted Zero-Cost RAG Matcher**: Extracts top relevant policy paragraphs (~600 chars / ~350 tokens) per requirement using keyword-density scoring, eliminating context dilution and cutting API token consumption by **70%**.
+- ⚡ **Multi-Tier SHA-256 Audit Caching**: Features in-memory + Supabase Cloud (`audit_verdict_cache`) persistent caching. Re-running audits or evaluating policy revisions returns in **0.001 seconds** with **$0 API cost**.
+- 🔑 **Multi-Key API Fallback Engine**: Supports comma-separated keys (`GEMINI_API_KEY=key1,key2`) and multi-model rotation across modern **Google GenAI SDK v2** (`gemini-3.1-flash-lite`, `gemini-flash-latest`) with secondary **Groq fallback** (`llama-3.3-70b-versatile`, `llama-3.1-8b-instant`).
+- 🎯 **Interactive Scope Selection**: Sidebar dropdown (`st.selectbox`) enables users to dynamically filter audit scores, policy domain gap accordions, and priority action plans by target compliance standard (`All Frameworks`, `EU GDPR`, `US HIPAA`, `RBI Cyber`, `SOC 2 Type II`).
+- 🚨 **Statutory Fine & Exposure Calculator**: Evaluates statutory penalties across standards:
+  - **EU GDPR**: Art. 83 Tier 1 (€10M or 2%) vs Tier 2 (€20M or 4% global annual revenue).
+  - **US HIPAA**: Statutory Civil Monetary Penalty ($1.9M+/year under 45 CFR § 160).
+  - **RBI Cyber**: Banking Regulation Act statutory penalties & FIU-IND enforcement directions.
+  - **SOC 2**: Qualified vs Unqualified audit opinion risk.
+- 📋 **Policy-Grouped Action Plan**: Organizes remediation tasks by priority tier (**P1 Critical**, **P2 High**, **P3 Medium**) grouped by company policy domain.
+- 📄 **Audit-Grade ReportLab PDF & JSON Exporter**: Renders PDF audit reports complete with wrapped regulation tables, status color indicators, policy quotes, and targeted scope downloads.
 
 ---
 
@@ -28,28 +39,28 @@
 
 ```mermaid
 flowchart TD
-    A[📄 User Uploads Policy PDF] --> B[🔍 Auto-Extract Company & Policy Metadata]
-    B --> C[🤖 Google ADK Supervisor Agent]
-    C --> D[⚙️ Parallel Execution Pool - ThreadPoolExecutor]
+    A[📄 User Uploads Policy PDF] --> B[🔍 Metadata Extractor & Section Chunking]
+    B --> C[🤖 Google ADK Supervisor Router Agent]
+    C --> D[⚙️ Thread-Paced Concurrency Pool]
     
-    subgraph SubAgents [11 Chapter Sub-Agents (Chapters I–XI)]
-        E1[Ch I: General Provisions]
-        E2[Ch II: Principles]
-        E3[Ch III: Data Subject Rights]
-        E4[Ch IV: Controller & Processor]
-        E5[Ch V: Third Country Transfers]
-        E6[Ch VI–XI: Governance & Penalties]
+    subgraph ParallelSubAgents [Parallel Chapter Sub-Agents]
+        E1[🇪🇺 EU GDPR Sub-Agent]
+        E2[🏥 US HIPAA Sub-Agent]
+        E3[🏦 RBI Cyber Sub-Agent]
+        E4[🛡️ SOC 2 Type II Sub-Agent]
     end
     
-    D --> E1 & E2 & E3 & E4 & E5 & E6
+    D --> E1 & E2 & E3 & E4
     
-    E1 & E2 & E3 & E4 & E5 & E6 <--> F[(☁️ Supabase Cloud pgvector Store)]
+    E1 & E2 & E3 & E4 <--> F[🎯 Targeted Paragraph Matcher]
+    E1 & E2 & E3 & E4 <--> G[(⚡ SHA-256 Cache - In-Memory & Supabase)]
+    E1 & E2 & E3 & E4 <--> H[🔑 Multi-Key Fallback Engine: Gemini v2 → Groq]
     
-    E1 & E2 & E3 & E4 & E5 & E6 --> G[📊 Master Report Aggregator]
+    E1 & E2 & E3 & E4 --> I[📊 Master Audit Report Aggregator]
     
-    G --> H[🎨 Interactive Streamlit Web UI]
-    G --> I[📄 ReportLab Audit PDF Exporter]
-    G --> J[💾 JSON Report Storage]
+    I --> J[🎨 Interactive Streamlit Web UI]
+    I --> K[📄 ReportLab Audit PDF Exporter]
+    I --> L[📥 Targeted Scope JSON Exporter]
 ```
 
 ---
@@ -58,23 +69,25 @@ flowchart TD
 
 ```
 LexMesh/
-├── app.py                      # Interactive Streamlit Web Dashboard & UI
-├── config.py                   # Environment configuration loader
-├── generate_gdpr_pdf.py        # Script generating GDPR condensed reference PDF
-├── sync_to_supabase.py         # Cloud vector store ingestion script
-├── requirements.txt            # Python dependencies
-├── gdpr_requirements_master.json # 64 atomic requirement catalog with vector embeddings
+├── app.py                         # Streamlit Interactive Web Dashboard & Filter Engine
+├── config.py                      # Multi-Key Environment Config & Key Parsing Engine
+├── requirements.txt               # Python Dependencies
+├── gdpr_requirements_master.json  # 99 Article GDPR Statutory Requirement Catalog
+├── hipaa_requirements_master.json # HIPAA 45 CFR § 160/164 Statutory Requirement Catalog
+├── rbi_requirements_master.json   # RBI Master Direction Cyber Security Requirement Catalog
+├── soc2_requirements_master.json  # AICPA SOC 2 Type II Trust Criteria Catalog
 ├── agents/
 │   ├── __init__.py
-│   ├── adk_agent.py            # Google ADK Agent Primitives & Orchestrator
-│   ├── chapter_agents.py       # LLM provider fallback chain (Gemini 3.6 -> Groq 70B) & Sub-Agents
-│   └── supervisor.py           # Supervisor Router Agent, dynamic scoring & action plans
+│   ├── adk_agent.py               # Google ADK Agent Primitives & Workflow Orchestrator
+│   ├── chapter_agents.py          # Targeted RAG, SHA-256 Audit Cache & LLM Provider Chain
+│   └── supervisor.py              # Supervisor Agent, Scoring Engine & Action Plan Builder
 ├── db/
 │   ├── __init__.py
-│   └── supabase_client.py      # Supabase Client for pgvector & compliance reports
-└── reporter/
-    ├── __init__.py
-    └── pdf_generator.py        # Enterprise ReportLab PDF report generator
+│   └── supabase_client.py         # Supabase Cloud Client & Persistent Audit Cache Manager
+├── reporter/
+│   ├── __init__.py
+│   └── pdf_generator.py           # Enterprise ReportLab PDF Exporter with Text Wrapping
+└── scratch/                       # Temporary development benchmarks & diagnostic scripts
 ```
 
 ---
@@ -82,12 +95,12 @@ LexMesh/
 ## 🚀 Quick Start Guide
 
 ### 1. Prerequisites
-- Python 3.11 or higher
-- Supabase Cloud account (`pgvector` enabled)
-- API Keys: Google AI Studio (`GEMINI_API_KEY`), Groq Console (`GROQ_API_KEY`)
+- **Python 3.10+** (Tested on Python 3.10 & 3.11)
+- **API Keys**: Google AI Studio (`GEMINI_API_KEY`), Groq Console (`GROQ_API_KEY`)
+- *(Optional)* Supabase Cloud project for cloud report & audit verdict storage
 
 ### 2. Installation
-```powershell
+```bash
 # Clone the repository
 git clone https://github.com/YashVaswani/LexMesh.git
 cd LexMesh
@@ -96,36 +109,37 @@ cd LexMesh
 pip install -r requirements.txt
 ```
 
-### 3. Environment Configuration
-Create a `.env` file in the root directory:
+### 3. Environment Setup
+Create a `.env` file in the project root:
 ```env
-GEMINI_API_KEY=your_gemini_api_key
-GROQ_API_KEY=your_groq_api_key
-SUPABASE_URL=https://your-project-ref.supabase.co
+# Supports comma-separated keys for automatic rotation & higher throughput
+GEMINI_API_KEY=your_gemini_key_1,your_gemini_key_2
+GROQ_API_KEY=your_groq_key_1,your_groq_key_2
+
+# Optional Supabase Cloud database configuration
+SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_KEY=your_supabase_anon_key
 ```
 
-### 4. Vector Database Ingestion (Supabase Cloud)
-Sync the 64 atomic GDPR requirement chunks with 384-dimensional vector embeddings to Supabase:
-```powershell
-python sync_to_supabase.py
-```
-
-### 5. Launch Web Dashboard
+### 4. Launch Application
 Start the interactive Streamlit dashboard:
-```powershell
-python -m streamlit run app.py
+```bash
+streamlit run app.py
 ```
+Open your browser at **`http://localhost:8501`**.
 
 ---
 
-## 🗺️ Roadmap (Phase 2 & Beyond)
+## 📊 Compliance Coverage Summary
 
-- [x] **Phase 1**: Complete GDPR 99-Article Compliance Engine with Google ADK Parallel RAG & PDF Exporter.
-- [ ] **Phase 2**: Multi-Framework Enterprise Support (**ISO 27001:2022**, **RBI Cybersecurity Framework**, **HIPAA**, **SOC 2 Type II**).
-- [ ] **Phase 3**: Automated AI Remediation Patch Generator (generating draft policy rewrite clauses automatically).
+| Framework Standard | Statutory Authority | Requirement Count | Fine / Risk Exposure |
+| :--- | :--- | :--- | :--- |
+| 🇪🇺 **EU GDPR** | Regulation (EU) 2016/679 | 99 Articles | Up to €20M or 4% Global Annual Revenue |
+| 🏥 **US HIPAA** | 45 CFR § 160 & § 164 | 43 Criteria | Up to $1.9M+ Civil Monetary Penalties / Year |
+| 🏦 **RBI Cyber** | RBI Master Directions | 68 Provisions | Banking Regulation Act Penalties & Directives |
+| 🛡️ **SOC 2 Type II** | AICPA Trust Criteria | 43 Controls | Audit Qualification & Enterprise Deal Loss |
 
 ---
 
 ## 📄 License & Attribution
-Designed & Engineered by **LexMesh Team**. Powered by Google ADK, Gemini, Groq, Supabase, and Streamlit.
+Engineered by the **LexMesh Development Team**. Powered by Google ADK, Google GenAI SDK v2, Gemini Flash, Groq Llama 3.3, Supabase, Streamlit, and ReportLab.
