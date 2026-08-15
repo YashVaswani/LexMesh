@@ -1,4 +1,5 @@
 from nicegui import ui
+from ui.components.lucide import lucide_icon
 
 
 def create_policy_posture(report):
@@ -70,8 +71,6 @@ def create_policy_posture(report):
             ),
         )
 
-        icon = item.get("icon", "📄")
-
         score = item.get(
             "score",
             "—",
@@ -93,11 +92,13 @@ def create_policy_posture(report):
                 "w-full items-center justify-between"
             ):
 
-                ui.label(
-                    f"{icon} {domain}"
-                ).classes(
-                    "lex-domain-title"
-                )
+                with ui.row().classes("items-center gap-2"):
+                    lucide_icon(item.get("icon", "file-text"), size=20, class_name="text-emerald-700 dark:text-emerald-400")
+                    ui.label(
+                        str(domain)
+                    ).classes(
+                        "lex-domain-title"
+                    )
 
                 ui.badge(
                     str(verdict)

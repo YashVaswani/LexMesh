@@ -1,17 +1,18 @@
 from nicegui import ui
+from ui.components.lucide import lucide_icon
 
 
 FRAMEWORKS = {
-    '🌐 All Standards (Full Scope)': [
+    'All Standards': [
         'gdpr',
         'hipaa',
         'rbi',
         'soc2',
     ],
-    '🇪🇺 EU GDPR': ['gdpr'],
-    '🏥 US HIPAA': ['hipaa'],
-    '🏦 RBI Cyber Framework': ['rbi'],
-    '🛡️ SOC 2 Type II': ['soc2'],
+    'EU GDPR': ['gdpr'],
+    'US HIPAA': ['hipaa'],
+    'RBI Cyber Framework': ['rbi'],
+    'SOC 2 Type II': ['soc2'],
 }
 
 
@@ -39,11 +40,7 @@ def create_sidebar(
                 "items-center gap-3"
             ):
 
-                ui.icon(
-                    "account_tree"
-                ).classes(
-                    "lex-section-icon lex-pipeline-icon"
-                )
+                lucide_icon("workflow", size=24, class_name="lex-section-icon lex-pipeline-icon")
 
                 with ui.column().classes("gap-0"):
 
@@ -64,7 +61,7 @@ def create_sidebar(
             )
 
             _service(
-                "auto_awesome",
+                "sparkles",
                 "Gemini API",
                 "Google AI",
                 gemini_connected,
@@ -72,7 +69,7 @@ def create_sidebar(
             )
 
             _service(
-                "bolt",
+                "zap",
                 "Groq API",
                 "Fast inference",
                 groq_connected,
@@ -88,7 +85,7 @@ def create_sidebar(
             )
 
             _service(
-                "hub",
+                "layers",
                 "Google ADK",
                 "Orchestration",
                 True,
@@ -107,11 +104,7 @@ def create_sidebar(
                 "items-center gap-3"
             ):
 
-                ui.icon(
-                    "verified_user"
-                ).classes(
-                    "lex-section-icon lex-target-icon"
-                )
+                lucide_icon("shield-check", size=24, class_name="lex-section-icon lex-target-icon")
 
                 with ui.column().classes("gap-0"):
 
@@ -132,7 +125,7 @@ def create_sidebar(
                     FRAMEWORKS.keys()
                 ),
                 value=(
-                    '🌐 All Standards (Full Scope)'
+                    'All Standards'
                 ),
                 label="Compliance framework",
             ).props(
@@ -153,11 +146,7 @@ def create_sidebar(
                 "items-center gap-3"
             ):
 
-                ui.icon(
-                    "picture_as_pdf"
-                ).classes(
-                    "lex-section-icon lex-document-icon"
-                )
+                lucide_icon("file-text", size=24, class_name="lex-section-icon lex-document-icon")
 
                 with ui.column().classes("gap-0"):
 
@@ -181,7 +170,7 @@ def create_sidebar(
                 label="Upload Company Policy PDF",
                 auto_upload=True,
             ).props(
-                "accept=.pdf"
+                "accept=.pdf flat bordered class=w-full"
             ).classes(
                 "lex-policy-upload"
             )
@@ -224,7 +213,6 @@ def create_sidebar(
 
             run_button = ui.button(
                 "Run Unified Gap Analysis",
-                icon="rocket_launch",
             ).props(
                 "unelevated"
             ).classes(
@@ -249,14 +237,10 @@ def _service(
 ):
 
     with ui.row().classes(
-        "lex-service-row"
+        "lex-service-row items-center"
     ):
 
-        ui.icon(
-            icon
-        ).classes(
-            f"lex-service-icon {icon_class}"
-        )
+        lucide_icon(icon, size=18, class_name=f"lex-service-icon {icon_class}")
 
         with ui.column().classes(
             "gap-0 flex-1"

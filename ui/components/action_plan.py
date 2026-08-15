@@ -1,4 +1,5 @@
 from nicegui import ui
+from ui.components.lucide import lucide_icon
 
 
 def create_action_plan(report):
@@ -21,7 +22,8 @@ def create_action_plan(report):
             [],
         ),
         "lex-p1",
-        "priority_high",
+        "alert-octagon",
+        "text-red-500",
     )
 
     _priority(
@@ -31,7 +33,8 @@ def create_action_plan(report):
             [],
         ),
         "lex-p2",
-        "warning",
+        "alert-triangle",
+        "text-amber-500",
     )
 
     _priority(
@@ -41,7 +44,8 @@ def create_action_plan(report):
             [],
         ),
         "lex-p3",
-        "schedule",
+        "info",
+        "text-emerald-500",
     )
 
 
@@ -50,6 +54,7 @@ def _priority(
     items,
     css_class,
     icon,
+    color_class="text-emerald-500",
 ):
 
     with ui.card().classes(
@@ -60,9 +65,7 @@ def _priority(
             "items-center gap-2"
         ):
 
-            ui.icon(
-                icon
-            )
+            lucide_icon(icon, size=20, class_name=color_class)
 
             ui.label(
                 title
@@ -147,15 +150,17 @@ def _priority(
                         )
                         
                     if domain:
-                        ui.badge(str(domain)).props("outline color=grey")
+                        ui.badge(str(domain)).classes("lex-domain-badge-outline")
                         
                     if status:
-                        ui.badge(str(status)).props("color=red")
+                        ui.badge(str(status)).classes("lex-status-partial")
 
                 if action:
-
+                    with ui.row().classes("items-center gap-2 mt-3 mb-1"):
+                        lucide_icon("sparkles", size=16, class_name="text-emerald-800 dark:text-emerald-300")
+                        ui.label("Action Required").classes("lex-gap-label")
                     ui.label(
                         str(action)
                     ).classes(
-                        "lex-action-item-text"
+                        "lex-gap-text"
                     )

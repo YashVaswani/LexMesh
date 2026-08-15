@@ -1,26 +1,31 @@
 from nicegui import ui
+from ui.components.lucide import lucide_icon
 
 
 FRAMEWORK_INFO = {
     "gdpr": {
         "name": "EU GDPR",
-        "icon": "🇪🇺",
+        "icon": "shield-check",
         "class": "lex-gdpr-card",
+        "color": "text-emerald-600",
     },
     "hipaa": {
         "name": "US HIPAA",
-        "icon": "🏥",
+        "icon": "activity",
         "class": "lex-hipaa-card",
+        "color": "text-teal-600",
     },
     "rbi": {
         "name": "RBI Cyber",
-        "icon": "🏦",
+        "icon": "building-2",
         "class": "lex-rbi-card",
+        "color": "text-orange-600",
     },
     "soc2": {
         "name": "SOC 2 Type II",
-        "icon": "🛡️",
+        "icon": "lock",
         "class": "lex-soc2-card",
+        "color": "text-amber-600",
     },
 }
 
@@ -84,7 +89,10 @@ def create_score_cards(
                     overall / 100,
                     1,
                 ),
-            )
+            ),
+            show_value=False,
+        ).props(
+            ':show-value="false"'
         ).classes(
             "lex-score-progress"
         )
@@ -116,8 +124,9 @@ def create_score_cards(
                 key,
                 {
                     "name": key.upper(),
-                    "icon": "🛡️",
+                    "icon": "shield-check",
                     "class": "",
+                    "color": "text-emerald-600",
                 },
             )
 
@@ -146,11 +155,13 @@ def create_score_cards(
                     "items-center justify-between"
                 ):
 
-                    ui.label(
-                        f"{info['icon']} {info['name']}"
-                    ).classes(
-                        "lex-framework-name"
-                    )
+                    with ui.row().classes("items-center gap-2"):
+                        lucide_icon(info["icon"], size=20, class_name=info["color"])
+                        ui.label(
+                            info['name']
+                        ).classes(
+                            "lex-framework-name"
+                        )
 
                     ui.label(
                         f"{score:.0f}%"
@@ -165,7 +176,10 @@ def create_score_cards(
                             score / 100,
                             1,
                         ),
-                    )
+                    ),
+                    show_value=False,
+                ).props(
+                    ':show-value="false"'
                 )
 
                 ui.label(

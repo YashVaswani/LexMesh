@@ -1,19 +1,19 @@
-# 🛡️ LexMesh — Policy-Centric Multi-Framework Compliance Engine
+# LexMesh — Policy-Centric Multi-Framework Compliance Engine
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![Framework](https://img.shields.io/badge/Orchestration-Google%20ADK-green.svg)](https://ai.google.dev/)
 [![SDK](https://img.shields.io/badge/Google%20GenAI-v2.18.1-4285F4.svg)](https://github.com/googleapis/python-genai)
 [![Database](https://img.shields.io/badge/Database-Supabase%20Cloud-emerald.svg)](https://supabase.com/)
 [![LLM](https://img.shields.io/badge/LLMs-Gemini%20Flash%20%7C%20Groq%20Llama%203.3-orange.svg)](https://groq.com/)
-[![UI](https://img.shields.io/badge/UI-Streamlit-ff4b4b.svg)](https://streamlit.io/)
+[![UI](https://img.shields.io/badge/UI-NiceGUI-green.svg)](https://nicegui.io/)
 [![PDF Engine](https://img.shields.io/badge/Exporter-ReportLab-darkblue.svg)](https://www.reportlab.com/)
 
 **LexMesh** is an enterprise-grade, policy-centric **Multi-Framework Compliance & Legal Audit Engine**. Powered by Google ADK orchestration primitives, LexMesh simultaneously evaluates company policy documents against **250+ atomic, testable statutory requirements** across four major global regulatory standards:
 
-1.    **EU GDPR** — General Data Protection Regulation (Art. 1–99)
-2. 🏥 **US HIPAA** — Health Insurance Portability and Accountability Act (45 CFR § 160 & 164)
-3. 🏦 **RBI Cyber Framework** — Reserve Bank of India Cyber Security & KYC Master Directions
-4. 🛡️ **SOC 2 Type II** — AICPA Trust Services Criteria (Security, Availability, Confidentiality, Processing Integrity, Privacy)
+1. **EU GDPR** — General Data Protection Regulation (Art. 1–99)
+2. **US HIPAA** — Health Insurance Portability and Accountability Act (45 CFR § 160 & 164)
+3. **RBI Cyber Framework** — Reserve Bank of India Cyber Security & KYC Master Directions
+4. **SOC 2 Type II** — AICPA Trust Services Criteria (Security, Availability, Confidentiality, Processing Integrity, Privacy)
 
 ---
 
@@ -24,7 +24,8 @@
 - 🎯 **Targeted Zero-Cost RAG Matcher**: Extracts top relevant policy paragraphs (~600 chars / ~350 tokens) per requirement using keyword-density scoring, eliminating context dilution and cutting API token consumption by **70%**.
 - ⚡ **Multi-Tier SHA-256 Audit Caching**: Features in-memory + Supabase Cloud (`audit_verdict_cache`) persistent caching. Re-running audits or evaluating policy revisions returns in **0.001 seconds** with **$0 API cost**.
 - 🔑 **Multi-Key API Fallback Engine**: Supports comma-separated keys (`GEMINI_API_KEY=key1,key2`) and multi-model rotation across modern **Google GenAI SDK v2** (`gemini-3.1-flash-lite`, `gemini-flash-latest`) with secondary **Groq fallback** (`llama-3.3-70b-versatile`, `llama-3.1-8b-instant`).
-- 🎯 **Interactive Scope Selection**: Sidebar dropdown (`st.selectbox`) enables users to dynamically filter audit scores, policy domain gap accordions, and priority action plans by target compliance standard (`All Frameworks`, `EU GDPR`, `US HIPAA`, `RBI Cyber`, `SOC 2 Type II`).
+- 🎨 **Executive Sage & Beige Design System**: Features a high-contrast Warm Beige (`#F5F2EB`) and Forest Sage (`#23382B`) design system, Google Font **Plus Jakarta Sans** typography, Lucide vector SVG icons, and 0 emoji clutter.
+- 🎯 **Interactive Scope Selection**: Sidebar dropdown enables users to dynamically filter audit scores, policy domain gap accordions, and priority action plans by target compliance standard (`All Frameworks`, `EU GDPR`, `US HIPAA`, `RBI Cyber`, `SOC 2 Type II`).
 - 🚨 **Statutory Fine & Exposure Calculator**: Evaluates statutory penalties across standards:
   - **EU GDPR**: Art. 83 Tier 1 (€10M or 2%) vs Tier 2 (€20M or 4% global annual revenue).
   - **US HIPAA**: Statutory Civil Monetary Penalty ($1.9M+/year under 45 CFR § 160).
@@ -44,10 +45,10 @@ flowchart TD
     C --> D[⚙️ Thread-Paced Concurrency Pool]
     
     subgraph ParallelSubAgents [Parallel Chapter Sub-Agents]
-        E1[ EU GDPR Sub-Agent]
-        E2[🏥 US HIPAA Sub-Agent]
-        E3[🏦 RBI Cyber Sub-Agent]
-        E4[🛡️ SOC 2 Type II Sub-Agent]
+        E1[EU GDPR Sub-Agent]
+        E2[US HIPAA Sub-Agent]
+        E3[RBI Cyber Sub-Agent]
+        E4[SOC 2 Type II Sub-Agent]
     end
     
     D --> E1 & E2 & E3 & E4
@@ -58,7 +59,7 @@ flowchart TD
     
     E1 & E2 & E3 & E4 --> I[📊 Master Audit Report Aggregator]
     
-    I --> J[🎨 Interactive Streamlit Web UI]
+    I --> J[🎨 Interactive NiceGUI Web Dashboard]
     I --> K[📄 ReportLab Audit PDF Exporter]
     I --> L[📥 Targeted Scope JSON Exporter]
 ```
@@ -69,7 +70,7 @@ flowchart TD
 
 ```
 LexMesh/
-├── app.py                         # Streamlit Interactive Web Dashboard & Filter Engine
+├── nicegui_app.py                 # NiceGUI Enterprise Web Dashboard & UI Entry Point
 ├── config.py                      # Multi-Key Environment Config & Key Parsing Engine
 ├── requirements.txt               # Python Dependencies
 ├── gdpr_requirements_master.json  # 99 Article GDPR Statutory Requirement Catalog
@@ -87,7 +88,9 @@ LexMesh/
 ├── reporter/
 │   ├── __init__.py
 │   └── pdf_generator.py           # Enterprise ReportLab PDF Exporter with Text Wrapping
-└── scratch/                       # Temporary development benchmarks & diagnostic scripts
+├── ui/
+│   ├── components/                # Modular NiceGUI UI Components & Lucide SVGs
+│   └── styles/theme.css           # Executive Warm Beige & Sage Green Design System
 ```
 
 ---
@@ -95,7 +98,7 @@ LexMesh/
 ## 🚀 Quick Start Guide
 
 ### 1. Prerequisites
-- **Python 3.10+** (Tested on Python 3.10 & 3.11)
+- **Python 3.10+** (Tested on Python 3.10, 3.11, 3.14)
 - **API Keys**: Google AI Studio (`GEMINI_API_KEY`), Groq Console (`GROQ_API_KEY`)
 - *(Optional)* Supabase Cloud project for cloud report & audit verdict storage
 
@@ -122,11 +125,11 @@ SUPABASE_KEY=your_supabase_anon_key
 ```
 
 ### 4. Launch Application
-Start the interactive Streamlit dashboard:
+Start the interactive NiceGUI executive dashboard:
 ```bash
-streamlit run app.py
+python nicegui_app.py
 ```
-Open your browser at **`http://localhost:8501`**.
+Open your browser at **`http://localhost:8080`**.
 
 ---
 
@@ -134,12 +137,12 @@ Open your browser at **`http://localhost:8501`**.
 
 | Framework Standard | Statutory Authority | Requirement Count | Fine / Risk Exposure |
 | :--- | :--- | :--- | :--- |
-|    **EU GDPR** | Regulation (EU) 2016/679 | 99 Articles | Up to €20M or 4% Global Annual Revenue |
-| 🏥 **US HIPAA** | 45 CFR § 160 & § 164 | 43 Criteria | Up to $1.9M+ Civil Monetary Penalties / Year |
-| 🏦 **RBI Cyber** | RBI Master Directions | 68 Provisions | Banking Regulation Act Penalties & Directives |
-| 🛡️ **SOC 2 Type II** | AICPA Trust Criteria | 43 Controls | Audit Qualification & Enterprise Deal Loss |
+| **EU GDPR** | Regulation (EU) 2016/679 | 99 Articles | Up to €20M or 4% Global Annual Revenue |
+| **US HIPAA** | 45 CFR § 160 & § 164 | 43 Criteria | Up to $1.9M+ Civil Monetary Penalties / Year |
+| **RBI Cyber** | RBI Master Directions | 68 Provisions | Banking Regulation Act Penalties & Directives |
+| **SOC 2 Type II** | AICPA Trust Criteria | 43 Controls | Audit Qualification & Enterprise Deal Loss |
 
 ---
 
 ## 📄 License & Attribution
-Engineered by the **LexMesh Development Team**. Powered by Google ADK, Google GenAI SDK v2, Gemini Flash, Groq Llama 3.3, Supabase, Streamlit, and ReportLab.
+Engineered by the **LexMesh Development Team**. Powered by Google ADK, Google GenAI SDK v2, Gemini Flash, Groq Llama 3.3, Supabase, NiceGUI, Lucide Icons, and ReportLab.
