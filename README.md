@@ -10,7 +10,7 @@
 
 **LexMesh** is an enterprise-grade, policy-centric **Multi-Framework Compliance & Legal Audit Engine**. Powered by Google ADK orchestration primitives, LexMesh simultaneously evaluates company policy documents against **250+ atomic, testable statutory requirements** across four major global regulatory standards:
 
-1. 🇪🇺 **EU GDPR** — General Data Protection Regulation (Art. 1–99)
+1.    **EU GDPR** — General Data Protection Regulation (Art. 1–99)
 2. 🏥 **US HIPAA** — Health Insurance Portability and Accountability Act (45 CFR § 160 & 164)
 3. 🏦 **RBI Cyber Framework** — Reserve Bank of India Cyber Security & KYC Master Directions
 4. 🛡️ **SOC 2 Type II** — AICPA Trust Services Criteria (Security, Availability, Confidentiality, Processing Integrity, Privacy)
@@ -44,7 +44,7 @@ flowchart TD
     C --> D[⚙️ Thread-Paced Concurrency Pool]
     
     subgraph ParallelSubAgents [Parallel Chapter Sub-Agents]
-        E1[🇪🇺 EU GDPR Sub-Agent]
+        E1[ EU GDPR Sub-Agent]
         E2[🏥 US HIPAA Sub-Agent]
         E3[🏦 RBI Cyber Sub-Agent]
         E4[🛡️ SOC 2 Type II Sub-Agent]
@@ -134,7 +134,7 @@ Open your browser at **`http://localhost:8501`**.
 
 | Framework Standard | Statutory Authority | Requirement Count | Fine / Risk Exposure |
 | :--- | :--- | :--- | :--- |
-| 🇪🇺 **EU GDPR** | Regulation (EU) 2016/679 | 99 Articles | Up to €20M or 4% Global Annual Revenue |
+|    **EU GDPR** | Regulation (EU) 2016/679 | 99 Articles | Up to €20M or 4% Global Annual Revenue |
 | 🏥 **US HIPAA** | 45 CFR § 160 & § 164 | 43 Criteria | Up to $1.9M+ Civil Monetary Penalties / Year |
 | 🏦 **RBI Cyber** | RBI Master Directions | 68 Provisions | Banking Regulation Act Penalties & Directives |
 | 🛡️ **SOC 2 Type II** | AICPA Trust Criteria | 43 Controls | Audit Qualification & Enterprise Deal Loss |

@@ -1,0 +1,1019 @@
+:root {
+    --lex-bg: #f4f7fb;
+    --lex-surface: #ffffff;
+    --lex-border: #e2e8f0;
+
+    --lex-text: #172033;
+    --lex-muted: #64748b;
+
+    --lex-blue: #2563eb;
+    --lex-indigo: #4f46e5;
+    --lex-purple: #7c3aed;
+    --lex-teal: #0891b2;
+    --lex-green: #16a34a;
+    --lex-orange: #ea580c;
+    --lex-red: #dc2626;
+}
+
+
+/* ============================================================
+   BODY
+   ============================================================ */
+
+body {
+    background:
+        radial-gradient(
+            circle at 0% 0%,
+            #ffffff,
+            #f4f7fb 55%,
+            #edf3fb
+        ) !important;
+
+    color: var(--lex-text);
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+/* ============================================================
+   PAGE
+   ============================================================ */
+
+.lex-page-title {
+    color: #172033 !important;
+}
+
+.lex-page-subtitle {
+    color: #64748b !important;
+}
+
+.lex-analysis-status {
+    padding: 10px 14px;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+
+    color: #536176 !important;
+}
+
+
+/* ============================================================
+   TABS
+   ============================================================ */
+
+.lex-dashboard-tabs {
+    background: rgba(255,255,255,.92);
+
+    border: 1px solid #dfe7f1;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 6px 20px rgba(40,60,90,.06);
+}
+
+.lex-dashboard-tabs .q-tab {
+    min-height: 58px;
+
+    color: #64748b;
+
+    font-weight: 600;
+
+    text-transform: none;
+}
+
+.lex-dashboard-tabs .q-tab--active {
+    color: #2563eb;
+
+    background:
+        linear-gradient(
+            180deg,
+            #edf4ff,
+            #ffffff
+        );
+}
+
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+.lex-sidebar {
+    padding: 14px !important;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f7faff,
+            #f2f6fb
+        ) !important;
+
+    border-right: 1px solid #dce5f0 !important;
+}
+
+.lex-sidebar-section {
+    width: 100%;
+
+    padding: 15px !important;
+
+    margin-bottom: 13px;
+
+    border-radius: 16px !important;
+
+    background: #ffffff !important;
+
+    border: 1px solid #e2e8f0 !important;
+
+    box-shadow:
+        0 5px 16px rgba(40,60,90,.06) !important;
+}
+
+.lex-pipeline-section {
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #eef4ff
+        ) !important;
+
+    border-top: 3px solid #4f46e5 !important;
+}
+
+.lex-target-section {
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #f5f0ff
+        ) !important;
+
+    border-top: 3px solid #7c3aed !important;
+}
+
+.lex-document-section {
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #edfbfc
+        ) !important;
+
+    border-top: 3px solid #0891b2 !important;
+}
+
+
+/* ============================================================
+   SIDEBAR TEXT
+   ============================================================ */
+
+.lex-section-title {
+    color: #172033 !important;
+
+    font-size: 15px;
+
+    font-weight: 700;
+}
+
+.lex-section-subtitle {
+    color: #7a8799 !important;
+
+    font-size: 11px;
+}
+
+.lex-section-icon {
+    font-size: 22px;
+}
+
+.lex-pipeline-icon {
+    color: #4f46e5 !important;
+}
+
+.lex-target-icon {
+    color: #7c3aed !important;
+}
+
+.lex-document-icon {
+    color: #0891b2 !important;
+}
+
+
+/* ============================================================
+   SERVICES
+   ============================================================ */
+
+.lex-service-row {
+    width: 100%;
+
+    min-height: 38px;
+
+    align-items: center;
+}
+
+.lex-service-icon {
+    font-size: 18px;
+}
+
+.lex-gemini-icon {
+    color: #4285f4 !important;
+}
+
+.lex-groq-icon {
+    color: #f97316 !important;
+}
+
+.lex-db-icon {
+    color: #3b82f6 !important;
+}
+
+.lex-adk-icon {
+    color: #8b5cf6 !important;
+}
+
+.lex-service-name {
+    color: #334155 !important;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.lex-service-subtitle {
+    color: #94a3b8 !important;
+
+    font-size: 10px;
+}
+
+.lex-connected-badge {
+    background: #eaf8ef !important;
+
+    color: #15803d !important;
+
+    border: 1px solid #bce8ca;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+.lex-warning-badge {
+    background: #fff7e6 !important;
+
+    color: #b45309 !important;
+
+    border: 1px solid #f4d79d;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+}
+
+
+/* ============================================================
+   SELECT
+   ============================================================ */
+
+.lex-framework-select {
+    width: 100%;
+
+    margin-top: 14px;
+}
+
+.lex-framework-select .q-field__control {
+    min-height: 52px !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8fbff,
+            #edf4ff
+        ) !important;
+
+    border-radius: 11px !important;
+}
+
+.lex-framework-select .q-field__native {
+    color: #172033 !important;
+
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   UPLOAD BUTTON
+   ============================================================ */
+
+.lex-policy-upload {
+    width: 100% !important;
+
+    margin-top: 15px;
+}
+
+.lex-policy-upload .q-uploader {
+    width: 100% !important;
+
+    min-height: 125px !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eaf5ff,
+            #f3edff
+        ) !important;
+
+    border: 2px dashed #7aa7ed !important;
+
+    border-radius: 14px !important;
+
+    overflow: hidden !important;
+}
+
+.lex-policy-upload .q-uploader__header {
+    background: transparent !important;
+
+    color: #1d4ed8 !important;
+}
+
+.lex-policy-upload .q-uploader__title {
+    color: #1d4ed8 !important;
+
+    font-weight: 700 !important;
+}
+
+.lex-policy-upload .q-uploader__subtitle {
+    color: #64748b !important;
+}
+
+.lex-upload-help {
+    color: #8a96a8 !important;
+
+    font-size: 10px;
+
+    margin-top: 5px;
+}
+
+
+/* ============================================================
+   INPUTS
+   ============================================================ */
+
+.lex-sidebar-input {
+    width: 100%;
+
+    margin-top: 9px;
+}
+
+.lex-sidebar-input .q-field__control {
+    background: #ffffff !important;
+
+    border-radius: 10px !important;
+}
+
+.lex-sidebar-input .q-field__native,
+.lex-sidebar-input .q-field__input {
+    color: #172033 !important;
+}
+
+
+/* ============================================================
+   RUN BUTTON
+   ============================================================ */
+
+.lex-run-button {
+    width: 100%;
+
+    min-height: 48px;
+
+    margin-top: 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        ) !important;
+
+    color: white !important;
+
+    border-radius: 11px !important;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 7px 18px rgba(37,99,235,.25);
+}
+
+
+/* ============================================================
+   SCORE CARDS
+   ============================================================ */
+
+.lex-score-card {
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #f1f6ff
+        ) !important;
+
+    border: 1px solid #dce7f7 !important;
+
+    border-radius: 18px !important;
+
+    padding: 20px !important;
+
+    box-shadow:
+        0 7px 22px rgba(37,99,235,.08);
+}
+
+.lex-card-title {
+    color: #334155 !important;
+
+    font-size: 16px;
+
+    font-weight: 700;
+}
+
+.lex-overall-score {
+    color: #2563eb !important;
+
+    font-size: 42px;
+
+    font-weight: 800;
+}
+
+.lex-risk-text {
+    color: #64748b !important;
+
+    font-size: 13px;
+}
+
+.lex-score-progress {
+    margin-top: 15px;
+}
+
+.lex-section-heading {
+    color: #172033 !important;
+
+    font-size: 19px;
+
+    font-weight: 750;
+
+    margin-top: 20px;
+}
+
+.lex-empty-state {
+    color: #94a3b8 !important;
+
+    padding: 25px;
+}
+
+
+/* ============================================================
+   FRAMEWORK CARDS
+   ============================================================ */
+
+.lex-framework-card {
+    border-radius: 17px !important;
+
+    padding: 18px !important;
+
+    box-shadow:
+        0 5px 18px rgba(40,60,90,.07);
+}
+
+.lex-gdpr-card {
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #edf4ff
+        ) !important;
+
+    border-top: 4px solid #2563eb !important;
+}
+
+.lex-hipaa-card {
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #f5efff
+        ) !important;
+
+    border-top: 4px solid #7c3aed !important;
+}
+
+.lex-rbi-card {
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #ebfafc
+        ) !important;
+
+    border-top: 4px solid #0891b2 !important;
+}
+
+.lex-soc2-card {
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #edf9f1
+        ) !important;
+
+    border-top: 4px solid #16a34a !important;
+}
+
+.lex-framework-name {
+    color: #334155 !important;
+
+    font-weight: 700;
+}
+
+.lex-framework-score {
+    color: #2563eb !important;
+
+    font-size: 27px;
+
+    font-weight: 800;
+}
+
+.lex-framework-risk,
+.lex-framework-exposure {
+    color: #64748b !important;
+
+    font-size: 12px;
+
+    margin-top: 7px;
+}
+
+
+/* ============================================================
+   POSTURE
+   ============================================================ */
+
+.lex-posture-summary,
+.lex-domain-card,
+.lex-action-card {
+    background: #ffffff !important;
+
+    border: 1px solid #e2e8f0 !important;
+
+    border-radius: 15px !important;
+
+    padding: 18px !important;
+
+    box-shadow:
+        0 5px 18px rgba(40,60,90,.06);
+}
+
+.lex-posture-text {
+    color: #536176 !important;
+
+    line-height: 1.7;
+}
+
+.lex-domain-title {
+    color: #172033 !important;
+
+    font-weight: 700;
+}
+
+.lex-domain-score {
+    color: #2563eb !important;
+
+    font-weight: 700;
+
+    margin-top: 8px;
+}
+
+.lex-domain-badge,
+.lex-framework-mini-badge {
+    background: #edf4ff !important;
+
+    color: #2563eb !important;
+
+    border-radius: 999px;
+}
+
+
+/* ============================================================
+   GAPS
+   ============================================================ */
+
+.lex-gap-expansion {
+    background: #ffffff !important;
+
+    border: 1px solid #e2e8f0 !important;
+
+    border-radius: 12px !important;
+
+    margin-bottom: 8px;
+}
+
+.lex-gap-label {
+    color: #475569 !important;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    margin-top: 10px;
+}
+
+.lex-gap-text {
+    color: #536176 !important;
+
+    line-height: 1.65;
+}
+
+.lex-fix-box {
+    background: #effbf4 !important;
+
+    color: #166534 !important;
+
+    border-left: 4px solid #16a34a;
+
+    padding: 10px 12px;
+
+    border-radius: 8px;
+
+    margin-top: 5px;
+}
+
+.lex-status-met {
+    background: #eaf8ef !important;
+    color: #15803d !important;
+}
+
+.lex-status-partial {
+    background: #fff7e6 !important;
+    color: #b45309 !important;
+}
+
+.lex-status-not {
+    background: #ffeded !important;
+    color: #b91c1c !important;
+}
+
+.lex-status-conflict {
+    background: #f4edff !important;
+    color: #7c3aed !important;
+}
+
+.lex-status-unknown {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+}
+
+
+/* ============================================================
+   ACTION PLAN
+   ============================================================ */
+
+.lex-p1 {
+    border-left: 5px solid #dc2626 !important;
+
+    background:
+        linear-gradient(
+            90deg,
+            #fff1f1,
+            #ffffff
+        ) !important;
+}
+
+.lex-p2 {
+    border-left: 5px solid #d97706 !important;
+
+    background:
+        linear-gradient(
+            90deg,
+            #fff8e8,
+            #ffffff
+        ) !important;
+}
+
+.lex-p3 {
+    border-left: 5px solid #2563eb !important;
+
+    background:
+        linear-gradient(
+            90deg,
+            #eef5ff,
+            #ffffff
+        ) !important;
+}
+
+.lex-action-title {
+    color: #172033 !important;
+
+    font-weight: 750;
+}
+
+.lex-action-item {
+    margin-top: 10px;
+
+    background: #f8fafc !important;
+
+    border: 1px solid #e5eaf1 !important;
+
+    border-radius: 10px !important;
+}
+
+.lex-action-item-title {
+    color: #334155 !important;
+
+    font-weight: 700;
+}
+
+.lex-action-item-text {
+    color: #536176 !important;
+
+    margin-top: 8px;
+}
+
+.lex-empty-small {
+    color: #94a3b8 !important;
+
+    margin-top: 10px;
+}
+
+
+/* ============================================================
+   EXPORT
+   ============================================================ */
+
+.lex-export-json-button {
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #0891b2
+        ) !important;
+
+    color: white !important;
+}
+
+.lex-export-pdf-button {
+    background:
+        linear-gradient(
+            135deg,
+            #dc2626,
+            #ea580c
+        ) !important;
+
+    color: white !important;
+}
+
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+
+.body--dark {
+    --lex-bg: #0b1220;
+    --lex-surface: #121b2d;
+    --lex-border: #293750;
+    --lex-text: #f1f5f9;
+    --lex-muted: #94a3b8;
+}
+
+.body--dark body {
+    background:
+        radial-gradient(
+            circle at 90% 0%,
+            #172554,
+            #0b1220 45%,
+            #080d17
+        ) !important;
+
+    color: #f1f5f9;
+}
+
+
+/* Sidebar */
+
+.body--dark .lex-sidebar {
+    background:
+        linear-gradient(
+            180deg,
+            #0d1628,
+            #111b2e
+        ) !important;
+
+    border-color: #293750 !important;
+}
+
+.body--dark .lex-sidebar-section {
+    background:
+        linear-gradient(
+            135deg,
+            #121c2f,
+            #172238
+        ) !important;
+
+    border-color: #293750 !important;
+}
+
+.body--dark .lex-section-title {
+    color: #f1f5f9 !important;
+}
+
+.body--dark .lex-section-subtitle,
+.body--dark .lex-service-subtitle {
+    color: #94a3b8 !important;
+}
+
+.body--dark .lex-service-name {
+    color: #dbe4ef !important;
+}
+
+
+/* Select */
+
+.body--dark .lex-framework-select .q-field__control {
+    background: #18253a !important;
+
+    border-color: #3b4b67 !important;
+}
+
+.body--dark .lex-framework-select .q-field__native {
+    color: #f1f5f9 !important;
+}
+
+
+/* Upload */
+
+.body--dark .lex-policy-upload .q-uploader {
+    background:
+        linear-gradient(
+            135deg,
+            #142442,
+            #211b3a
+        ) !important;
+
+    border-color: #4f7fc4 !important;
+}
+
+.body--dark .lex-policy-upload .q-uploader__title {
+    color: #dbeafe !important;
+}
+
+.body--dark .lex-policy-upload .q-uploader__subtitle {
+    color: #94a3b8 !important;
+}
+
+
+/* Inputs */
+
+.body--dark .lex-sidebar-input .q-field__control {
+    background: #18253a !important;
+
+    border-color: #3b4b67 !important;
+}
+
+.body--dark .lex-sidebar-input .q-field__native,
+.body--dark .lex-sidebar-input .q-field__input {
+    color: #f1f5f9 !important;
+}
+
+
+/* Main */
+
+.body--dark .lex-page-title {
+    color: #f1f5f9 !important;
+}
+
+.body--dark .lex-page-subtitle {
+    color: #94a3b8 !important;
+}
+
+.body--dark .lex-analysis-status {
+    background: #121b2d !important;
+
+    border-color: #293750 !important;
+
+    color: #aab7c9 !important;
+}
+
+
+/* Tabs */
+
+.body--dark .lex-dashboard-tabs {
+    background: #121b2d !important;
+
+    border-color: #293750 !important;
+}
+
+.body--dark .lex-dashboard-tabs .q-tab {
+    color: #94a3b8;
+}
+
+.body--dark .lex-dashboard-tabs .q-tab--active {
+    color: #60a5fa;
+
+    background: #172554;
+}
+
+
+/* Cards */
+
+.body--dark .lex-score-card,
+.body--dark .lex-framework-card,
+.body--dark .lex-posture-summary,
+.body--dark .lex-domain-card,
+.body--dark .lex-action-card {
+    background:
+        linear-gradient(
+            135deg,
+            #121b2d,
+            #172238
+        ) !important;
+
+    border-color: #293750 !important;
+}
+
+.body--dark .lex-card-title,
+.body--dark .lex-section-heading,
+.body--dark .lex-framework-name,
+.body--dark .lex-domain-title,
+.body--dark .lex-action-title,
+.body--dark .lex-action-item-title {
+    color: #f1f5f9 !important;
+}
+
+.body--dark .lex-risk-text,
+.body--dark .lex-framework-risk,
+.body--dark .lex-framework-exposure,
+.body--dark .lex-posture-text,
+.body--dark .lex-domain-score,
+.body--dark .lex-gap-text,
+.body--dark .lex-action-item-text {
+    color: #aebbd0 !important;
+}
+
+
+/* Gap */
+
+.body--dark .lex-gap-expansion {
+    background: #121b2d !important;
+
+    border-color: #293750 !important;
+}
+
+.body--dark .lex-fix-box {
+    background: #10271b !important;
+
+    color: #86efac !important;
+}
+
+
+/* Action */
+
+.body--dark .lex-p1,
+.body--dark .lex-p2,
+.body--dark .lex-p3 {
+    background:
+        linear-gradient(
+            90deg,
+            #172238,
+            #121b2d
+        ) !important;
+}
+
+.body--dark .lex-action-item {
+    background: #18253a !important;
+
+    border-color: #293750 !important;
+}
+
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #b6c3d5;
+    border-radius: 20px;
+}
+
+.body--dark ::-webkit-scrollbar-thumb {
+    background: #46566f;
+}
