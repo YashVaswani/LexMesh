@@ -60,12 +60,17 @@ def create_policy_posture(report):
     for item in breakdown:
 
         domain = item.get(
-            "domain",
+            "domain_title",
             item.get(
-                "policy_domain",
-                "Unknown Domain",
+                "domain",
+                item.get(
+                    "policy_domain",
+                    "Unknown Domain",
+                ),
             ),
         )
+
+        icon = item.get("icon", "📄")
 
         score = item.get(
             "score",
@@ -73,8 +78,11 @@ def create_policy_posture(report):
         )
 
         verdict = item.get(
-            "verdict",
-            "—",
+            "status",
+            item.get(
+                "verdict",
+                "—",
+            ),
         )
 
         with ui.card().classes(
@@ -86,7 +94,7 @@ def create_policy_posture(report):
             ):
 
                 ui.label(
-                    str(domain)
+                    f"{icon} {domain}"
                 ).classes(
                     "lex-domain-title"
                 )

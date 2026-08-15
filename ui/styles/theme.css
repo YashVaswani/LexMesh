@@ -949,7 +949,8 @@ body {
 .body--dark .lex-section-heading,
 .body--dark .lex-framework-name,
 .body--dark .lex-domain-title,
-.body--dark .lex-action-title {
+.body--dark .lex-action-title,
+.body--dark .lex-action-item-title {
     color: #f1f5f9 !important;
 }
 
