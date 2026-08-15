@@ -12,16 +12,16 @@ from reportlab.platypus import (
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.pdfgen import canvas
 
-PRIMARY = colors.HexColor("#1E3A8A")
-SECONDARY = colors.HexColor("#0D9488")
-DARK_GRAY = colors.HexColor("#1F2937")
-LIGHT_BG = colors.HexColor("#F8FAFC")
-BORDER_COLOR = colors.HexColor("#E2E8F0")
+PRIMARY = colors.HexColor("#23382B")
+SECONDARY = colors.HexColor("#4E795D")
+DARK_GRAY = colors.HexColor("#1B2721")
+LIGHT_BG = colors.HexColor("#F5F2EB")
+BORDER_COLOR = colors.HexColor("#D4CBC0")
 
-COLOR_MET = colors.HexColor("#16A34A")
-COLOR_PARTIAL = colors.HexColor("#D97706")
-COLOR_NOT = colors.HexColor("#DC2626")
-COLOR_CONFLICT = colors.HexColor("#B45309")
+COLOR_MET = colors.HexColor("#3B6349")
+COLOR_PARTIAL = colors.HexColor("#B45339")
+COLOR_NOT = colors.HexColor("#9E3232")
+COLOR_CONFLICT = colors.HexColor("#B45339")
 
 class PageNumCanvas(canvas.Canvas):
     def __init__(self, *args, **kwargs):
@@ -103,15 +103,15 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
     elements.append(Spacer(1, 12))
     
     overall_score = summary.get("overall_score", 0)
-    score_p = Paragraph(f"<font size=24 color='#1E3A8A'><b>{overall_score}%</b></font><br/><font size=8.5 color='#64748B'>Unified Overall Multi-Framework Score</font>", body_style)
-    risk_p = Paragraph(f"<b>Overall Posture:</b> {summary.get('overall_risk', 'HIGH RISK')}<br/><font color='#64748B'>Simultaneous RAG evaluation across all 4 regulatory frameworks.</font>", body_style)
+    score_p = Paragraph(f"<font size=24 color='#23382B'><b>{overall_score}%</b></font><br/><font size=8.5 color='#647269'>Unified Overall Multi-Framework Score</font>", body_style)
+    risk_p = Paragraph(f"<b>Overall Posture:</b> {summary.get('overall_risk', 'HIGH RISK')}<br/><font color='#647269'>Simultaneous RAG evaluation across all 4 regulatory frameworks.</font>", body_style)
     
     score_table = Table([[score_p, risk_p]], colWidths=[180, 324])
     score_table.setStyle(TableStyle([
         ('BOX', (0,0), (-1,-1), 1, PRIMARY),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
         ('PADDING', (0,0), (-1,-1), 8),
-        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#EFF6FF")),
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#E2EBE5")),
     ]))
     elements.append(score_table)
     elements.append(Spacer(1, 12))
@@ -196,10 +196,10 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
             gaps_by_fw[fw].append(gap)
 
     fw_display_names = [
-        ("gdpr", " EU GDPR — Detailed Audit Findings & Policy Fixes"),
-        ("hipaa", "🏥 US HIPAA — Detailed Audit Findings & Policy Fixes"),
-        ("rbi", "🏦 RBI Cyber Framework — Detailed Audit Findings & Policy Fixes"),
-        ("soc2", "🛡️ SOC 2 Type II — Detailed Audit Findings & Policy Fixes")
+        ("gdpr", "EU GDPR — Detailed Audit Findings & Policy Fixes"),
+        ("hipaa", "US HIPAA — Detailed Audit Findings & Policy Fixes"),
+        ("rbi", "RBI Cyber Framework — Detailed Audit Findings & Policy Fixes"),
+        ("soc2", "SOC 2 Type II — Detailed Audit Findings & Policy Fixes")
     ]
 
     for fw_key, fw_heading in fw_display_names:
@@ -282,7 +282,7 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
                 Paragraph(f"<font color='#DC2626'>{stat_t}</font>", body_style)
             ])
         
-        elements.append(Paragraph(f"🚨 P1 CRITICAL PRIORITY ({len(p1_items)} items)", ParagraphStyle('P1', parent=bold_body, textColor=colors.white, backColor=COLOR_NOT, spaceBefore=4, spaceAfter=4)))
+        elements.append(Paragraph(f"P1 CRITICAL PRIORITY ({len(p1_items)} items)", ParagraphStyle('P1', parent=bold_body, textColor=colors.white, backColor=COLOR_NOT, spaceBefore=4, spaceAfter=4)))
         t_p1 = Table(p1_rows, colWidths=[20, 105, 110, 199, 70])
         t_p1.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,0), COLOR_NOT),
@@ -308,10 +308,10 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
                 Paragraph(dom_t, body_style),
                 Paragraph(fw_t, body_style),
                 Paragraph(act_t, body_style),
-                Paragraph(f"<font color='#D97706'>{stat_t}</font>", body_style)
+                Paragraph(f"<font color='#B45339'>{stat_t}</font>", body_style)
             ])
         
-        elements.append(Paragraph(f"⚠️ P2 HIGH PRIORITY ({len(p2_items)} items)", ParagraphStyle('P2', parent=bold_body, textColor=colors.white, backColor=COLOR_PARTIAL, spaceBefore=4, spaceAfter=4)))
+        elements.append(Paragraph(f"P2 HIGH PRIORITY ({len(p2_items)} items)", ParagraphStyle('P2', parent=bold_body, textColor=colors.white, backColor=COLOR_PARTIAL, spaceBefore=4, spaceAfter=4)))
         t_p2 = Table(p2_rows, colWidths=[20, 105, 110, 199, 70])
         t_p2.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,0), COLOR_PARTIAL),
@@ -337,10 +337,10 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
                 Paragraph(dom_t, body_style),
                 Paragraph(fw_t, body_style),
                 Paragraph(act_t, body_style),
-                Paragraph(f"<font color='#16A34A'>{stat_t}</font>", body_style)
+                Paragraph(f"<font color='#3B6349'>{stat_t}</font>", body_style)
             ])
         
-        elements.append(Paragraph(f"ℹ️ P3 MEDIUM PRIORITY ({len(p3_items)} items)", ParagraphStyle('P3', parent=bold_body, textColor=colors.white, backColor=SECONDARY, spaceBefore=4, spaceAfter=4)))
+        elements.append(Paragraph(f"P3 MEDIUM PRIORITY ({len(p3_items)} items)", ParagraphStyle('P3', parent=bold_body, textColor=colors.white, backColor=SECONDARY, spaceBefore=4, spaceAfter=4)))
         t_p3 = Table(p3_rows, colWidths=[20, 105, 110, 199, 70])
         t_p3.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,0), SECONDARY),

@@ -1,4 +1,5 @@
 from nicegui import ui
+from ui.components.lucide import lucide_icon
 
 
 def create_header():
@@ -17,11 +18,7 @@ def create_header():
             "items-center gap-3"
         ):
 
-            ui.icon(
-                "shield"
-            ).classes(
-                "text-blue-500 text-4xl"
-            )
+            lucide_icon("shield", size=32, class_name="text-emerald-400")
 
             with ui.column().classes(
                 "gap-0"
@@ -30,15 +27,13 @@ def create_header():
                 ui.label(
                     "LexMesh"
                 ).classes(
-                    "text-2xl font-bold "
-                    "text-slate-900 dark:text-white"
+                    "lex-brand-title"
                 )
 
                 ui.label(
                     "Multi-Framework Compliance Engine"
                 ).classes(
-                    "text-xs "
-                    "text-slate-500 dark:text-slate-400"
+                    "lex-brand-subtitle"
                 )
 
         # ====================================================
@@ -49,21 +44,13 @@ def create_header():
             "items-center gap-3"
         ):
 
-            ui.icon(
-                "light_mode"
-            ).classes(
-                "text-amber-500 text-xl"
-            )
+            lucide_icon("sun", size=20, class_name="text-amber-400")
 
             ui.switch(
                 value=False,
                 on_change=lambda e: dark_mode.set_value(e.value),
             ).props(
-                "color=primary"
+                "color=emerald"
             )
 
-            ui.icon(
-                "dark_mode"
-            ).classes(
-                "text-slate-500 dark:text-blue-400 text-xl"
-            )
+            lucide_icon("moon", size=20, class_name="text-emerald-200 dark:text-emerald-400")

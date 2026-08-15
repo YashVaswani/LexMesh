@@ -16,6 +16,21 @@ from ui.components.policy_posture import create_policy_posture
 from ui.components.gap_analysis import create_gap_analysis
 from ui.components.action_plan import create_action_plan
 from ui.components.report_export import create_report_export
+from ui.components.lucide import lucide_icon
+
+# Load Custom Enterprise Theme CSS & Lucide Icons CDN
+theme_css_path = Path(__file__).parent / "ui" / "styles" / "theme.css"
+if theme_css_path.exists():
+    ui.add_head_html(f"<style>{theme_css_path.read_text(encoding='utf-8')}</style>", shared=True)
+
+ui.add_head_html('''
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        if (window.lucide) lucide.createIcons();
+    });
+</script>
+''', shared=True)
 
 
 # ============================================================
@@ -23,26 +38,26 @@ from ui.components.report_export import create_report_export
 # ============================================================
 
 FRAMEWORKS = {
-    "🌐 All Standards (Full Scope)": [
+    "All Standards (Full Scope)": [
         "gdpr",
         "hipaa",
         "rbi",
         "soc2",
     ],
 
-    "🇪🇺 EU GDPR": [
+    "EU GDPR": [
         "gdpr",
     ],
 
-    "🏥 US HIPAA": [
+    "US HIPAA": [
         "hipaa",
     ],
 
-    "🏦 RBI Cyber Framework": [
+    "RBI Cyber Framework": [
         "rbi",
     ],
 
-    "🛡️ SOC 2 Type II": [
+    "SOC 2 Type II": [
         "soc2",
     ],
 }
@@ -72,6 +87,18 @@ if theme_path.exists():
 
 @ui.page("/")
 def dashboard():
+
+    # Set Quasar Brand Colors for this page
+    ui.colors(
+        primary='#4e795d',
+        secondary='#eae3d2',
+        accent='#8a7642',
+        dark='#101713',
+        positive='#3b6349',
+        negative='#9e3232',
+        info='#3b6b78',
+        warning='#b45339',
+    )
 
     # ========================================================
     # PAGE STATE
@@ -163,30 +190,30 @@ def dashboard():
             "w-full lex-dashboard-tabs"
         ) as tabs:
 
-            ui.tab(
-                "score",
-                label="📊 Score & Framework",
-            )
+            with ui.tab("score", label="").classes("lex-tab-item"):
+                with ui.row().classes("items-center gap-2"):
+                    lucide_icon("bar-chart-3", size=18)
+                    ui.label("Score & Framework")
 
-            ui.tab(
-                "posture",
-                label="📑 Policy Posture",
-            )
+            with ui.tab("posture", label="").classes("lex-tab-item"):
+                with ui.row().classes("items-center gap-2"):
+                    lucide_icon("file-check", size=18)
+                    ui.label("Executive Posture")
 
-            ui.tab(
-                "gaps",
-                label="🔍 Detailed Policy Gaps",
-            )
+            with ui.tab("gaps", label="").classes("lex-tab-item"):
+                with ui.row().classes("items-center gap-2"):
+                    lucide_icon("shield-alert", size=18)
+                    ui.label("Detailed Policy Gaps")
 
-            ui.tab(
-                "action",
-                label="📋 Policy Action Plan",
-            )
+            with ui.tab("action", label="").classes("lex-tab-item"):
+                with ui.row().classes("items-center gap-2"):
+                    lucide_icon("clipboard-list", size=18)
+                    ui.label("Priority Action Plan")
 
-            ui.tab(
-                "export",
-                label="📥 Report Export",
-            )
+            with ui.tab("export", label="").classes("lex-tab-item"):
+                with ui.row().classes("items-center gap-2"):
+                    lucide_icon("file-down", size=18)
+                    ui.label("Report Export")
 
         # ====================================================
         # TAB PANELS
@@ -207,16 +234,13 @@ def dashboard():
                 "score"
             ):
 
-                score_container = (
-                    ui.column()
-                    .classes("w-full")
-                )
+                with ui.column().classes("w-full") as score_container:
 
-                ui.label(
-                    "No scores available."
-                ).classes(
-                    "lex-empty-state"
-                )
+                    ui.label(
+                        "Upload a company policy PDF and click Run Analysis to view compliance scores."
+                    ).classes(
+                        "lex-empty-state"
+                    )
 
             # =================================================
             # POLICY POSTURE
@@ -226,16 +250,13 @@ def dashboard():
                 "posture"
             ):
 
-                posture_container = (
-                    ui.column()
-                    .classes("w-full")
-                )
+                with ui.column().classes("w-full") as posture_container:
 
-                ui.label(
-                    "Run an analysis to view policy posture."
-                ).classes(
-                    "lex-empty-state"
-                )
+                    ui.label(
+                        "Run an analysis to view policy posture."
+                    ).classes(
+                        "lex-empty-state"
+                    )
 
             # =================================================
             # DETAILED GAPS
@@ -245,16 +266,13 @@ def dashboard():
                 "gaps"
             ):
 
-                gap_container = (
-                    ui.column()
-                    .classes("w-full")
-                )
+                with ui.column().classes("w-full") as gap_container:
 
-                ui.label(
-                    "Run an analysis to view detailed gaps."
-                ).classes(
-                    "lex-empty-state"
-                )
+                    ui.label(
+                        "Run an analysis to view detailed gaps."
+                    ).classes(
+                        "lex-empty-state"
+                    )
 
             # =================================================
             # ACTION PLAN
@@ -264,16 +282,13 @@ def dashboard():
                 "action"
             ):
 
-                action_container = (
-                    ui.column()
-                    .classes("w-full")
-                )
+                with ui.column().classes("w-full") as action_container:
 
-                ui.label(
-                    "Run an analysis to view the action plan."
-                ).classes(
-                    "lex-empty-state"
-                )
+                    ui.label(
+                        "Run an analysis to view the action plan."
+                    ).classes(
+                        "lex-empty-state"
+                    )
 
             # =================================================
             # EXPORT
@@ -283,16 +298,13 @@ def dashboard():
                 "export"
             ):
 
-                export_container = (
-                    ui.column()
-                    .classes("w-full")
-                )
+                with ui.column().classes("w-full") as export_container:
 
-                ui.label(
-                    "Run an analysis to enable exports."
-                ).classes(
-                    "lex-empty-state"
-                )
+                    ui.label(
+                        "Run an analysis to enable exports."
+                    ).classes(
+                        "lex-empty-state"
+                    )
 
     # ========================================================
     # PDF METADATA EXTRACTION
@@ -845,8 +857,7 @@ def dashboard():
             # ------------------------------------------------
 
             status.set_text(
-                f"📄 {uploaded_file.name} "
-                f"uploaded and ready for analysis."
+                f"Document {uploaded_file.name} uploaded and ready for analysis."
             )
 
             ui.notify(
@@ -956,7 +967,7 @@ def dashboard():
         ):
 
             status.set_text(
-                "⚠️ Please upload a PDF first."
+                "Please upload a company policy PDF document first."
             )
 
             ui.notify(
@@ -1009,7 +1020,7 @@ def dashboard():
             selected_fw_keys = FRAMEWORKS.get(
                 selected_label,
                 FRAMEWORKS[
-                    "🌐 All Standards (Full Scope)"
+                    "All Standards (Full Scope)"
                 ],
             )
 
@@ -1084,7 +1095,7 @@ def dashboard():
             # =================================================
 
             status.set_text(
-                "🤖 Running LexMesh compliance analysis..."
+                "Running LexMesh compliance analysis..."
             )
 
             print()
@@ -1263,7 +1274,7 @@ def dashboard():
             )
 
             status.set_text(
-                f"✅ Analysis completed successfully. "
+                f"Analysis completed successfully. "
                 f"Overall Score: {score}%"
             )
 
@@ -1336,7 +1347,7 @@ def dashboard():
             selected_label = sidebar["framework_select"].value
             selected_fw_keys = FRAMEWORKS.get(
                 selected_label,
-                FRAMEWORKS["🌐 All Standards (Full Scope)"],
+                FRAMEWORKS["All Standards (Full Scope)"],
             )
             page_state["selected_frameworks"] = selected_fw_keys
             
@@ -1388,6 +1399,5 @@ def dashboard():
 
 ui.run(
     title="LexMesh",
-    favicon="🛡️",
     port=8080,
 )

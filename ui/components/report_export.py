@@ -6,14 +6,15 @@ from pathlib import Path
 from nicegui import ui
 
 from reporter.pdf_generator import generate_compliance_pdf
+from ui.components.lucide import lucide_icon
 
 
 EXPORT_SCOPES = {
-    "🌐 All Selected Frameworks": None,
-    "🇪🇺 EU GDPR Only": ["gdpr"],
-    "🏥 US HIPAA Only": ["hipaa"],
-    "🏦 RBI Cyber Framework Only": ["rbi"],
-    "🛡️ SOC 2 Type II Only": ["soc2"],
+    "All Selected Frameworks": None,
+    "EU GDPR Only": ["gdpr"],
+    "US HIPAA Only": ["hipaa"],
+    "RBI Cyber Framework Only": ["rbi"],
+    "SOC 2 Type II Only": ["soc2"],
 }
 
 
@@ -45,7 +46,7 @@ def create_report_export(
         options=list(
             EXPORT_SCOPES.keys()
         ),
-        value="🌐 All Selected Frameworks",
+        value="All Selected Frameworks",
         label="Export compliance scope",
     ).props(
         "outlined"
@@ -57,29 +58,20 @@ def create_report_export(
         "w-full gap-4 mt-4"
     ):
 
-        json_button = ui.button(
-            "Download JSON",
-            icon="data_object",
-        ).props(
-            "unelevated"
-        ).classes(
-            "lex-export-json-button"
-        )
+        with ui.button().props("unelevated").classes("lex-export-json-button") as json_button:
+            lucide_icon("file-json", size=18, class_name="mr-2")
+            ui.label("Download JSON")
 
-        pdf_button = ui.button(
-            "Render PDF Report",
-            icon="picture_as_pdf",
-        ).props(
-            "unelevated"
-        ).classes(
-            "lex-export-pdf-button"
-        )
+        with ui.button().props("unelevated").classes("lex-export-pdf-button") as pdf_button:
+            lucide_icon("file-down", size=18, class_name="mr-2")
+            ui.label("Render PDF Report")
 
     result_label = ui.label(
         ""
     ).classes(
         "lex-analysis-status"
     )
+    result_label.set_visibility(False)
 
     def target_report():
 
@@ -146,12 +138,15 @@ def create_report_export(
             encoding="utf-8",
         )
 
+        # Use bytes download so browser doesn't reload/reset page state
         ui.download(
-            str(path)
+            path.read_bytes(),
+            filename=path.name,
         )
 
+        result_label.set_visibility(True)
         result_label.set_text(
-            "✅ JSON report generated."
+            "JSON report generated successfully."
         )
 
     def download_pdf():
@@ -193,18 +188,22 @@ def create_report_export(
                 str(path),
             )
 
+            # Use bytes download so browser doesn't reload/reset page state
             ui.download(
-                str(path)
+                path.read_bytes(),
+                filename=path.name,
             )
 
+            result_label.set_visibility(True)
             result_label.set_text(
-                "✅ PDF report generated."
+                "PDF report generated successfully."
             )
 
         except Exception as e:
 
+            result_label.set_visibility(True)
             result_label.set_text(
-                f"❌ PDF generation failed: {e}"
+                f"PDF generation failed: {e}"
             )
 
             ui.notify(

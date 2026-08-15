@@ -1,1019 +1,753 @@
-:root {
-    --lex-bg: #f4f7fb;
-    --lex-surface: #ffffff;
-    --lex-border: #e2e8f0;
-
-    --lex-text: #172033;
-    --lex-muted: #64748b;
-
-    --lex-blue: #2563eb;
-    --lex-indigo: #4f46e5;
-    --lex-purple: #7c3aed;
-    --lex-teal: #0891b2;
-    --lex-green: #16a34a;
-    --lex-orange: #ea580c;
-    --lex-red: #dc2626;
-}
-
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
 
 /* ============================================================
-   BODY
+   LEXMESH BEIGE & SAGE GREEN DESIGN SYSTEM
+   Bespoke, Executive Earthy Aesthetics (Organic, High-Contrast & Warm)
    ============================================================ */
 
-body {
-    background:
-        radial-gradient(
-            circle at 0% 0%,
-            #ffffff,
-            #f4f7fb 55%,
-            #edf3fb
-        ) !important;
+/* Quasar Color Variable Overrides (Light Mode) */
+:root {
+    /* Quasar Brand Variables Overrides */
+    --q-primary: #4e795d !important;
+    --q-secondary: #eae3d2 !important;
+    --q-accent: #8a7642 !important;
+    --q-dark: #101713 !important;
+    --q-positive: #3b6349 !important;
+    --q-negative: #9e3232 !important;
+    --q-info: #3b6b78 !important;
+    --q-warning: #b45339 !important;
 
-    color: var(--lex-text);
+    /* LIGHT THEME (Warm Almond Beige & Deep Forest Sage Green) */
+    --lex-bg: #f5f2eb;
+    --lex-surface: #ffffff;
+    --lex-surface-hover: #ebe6dd;
+    --lex-border: #d4cbc0;
+    --lex-border-hover: #b8ab9b;
 
-    font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+    --lex-text: #1b2721;           /* Deep Forest Obsidian Moss - High Contrast */
+    --lex-text-secondary: #3d4d43; /* Earthy Dark Slate */
+    --lex-muted: #647269;          /* Readable Warm Slate */
+
+    --lex-sage: #4e795d;
+    --lex-sage-dark: #23382b;
+    --lex-sage-light: #d4e2d8;
+    --lex-beige: #eae3d2;
+    --lex-beige-dark: #8a7642;
+
+    --lex-blue: #3b6b78;           /* Muted Slate Teal */
+    --lex-indigo: #4e795d;         /* Sage Accent */
+    --lex-purple: #786378;         /* Earthy Muted Plum */
+    --lex-teal: #2e7067;           /* Eucalyptus Teal */
+    --lex-green: #3b6349;          /* Rich Forest Sage */
+    --lex-orange: #b45339;         /* Terracotta Rust */
+    --lex-red: #9e3232;            /* Deep Warm Crimson */
+
+    --lex-header-bg: #23382b;      /* Deep Forest Sage Top Bar */
+    --lex-header-text: #f5f2eb;    /* Warm Cream Text */
+    --lex-sidebar-bg: #efebe4;     /* Soft Oatmeal Sand Drawer */
+    --lex-card-bg: #ffffff;
+    --lex-card-border: #d4cbc0;
+
+    --lex-tab-bg: #e6dfd3;
+    --lex-tab-text: #23382b;
+    --lex-tab-active-bg: #4e795d;  /* Deep Sage */
+    --lex-tab-active-text: #ffffff;
+
+    --lex-shadow: 0 4px 12px -2px rgba(35, 56, 43, 0.08), 0 2px 6px -1px rgba(35, 56, 43, 0.04);
+    --lex-shadow-lg: 0 12px 28px -6px rgba(35, 56, 43, 0.12), 0 8px 12px -6px rgba(35, 56, 43, 0.06);
+}
+
+/* Quasar Color Variable Overrides (Dark Mode) */
+body.q-dark, body.body--dark, .q-dark, body[dark] {
+    --q-primary: #7ca689 !important;
+    --q-secondary: #363026 !important;
+    --q-accent: #d9c59a !important;
+    --q-dark: #101713 !important;
+    --q-positive: #689f78 !important;
+    --q-negative: #c95151 !important;
+    --q-info: #5b8e9b !important;
+    --q-warning: #d9755b !important;
+
+    --lex-bg: #131b17;
+    --lex-surface: #1a241f;
+    --lex-surface-hover: #24332b;
+    --lex-border: #36483e;
+    --lex-border-hover: #4d6355;
+
+    --lex-text: #f5f2eb;           /* Soft Cream Linen */
+    --lex-text-secondary: #d9d2c7; /* Warm Oatmeal */
+    --lex-muted: #a39b8e;          /* Muted Sand */
+
+    --lex-sage: #7ca689;
+    --lex-sage-dark: #4e795d;
+    --lex-sage-light: #24332b;
+    --lex-beige: #363026;
+    --lex-beige-dark: #d9c59a;
+
+    --lex-blue: #5b8e9b;
+    --lex-indigo: #7ca689;
+    --lex-purple: #9c849c;
+    --lex-teal: #4ea89c;
+    --lex-green: #689f78;
+    --lex-orange: #d9755b;
+    --lex-red: #c95151;
+
+    --lex-header-bg: #101713;
+    --lex-header-text: #f5f2eb;
+    --lex-sidebar-bg: #16201b;
+    --lex-card-bg: #1a241f;
+    --lex-card-border: #36483e;
+
+    --lex-tab-bg: #24332b;
+    --lex-tab-text: #d9d2c7;
+    --lex-tab-active-bg: #7ca689;
+    --lex-tab-active-text: #131b17;
+
+    --lex-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+    --lex-shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
 }
 
 
 /* ============================================================
-   PAGE
+   GLOBAL BODY & TYPOGRAPHY
+   ============================================================ */
+
+body, button, input, select, textarea, .q-tab, .q-field, .q-btn, .q-item {
+    background-color: var(--lex-bg) !important;
+    color: var(--lex-text) !important;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-weight: 500;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--lex-text) !important;
+    font-weight: 800 !important;
+}
+
+
+/* ============================================================
+   HEADER & TOP BAR
+   ============================================================ */
+
+.lex-header {
+    background: var(--lex-header-bg) !important;
+    color: var(--lex-header-text) !important;
+    border-bottom: 2px solid var(--lex-sage) !important;
+    box-shadow: 0 4px 20px rgba(19, 27, 23, 0.25) !important;
+}
+
+.lex-brand-title {
+    color: #f5f2eb !important;
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+.lex-brand-subtitle {
+    color: #a3b8aa !important;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   PAGE HEADINGS & STATUS
    ============================================================ */
 
 .lex-page-title {
-    color: #172033 !important;
+    color: var(--lex-text) !important;
+    font-size: 1.75rem;
+    font-weight: 900 !important;
+    letter-spacing: -0.03em;
 }
 
 .lex-page-subtitle {
-    color: #64748b !important;
+    color: var(--lex-text-secondary) !important;
+    font-size: 0.95rem;
+    font-weight: 600 !important;
+}
+
+.lex-section-heading {
+    color: var(--lex-text) !important;
+    font-size: 1.2rem;
+    font-weight: 800 !important;
+    margin-top: 1.5rem;
+    margin-bottom: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .lex-analysis-status {
-    padding: 10px 14px;
+    padding: 12px 18px;
+    border-radius: 14px;
+    background: #e2ebe5 !important;
+    border: 2px solid #4e795d !important;
+    color: #23382b !important;
+    font-size: 0.9rem;
+    font-weight: 700 !important;
+    box-shadow: var(--lex-shadow);
+}
 
-    border-radius: 10px;
-
-    background: #ffffff;
-
-    border: 1px solid #e2e8f0;
-
-    color: #536176 !important;
+body.q-dark .lex-analysis-status,
+body.body--dark .lex-analysis-status,
+.q-dark .lex-analysis-status {
+    background: #24332b !important;
+    border-color: #7ca689 !important;
+    color: #7ca689 !important;
 }
 
 
 /* ============================================================
-   TABS
+   DASHBOARD TABS (HIGH CONTRAST SAGE & BEIGE PILL DESIGN)
    ============================================================ */
 
 .lex-dashboard-tabs {
-    background: rgba(255,255,255,.92);
-
-    border: 1px solid #dfe7f1;
-
-    border-radius: 15px;
-
-    box-shadow:
-        0 6px 20px rgba(40,60,90,.06);
+    background: var(--lex-tab-bg) !important;
+    border: 2px solid var(--lex-border) !important;
+    border-radius: 18px !important;
+    padding: 6px !important;
+    box-shadow: var(--lex-shadow) !important;
 }
 
 .lex-dashboard-tabs .q-tab {
-    min-height: 58px;
-
-    color: #64748b;
-
-    font-weight: 600;
-
+    min-height: 48px;
+    color: var(--lex-tab-text) !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem;
     text-transform: none;
+    border-radius: 14px;
+    transition: all 0.2s ease;
+    opacity: 1 !important;
 }
 
 .lex-dashboard-tabs .q-tab--active {
-    color: #2563eb;
+    color: var(--lex-tab-active-text) !important;
+    background: var(--lex-tab-active-bg) !important;
+    font-weight: 900 !important;
+    box-shadow: 0 4px 14px rgba(78, 121, 93, 0.35) !important;
+}
 
-    background:
-        linear-gradient(
-            180deg,
-            #edf4ff,
-            #ffffff
-        );
+/* Tab indicator bar override */
+.q-tab__indicator {
+    background-color: var(--lex-sage) !important;
 }
 
 
 /* ============================================================
-   SIDEBAR
+   SIDEBAR & CARDS
    ============================================================ */
 
 .lex-sidebar {
-    padding: 14px !important;
-
-    background:
-        linear-gradient(
-            180deg,
-            #f7faff,
-            #f2f6fb
-        ) !important;
-
-    border-right: 1px solid #dce5f0 !important;
+    padding: 16px !important;
+    background: var(--lex-sidebar-bg) !important;
+    border-right: 2px solid var(--lex-border) !important;
+    overflow-y: auto !important;
 }
 
 .lex-sidebar-section {
     width: 100%;
-
-    padding: 15px !important;
-
-    margin-bottom: 13px;
-
-    border-radius: 16px !important;
-
-    background: #ffffff !important;
-
-    border: 1px solid #e2e8f0 !important;
-
-    box-shadow:
-        0 5px 16px rgba(40,60,90,.06) !important;
+    padding: 18px !important;
+    margin-bottom: 16px;
+    border-radius: 18px !important;
+    background: var(--lex-surface) !important;
+    border: 2px solid var(--lex-card-border) !important;
+    box-shadow: var(--lex-shadow) !important;
 }
 
-.lex-pipeline-section {
-    background:
-        linear-gradient(
-            135deg,
-            #ffffff,
-            #eef4ff
-        ) !important;
-
-    border-top: 3px solid #4f46e5 !important;
-}
-
-.lex-target-section {
-    background:
-        linear-gradient(
-            135deg,
-            #ffffff,
-            #f5f0ff
-        ) !important;
-
-    border-top: 3px solid #7c3aed !important;
-}
-
-.lex-document-section {
-    background:
-        linear-gradient(
-            135deg,
-            #ffffff,
-            #edfbfc
-        ) !important;
-
-    border-top: 3px solid #0891b2 !important;
-}
-
-
-/* ============================================================
-   SIDEBAR TEXT
-   ============================================================ */
+.lex-pipeline-section { border-top: 5px solid var(--lex-sage) !important; }
+.lex-target-section   { border-top: 5px solid var(--lex-beige-dark) !important; }
+.lex-document-section { border-top: 5px solid var(--lex-teal) !important; }
 
 .lex-section-title {
-    color: #172033 !important;
-
-    font-size: 15px;
-
-    font-weight: 700;
+    color: var(--lex-text) !important;
+    font-size: 1.05rem;
+    font-weight: 800 !important;
 }
 
 .lex-section-subtitle {
-    color: #7a8799 !important;
-
-    font-size: 11px;
+    color: var(--lex-muted) !important;
+    font-size: 0.8rem;
+    font-weight: 600 !important;
 }
 
-.lex-section-icon {
-    font-size: 22px;
+.lex-section-divider {
+    background-color: var(--lex-border) !important;
+    height: 2px !important;
+    margin: 12px 0 !important;
 }
 
-.lex-pipeline-icon {
-    color: #4f46e5 !important;
-}
-
-.lex-target-icon {
-    color: #7c3aed !important;
-}
-
-.lex-document-icon {
-    color: #0891b2 !important;
-}
-
-
-/* ============================================================
-   SERVICES
-   ============================================================ */
-
-.lex-service-row {
-    width: 100%;
-
-    min-height: 38px;
-
-    align-items: center;
-}
-
-.lex-service-icon {
-    font-size: 18px;
-}
-
-.lex-gemini-icon {
-    color: #4285f4 !important;
-}
-
-.lex-groq-icon {
-    color: #f97316 !important;
-}
-
-.lex-db-icon {
-    color: #3b82f6 !important;
-}
-
-.lex-adk-icon {
-    color: #8b5cf6 !important;
-}
+.lex-pipeline-icon { color: var(--lex-sage) !important; }
+.lex-target-icon   { color: var(--lex-beige-dark) !important; }
+.lex-document-icon { color: var(--lex-teal) !important; }
 
 .lex-service-name {
-    color: #334155 !important;
-
-    font-size: 13px;
-
-    font-weight: 600;
-}
-
-.lex-service-subtitle {
-    color: #94a3b8 !important;
-
-    font-size: 10px;
-}
-
-.lex-connected-badge {
-    background: #eaf8ef !important;
-
-    color: #15803d !important;
-
-    border: 1px solid #bce8ca;
-
-    border-radius: 999px;
-
-    font-size: 10px;
-
-    font-weight: 700;
-}
-
-.lex-warning-badge {
-    background: #fff7e6 !important;
-
-    color: #b45309 !important;
-
-    border: 1px solid #f4d79d;
-
-    border-radius: 999px;
-
-    font-size: 10px;
-}
-
-
-/* ============================================================
-   SELECT
-   ============================================================ */
-
-.lex-framework-select {
-    width: 100%;
-
-    margin-top: 14px;
-}
-
-.lex-framework-select .q-field__control {
-    min-height: 52px !important;
-
-    background:
-        linear-gradient(
-            135deg,
-            #f8fbff,
-            #edf4ff
-        ) !important;
-
-    border-radius: 11px !important;
-}
-
-.lex-framework-select .q-field__native {
-    color: #172033 !important;
-
-    font-weight: 600;
-}
-
-
-/* ============================================================
-   UPLOAD BUTTON
-   ============================================================ */
-
-.lex-policy-upload {
-    width: 100% !important;
-
-    margin-top: 15px;
-}
-
-.lex-policy-upload .q-uploader {
-    width: 100% !important;
-
-    min-height: 125px !important;
-
-    background:
-        linear-gradient(
-            135deg,
-            #eaf5ff,
-            #f3edff
-        ) !important;
-
-    border: 2px dashed #7aa7ed !important;
-
-    border-radius: 14px !important;
-
-    overflow: hidden !important;
-}
-
-.lex-policy-upload .q-uploader__header {
-    background: transparent !important;
-
-    color: #1d4ed8 !important;
-}
-
-.lex-policy-upload .q-uploader__title {
-    color: #1d4ed8 !important;
-
+    color: var(--lex-text) !important;
+    font-size: 0.9rem;
     font-weight: 700 !important;
 }
 
+.lex-service-subtitle {
+    color: var(--lex-muted) !important;
+    font-size: 0.75rem;
+    font-weight: 600 !important;
+}
+
+.lex-connected-badge {
+    background: #3b6349 !important;
+    color: #ffffff !important;
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: 800 !important;
+    box-shadow: 0 2px 6px rgba(59, 99, 73, 0.3);
+}
+
+.lex-warning-badge {
+    background: #b45339 !important;
+    color: #ffffff !important;
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: 800 !important;
+}
+
+
+/* ============================================================
+   QUASAR INPUTS, SELECTS, CHECKBOXES & OVERRIDES
+   ============================================================ */
+
+.q-field__control {
+    background: var(--lex-surface-hover) !important;
+    border-color: var(--lex-border) !important;
+}
+
+.q-field--focused .q-field__control {
+    border-color: var(--lex-sage) !important;
+    box-shadow: 0 0 0 2px rgba(78, 121, 93, 0.2) !important;
+}
+
+.q-field--focused .q-field__label,
+.q-field--focused .q-icon,
+.q-field__native {
+    color: var(--lex-text) !important;
+}
+
+.q-menu {
+    background-color: var(--lex-surface) !important;
+    border: 1px solid var(--lex-border) !important;
+    color: var(--lex-text) !important;
+}
+
+.q-item--active, .q-item--highlighted {
+    background-color: var(--lex-surface-hover) !important;
+    color: var(--lex-sage) !important;
+}
+
+.q-checkbox__inner--truthy .q-checkbox__bg,
+.q-toggle__inner--truthy .q-toggle__track {
+    background: var(--lex-sage) !important;
+    border-color: var(--lex-sage) !important;
+}
+
+.q-linear-progress__model {
+    background-color: var(--lex-sage) !important;
+}
+
+.q-linear-progress__track {
+    background-color: var(--lex-border) !important;
+}
+
+
+/* Custom PDF Uploader Styling - Beige & Sage Green */
+.lex-policy-upload {
+    width: 100% !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    border: 2px dashed var(--lex-sage) !important;
+    box-shadow: var(--lex-shadow) !important;
+}
+
+.lex-policy-upload .q-uploader__header {
+    background: linear-gradient(135deg, #23382b, #4e795d) !important;
+    color: #ffffff !important;
+    padding: 12px 16px !important;
+}
+
+.lex-policy-upload .q-uploader__title {
+    font-weight: 800 !important;
+    font-size: 0.95rem !important;
+    color: #ffffff !important;
+}
+
 .lex-policy-upload .q-uploader__subtitle {
-    color: #64748b !important;
+    color: #d4e2d8 !important;
+    font-weight: 600 !important;
+    font-size: 0.75rem !important;
+}
+
+.lex-policy-upload .q-uploader__header-content .q-btn {
+    background: #f5f2eb !important;
+    color: #23382b !important;
+    border-radius: 10px !important;
+    font-weight: 800 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.lex-policy-upload .q-uploader__list {
+    background: var(--lex-surface-hover) !important;
+    min-height: 90px !important;
+    padding: 12px !important;
+}
+
+.lex-policy-upload .q-uploader__file {
+    background: var(--lex-surface) !important;
+    border: 1px solid var(--lex-border) !important;
+    border-radius: 12px !important;
+    color: var(--lex-text) !important;
 }
 
 .lex-upload-help {
-    color: #8a96a8 !important;
-
-    font-size: 10px;
-
-    margin-top: 5px;
+    color: var(--lex-muted) !important;
+    font-size: 0.75rem;
+    font-weight: 600 !important;
+    margin-top: 4px;
+    margin-bottom: 12px;
 }
-
-
-/* ============================================================
-   INPUTS
-   ============================================================ */
-
-.lex-sidebar-input {
-    width: 100%;
-
-    margin-top: 9px;
-}
-
-.lex-sidebar-input .q-field__control {
-    background: #ffffff !important;
-
-    border-radius: 10px !important;
-}
-
-.lex-sidebar-input .q-field__native,
-.lex-sidebar-input .q-field__input {
-    color: #172033 !important;
-}
-
-
-/* ============================================================
-   RUN BUTTON
-   ============================================================ */
 
 .lex-run-button {
-    width: 100%;
-
-    min-height: 48px;
-
-    margin-top: 15px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #2563eb,
-            #4f46e5
-        ) !important;
-
-    color: white !important;
-
-    border-radius: 11px !important;
-
-    font-weight: 700;
-
-    box-shadow:
-        0 7px 18px rgba(37,99,235,.25);
+    width: 100% !important;
+    min-height: 48px !important;
+    background: linear-gradient(135deg, #4e795d, #23382b) !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    font-size: 0.95rem !important;
+    border-radius: 14px !important;
+    margin-top: 14px !important;
+    box-shadow: 0 4px 14px rgba(78, 121, 93, 0.4) !important;
 }
 
 
 /* ============================================================
-   SCORE CARDS
+   SCORE CARDS & FRAMEWORK BREAKDOWN
    ============================================================ */
 
 .lex-score-card {
-    background:
-        linear-gradient(
-            135deg,
-            #ffffff,
-            #f1f6ff
-        ) !important;
-
-    border: 1px solid #dce7f7 !important;
-
-    border-radius: 18px !important;
-
-    padding: 20px !important;
-
-    box-shadow:
-        0 7px 22px rgba(37,99,235,.08);
+    background: var(--lex-card-bg) !important;
+    border: 2px solid var(--lex-card-border) !important;
+    border-radius: 22px !important;
+    padding: 24px !important;
+    box-shadow: var(--lex-shadow-lg) !important;
 }
 
 .lex-card-title {
-    color: #334155 !important;
-
-    font-size: 16px;
-
-    font-weight: 700;
+    color: var(--lex-muted) !important;
+    font-size: 0.9rem;
+    font-weight: 800 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 .lex-overall-score {
-    color: #2563eb !important;
-
-    font-size: 42px;
-
-    font-weight: 800;
+    font-size: 3.5rem;
+    font-weight: 900 !important;
+    color: var(--lex-sage) !important;
+    line-height: 1;
 }
 
 .lex-risk-text {
-    color: #64748b !important;
-
-    font-size: 13px;
+    font-size: 1.25rem;
+    font-weight: 900 !important;
+    color: var(--lex-red) !important;
 }
 
 .lex-score-progress {
-    margin-top: 15px;
+    height: 12px !important;
+    border-radius: 999px !important;
+    background: var(--lex-border) !important;
 }
-
-.lex-section-heading {
-    color: #172033 !important;
-
-    font-size: 19px;
-
-    font-weight: 750;
-
-    margin-top: 20px;
-}
-
-.lex-empty-state {
-    color: #94a3b8 !important;
-
-    padding: 25px;
-}
-
-
-/* ============================================================
-   FRAMEWORK CARDS
-   ============================================================ */
 
 .lex-framework-card {
-    border-radius: 17px !important;
-
+    background: var(--lex-card-bg) !important;
+    border: 2px solid var(--lex-card-border) !important;
+    border-radius: 18px !important;
     padding: 18px !important;
-
-    box-shadow:
-        0 5px 18px rgba(40,60,90,.07);
+    box-shadow: var(--lex-shadow) !important;
 }
 
-.lex-gdpr-card {
-    background:
-        linear-gradient(
-            135deg,
-            #ffffff,
-            #edf4ff
-        ) !important;
-
-    border-top: 4px solid #2563eb !important;
-}
-
-.lex-hipaa-card {
-    background:
-        linear-gradient(
-            135deg,
-            #ffffff,
-            #f5efff
-        ) !important;
-
-    border-top: 4px solid #7c3aed !important;
-}
-
-.lex-rbi-card {
-    background:
-        linear-gradient(
-            135deg,
-            #ffffff,
-            #ebfafc
-        ) !important;
-
-    border-top: 4px solid #0891b2 !important;
-}
-
-.lex-soc2-card {
-    background:
-        linear-gradient(
-            135deg,
-            #ffffff,
-            #edf9f1
-        ) !important;
-
-    border-top: 4px solid #16a34a !important;
-}
+.lex-gdpr-card { border-top: 5px solid #4e795d !important; }  /* Sage Green */
+.lex-hipaa-card { border-top: 5px solid #2e7067 !important; } /* Eucalyptus Teal */
+.lex-rbi-card { border-top: 5px solid #b45339 !important; }   /* Terracotta Rust */
+.lex-soc2-card { border-top: 5px solid #8a7642 !important; }  /* Warm Gold Beige */
 
 .lex-framework-name {
-    color: #334155 !important;
-
-    font-weight: 700;
+    color: var(--lex-text) !important;
+    font-size: 1.1rem;
+    font-weight: 800 !important;
 }
 
 .lex-framework-score {
-    color: #2563eb !important;
-
-    font-size: 27px;
-
-    font-weight: 800;
+    font-size: 2rem;
+    font-weight: 900 !important;
+    color: var(--lex-text) !important;
 }
 
-.lex-framework-risk,
+.lex-framework-risk {
+    font-size: 0.85rem;
+    font-weight: 800 !important;
+    color: var(--lex-red) !important;
+}
+
 .lex-framework-exposure {
-    color: #64748b !important;
+    font-size: 0.8rem;
+    font-weight: 600 !important;
+    color: var(--lex-muted) !important;
+    line-height: 1.4;
+}
 
-    font-size: 12px;
-
-    margin-top: 7px;
+.lex-framework-mini-badge {
+    background: var(--lex-sage) !important;
+    color: #ffffff !important;
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-weight: 700;
 }
 
 
 /* ============================================================
-   POSTURE
+   POLICY POSTURE SUMMARY
    ============================================================ */
 
-.lex-posture-summary,
-.lex-domain-card,
-.lex-action-card {
-    background: #ffffff !important;
-
-    border: 1px solid #e2e8f0 !important;
-
-    border-radius: 15px !important;
-
+.lex-posture-banner {
+    background: #fdf5f2 !important;
+    border: 2px solid #f4c2b5 !important;
+    border-radius: 18px !important;
     padding: 18px !important;
-
-    box-shadow:
-        0 5px 18px rgba(40,60,90,.06);
 }
 
-.lex-posture-text {
-    color: #536176 !important;
+body.q-dark .lex-posture-banner,
+body.body--dark .lex-posture-banner,
+.q-dark .lex-posture-banner {
+    background: #381b16 !important;
+    border-color: #7a3324 !important;
+}
 
-    line-height: 1.7;
+.lex-posture-summary {
+    background: var(--lex-card-bg) !important;
+    border: 2px solid var(--lex-card-border) !important;
+    border-radius: 18px !important;
+    padding: 24px !important;
+    box-shadow: var(--lex-shadow) !important;
+}
+
+.lex-domain-card {
+    background: var(--lex-surface-hover) !important;
+    border: 2px solid var(--lex-card-border) !important;
+    border-radius: 16px !important;
+    padding: 16px !important;
 }
 
 .lex-domain-title {
-    color: #172033 !important;
-
-    font-weight: 700;
+    color: var(--lex-text) !important;
+    font-size: 1.05rem;
+    font-weight: 800 !important;
 }
 
 .lex-domain-score {
-    color: #2563eb !important;
-
-    font-weight: 700;
-
-    margin-top: 8px;
-}
-
-.lex-domain-badge,
-.lex-framework-mini-badge {
-    background: #edf4ff !important;
-
-    color: #2563eb !important;
-
-    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 900 !important;
+    color: var(--lex-sage) !important;
 }
 
 
 /* ============================================================
-   GAPS
+   DETAILED GAP ANALYSIS ACCORDIONS
    ============================================================ */
 
 .lex-gap-expansion {
-    background: #ffffff !important;
-
-    border: 1px solid #e2e8f0 !important;
-
-    border-radius: 12px !important;
-
-    margin-bottom: 8px;
+    background: var(--lex-card-bg) !important;
+    border: 2px solid var(--lex-card-border) !important;
+    border-radius: 16px !important;
+    margin-bottom: 14px;
+    box-shadow: var(--lex-shadow) !important;
 }
 
-.lex-gap-label {
-    color: #475569 !important;
-
-    font-size: 12px;
-
-    font-weight: 700;
-
-    margin-top: 10px;
-}
-
-.lex-gap-text {
-    color: #536176 !important;
-
-    line-height: 1.65;
+.lex-gap-expansion .q-item__label {
+    color: var(--lex-text) !important;
+    font-weight: 800 !important;
+    font-size: 1.05rem;
 }
 
 .lex-fix-box {
-    background: #effbf4 !important;
+    background: #edf4ef !important;
+    border: 2px solid #a3c9b0 !important;
+    border-radius: 12px !important;
+    padding: 14px !important;
+    color: #1b3825 !important;
+    font-size: 0.9rem;
+    font-weight: 700 !important;
+    line-height: 1.4;
+}
 
-    color: #166534 !important;
+body.q-dark .lex-fix-box,
+body.body--dark .lex-fix-box,
+.q-dark .lex-fix-box {
+    background: #192b1f !important;
+    border-color: #3b6349 !important;
+    color: #a3c9b0 !important;
+}
 
-    border-left: 4px solid #16a34a;
-
-    padding: 10px 12px;
-
+.lex-verdict-met, .lex-status-met {
+    background: #3b6349 !important;
+    color: #ffffff !important;
     border-radius: 8px;
-
-    margin-top: 5px;
+    padding: 4px 10px;
+    font-weight: 800 !important;
 }
 
-.lex-status-met {
-    background: #eaf8ef !important;
-    color: #15803d !important;
+.lex-verdict-partial, .lex-status-partial, .lex-status-conflict {
+    background: #b45339 !important;
+    color: #ffffff !important;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-weight: 800 !important;
 }
 
-.lex-status-partial {
-    background: #fff7e6 !important;
-    color: #b45309 !important;
-}
-
-.lex-status-not {
-    background: #ffeded !important;
-    color: #b91c1c !important;
-}
-
-.lex-status-conflict {
-    background: #f4edff !important;
-    color: #7c3aed !important;
-}
-
-.lex-status-unknown {
-    background: #f1f5f9 !important;
-    color: #475569 !important;
+.lex-verdict-not, .lex-status-not {
+    background: #9e3232 !important;
+    color: #ffffff !important;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-weight: 800 !important;
 }
 
 
 /* ============================================================
-   ACTION PLAN
+   PRIORITY ACTION PLAN
    ============================================================ */
 
-.lex-p1 {
-    border-left: 5px solid #dc2626 !important;
-
-    background:
-        linear-gradient(
-            90deg,
-            #fff1f1,
-            #ffffff
-        ) !important;
+.lex-action-card {
+    background: var(--lex-card-bg) !important;
+    border: 2px solid var(--lex-card-border) !important;
+    border-radius: 18px !important;
+    padding: 20px !important;
+    margin-bottom: 18px;
+    box-shadow: var(--lex-shadow) !important;
 }
 
-.lex-p2 {
-    border-left: 5px solid #d97706 !important;
-
-    background:
-        linear-gradient(
-            90deg,
-            #fff8e8,
-            #ffffff
-        ) !important;
-}
-
-.lex-p3 {
-    border-left: 5px solid #2563eb !important;
-
-    background:
-        linear-gradient(
-            90deg,
-            #eef5ff,
-            #ffffff
-        ) !important;
-}
-
-.lex-action-title {
-    color: #172033 !important;
-
-    font-weight: 750;
-}
+.lex-p1 { border-left: 6px solid #9e3232 !important; }
+.lex-p2 { border-left: 6px solid #b45339 !important; }
+.lex-p3 { border-left: 6px solid #4e795d !important; }
 
 .lex-action-item {
-    margin-top: 10px;
-
-    background: #f8fafc !important;
-
-    border: 1px solid #e5eaf1 !important;
-
-    border-radius: 10px !important;
+    background: var(--lex-surface-hover) !important;
+    border: 2px solid var(--lex-card-border) !important;
+    border-radius: 14px !important;
+    padding: 16px !important;
+    margin-bottom: 10px;
 }
 
 .lex-action-item-title {
-    color: #334155 !important;
-
-    font-weight: 700;
+    color: var(--lex-text) !important;
+    font-size: 1rem;
+    font-weight: 800 !important;
 }
 
 .lex-action-item-text {
-    color: #536176 !important;
-
-    margin-top: 8px;
+    color: var(--lex-text) !important;
+    font-size: 0.92rem;
+    font-weight: 600 !important;
+    line-height: 1.5;
 }
 
-.lex-empty-small {
-    color: #94a3b8 !important;
-
+.lex-gap-label {
+    font-size: 0.95rem !important;
+    font-weight: 800 !important;
+    color: #1b3825 !important;
+    letter-spacing: 0.01em;
     margin-top: 10px;
+    margin-bottom: 4px;
 }
 
+body.q-dark .lex-gap-label,
+body.body--dark .lex-gap-label,
+.q-dark .lex-gap-label {
+    color: #a3c9b0 !important;
+}
 
-/* ============================================================
-   EXPORT
-   ============================================================ */
+.lex-gap-text {
+    font-size: 0.92rem !important;
+    font-weight: 600 !important;
+    color: #1b2721 !important;
+    line-height: 1.5;
+    background: rgba(255, 255, 255, 0.7) !important;
+    padding: 10px 14px !important;
+    border-radius: 10px !important;
+    border: 1px solid var(--lex-card-border) !important;
+}
+
+body.q-dark .lex-gap-text,
+body.body--dark .lex-gap-text,
+.q-dark .lex-gap-text {
+    color: #e2ebe5 !important;
+    background: rgba(0, 0, 0, 0.25) !important;
+}
+
+.lex-domain-badge-outline {
+    background: #e2ebe5 !important;
+    color: #1b3825 !important;
+    border: 1.5px solid #4e795d !important;
+    font-weight: 800 !important;
+    font-size: 0.78rem !important;
+    padding: 4px 10px !important;
+    border-radius: 8px !important;
+}
+
+body.q-dark .lex-domain-badge-outline,
+body.body--dark .lex-domain-badge-outline,
+.q-dark .lex-domain-badge-outline {
+    background: #23382b !important;
+    color: #e2ebe5 !important;
+    border-color: #7ca689 !important;
+}
 
 .lex-export-json-button {
-    background:
-        linear-gradient(
-            135deg,
-            #2563eb,
-            #0891b2
-        ) !important;
-
-    color: white !important;
+    background: var(--lex-surface-hover) !important;
+    color: var(--lex-text) !important;
+    border: 2px solid var(--lex-border) !important;
+    font-weight: 800 !important;
+    border-radius: 12px !important;
 }
 
 .lex-export-pdf-button {
-    background:
-        linear-gradient(
-            135deg,
-            #dc2626,
-            #ea580c
-        ) !important;
-
-    color: white !important;
+    background: linear-gradient(135deg, #4e795d, #23382b) !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(78, 121, 93, 0.3) !important;
 }
 
 
 /* ============================================================
-   DARK MODE
-   ============================================================ */
-
-.body--dark {
-    --lex-bg: #0b1220;
-    --lex-surface: #121b2d;
-    --lex-border: #293750;
-    --lex-text: #f1f5f9;
-    --lex-muted: #94a3b8;
-}
-
-.body--dark body {
-    background:
-        radial-gradient(
-            circle at 90% 0%,
-            #172554,
-            #0b1220 45%,
-            #080d17
-        ) !important;
-
-    color: #f1f5f9;
-}
-
-
-/* Sidebar */
-
-.body--dark .lex-sidebar {
-    background:
-        linear-gradient(
-            180deg,
-            #0d1628,
-            #111b2e
-        ) !important;
-
-    border-color: #293750 !important;
-}
-
-.body--dark .lex-sidebar-section {
-    background:
-        linear-gradient(
-            135deg,
-            #121c2f,
-            #172238
-        ) !important;
-
-    border-color: #293750 !important;
-}
-
-.body--dark .lex-section-title {
-    color: #f1f5f9 !important;
-}
-
-.body--dark .lex-section-subtitle,
-.body--dark .lex-service-subtitle {
-    color: #94a3b8 !important;
-}
-
-.body--dark .lex-service-name {
-    color: #dbe4ef !important;
-}
-
-
-/* Select */
-
-.body--dark .lex-framework-select .q-field__control {
-    background: #18253a !important;
-
-    border-color: #3b4b67 !important;
-}
-
-.body--dark .lex-framework-select .q-field__native {
-    color: #f1f5f9 !important;
-}
-
-
-/* Upload */
-
-.body--dark .lex-policy-upload .q-uploader {
-    background:
-        linear-gradient(
-            135deg,
-            #142442,
-            #211b3a
-        ) !important;
-
-    border-color: #4f7fc4 !important;
-}
-
-.body--dark .lex-policy-upload .q-uploader__title {
-    color: #dbeafe !important;
-}
-
-.body--dark .lex-policy-upload .q-uploader__subtitle {
-    color: #94a3b8 !important;
-}
-
-
-/* Inputs */
-
-.body--dark .lex-sidebar-input .q-field__control {
-    background: #18253a !important;
-
-    border-color: #3b4b67 !important;
-}
-
-.body--dark .lex-sidebar-input .q-field__native,
-.body--dark .lex-sidebar-input .q-field__input {
-    color: #f1f5f9 !important;
-}
-
-
-/* Main */
-
-.body--dark .lex-page-title {
-    color: #f1f5f9 !important;
-}
-
-.body--dark .lex-page-subtitle {
-    color: #94a3b8 !important;
-}
-
-.body--dark .lex-analysis-status {
-    background: #121b2d !important;
-
-    border-color: #293750 !important;
-
-    color: #aab7c9 !important;
-}
-
-
-/* Tabs */
-
-.body--dark .lex-dashboard-tabs {
-    background: #121b2d !important;
-
-    border-color: #293750 !important;
-}
-
-.body--dark .lex-dashboard-tabs .q-tab {
-    color: #94a3b8;
-}
-
-.body--dark .lex-dashboard-tabs .q-tab--active {
-    color: #60a5fa;
-
-    background: #172554;
-}
-
-
-/* Cards */
-
-.body--dark .lex-score-card,
-.body--dark .lex-framework-card,
-.body--dark .lex-posture-summary,
-.body--dark .lex-domain-card,
-.body--dark .lex-action-card {
-    background:
-        linear-gradient(
-            135deg,
-            #121b2d,
-            #172238
-        ) !important;
-
-    border-color: #293750 !important;
-}
-
-.body--dark .lex-card-title,
-.body--dark .lex-section-heading,
-.body--dark .lex-framework-name,
-.body--dark .lex-domain-title,
-.body--dark .lex-action-title,
-.body--dark .lex-action-item-title {
-    color: #f1f5f9 !important;
-}
-
-.body--dark .lex-risk-text,
-.body--dark .lex-framework-risk,
-.body--dark .lex-framework-exposure,
-.body--dark .lex-posture-text,
-.body--dark .lex-domain-score,
-.body--dark .lex-gap-text,
-.body--dark .lex-action-item-text {
-    color: #aebbd0 !important;
-}
-
-
-/* Gap */
-
-.body--dark .lex-gap-expansion {
-    background: #121b2d !important;
-
-    border-color: #293750 !important;
-}
-
-.body--dark .lex-fix-box {
-    background: #10271b !important;
-
-    color: #86efac !important;
-}
-
-
-/* Action */
-
-.body--dark .lex-p1,
-.body--dark .lex-p2,
-.body--dark .lex-p3 {
-    background:
-        linear-gradient(
-            90deg,
-            #172238,
-            #121b2d
-        ) !important;
-}
-
-.body--dark .lex-action-item {
-    background: #18253a !important;
-
-    border-color: #293750 !important;
-}
-
-
-/* ============================================================
-   SCROLLBAR
+   SCROLLBAR STYLING
    ============================================================ */
 
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 9px;
+    height: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--lex-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #b6c3d5;
+    background: #b8ab9b;
     border-radius: 20px;
 }
 
-.body--dark ::-webkit-scrollbar-thumb {
-    background: #46566f;
+body.q-dark ::-webkit-scrollbar-thumb,
+body.body--dark ::-webkit-scrollbar-thumb,
+.q-dark ::-webkit-scrollbar-thumb {
+    background: #36483e;
 }
