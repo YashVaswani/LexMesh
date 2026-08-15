@@ -109,7 +109,7 @@ def create_score_cards(
                 key
             )
 
-            if not data:
+            if data is None:
                 continue
 
             info = FRAMEWORK_INFO.get(

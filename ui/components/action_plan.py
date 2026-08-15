@@ -84,12 +84,15 @@ def _priority(
 
             title_text = (
                 item.get(
-                    "title",
+                    "Requirement Citation",
                     item.get(
-                        "Requirement",
+                        "title",
                         item.get(
-                            "requirement",
-                            "Compliance action",
+                            "Requirement",
+                            item.get(
+                                "requirement",
+                                "Compliance action",
+                            ),
                         ),
                     ),
                 )
@@ -97,12 +100,15 @@ def _priority(
 
             action = (
                 item.get(
-                    "recommended_action",
+                    "Action Required",
                     item.get(
-                        "Fix Required",
+                        "recommended_action",
                         item.get(
-                            "fix_suggestion",
-                            "",
+                            "Fix Required",
+                            item.get(
+                                "fix_suggestion",
+                                "",
+                            ),
                         ),
                     ),
                 )
@@ -117,6 +123,9 @@ def _priority(
                     ),
                 )
             )
+            
+            domain = item.get("Policy Domain", item.get("policy_domain", ""))
+            status = item.get("Current Status", item.get("current_status", ""))
 
             with ui.card().classes(
                 "w-full lex-action-item"
@@ -128,13 +137,20 @@ def _priority(
                     "lex-action-item-title"
                 )
 
-                if framework:
+                with ui.row().classes("items-center gap-2 mt-1"):
+                    if framework:
 
-                    ui.badge(
-                        str(framework)
-                    ).classes(
-                        "lex-framework-mini-badge"
-                    )
+                        ui.badge(
+                            str(framework)
+                        ).classes(
+                            "lex-framework-mini-badge"
+                        )
+                        
+                    if domain:
+                        ui.badge(str(domain)).props("outline color=grey")
+                        
+                    if status:
+                        ui.badge(str(status)).props("color=red")
 
                 if action:
 

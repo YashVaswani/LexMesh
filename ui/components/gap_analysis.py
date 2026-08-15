@@ -63,9 +63,9 @@ def create_gap_analysis(report):
     for index, gap in enumerate(gaps):
 
         requirement = gap.get(
-            "requirement_text",
+            "article",
             gap.get(
-                "requirement",
+                "requirement_text",
                 gap.get(
                     "title",
                     "Compliance Requirement",
@@ -73,9 +73,14 @@ def create_gap_analysis(report):
             ),
         )
 
+        req_id = gap.get("requirement_id", "")
+
         status = gap.get(
-            "status",
-            "Unknown",
+            "verdict",
+            gap.get(
+                "status",
+                "Unknown",
+            ),
         )
 
         framework = gap.get(
@@ -87,26 +92,30 @@ def create_gap_analysis(report):
         )
 
         explanation = gap.get(
-            "explanation",
+            "analysis",
             gap.get(
-                "analysis",
+                "explanation",
                 "",
             ),
         )
 
         fix = gap.get(
-            "fix_suggestion",
+            "fix_required",
             gap.get(
-                "fix_required",
+                "fix_suggestion",
                 gap.get(
                     "recommended_action",
                     "",
                 ),
             ),
         )
+        
+        mandate = gap.get("requirement_mandate", gap.get("gdpr_requires", ""))
+        policy_citation = gap.get("your_policy", "")
 
+        header_title = f"[{req_id}] {str(requirement)[:100]}" if req_id else f"{index + 1}. {str(requirement)[:100]}"
         with ui.expansion(
-            f"{index + 1}. {str(requirement)[:100]}"
+            header_title
         ).classes(
             "w-full lex-gap-expansion"
         ):
@@ -129,6 +138,14 @@ def create_gap_analysis(report):
                         "lex-status-unknown",
                     )
                 )
+
+            if mandate:
+                ui.label("Mandate").classes("lex-gap-label")
+                ui.label(str(mandate)).classes("lex-gap-text")
+
+            if policy_citation:
+                ui.label("Policy Citation").classes("lex-gap-label")
+                ui.label(str(policy_citation)).classes("lex-gap-text")
 
             if explanation:
 

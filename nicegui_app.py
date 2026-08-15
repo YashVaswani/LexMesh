@@ -1098,12 +1098,13 @@ def dashboard():
                 "=========================================="
             )
 
-            master_report = (
-                adk_supervisor.run_adk_pipeline(
-                    company,
-                    policy,
-                    policy_text,
-                )
+            import asyncio
+            master_report = await asyncio.get_event_loop().run_in_executor(
+                None,
+                adk_supervisor.run_adk_pipeline,
+                company,
+                policy,
+                policy_text,
             )
 
             # =================================================
@@ -1230,6 +1231,25 @@ def dashboard():
             # SUCCESS
             # =================================================
 
+            # DEBUG: Trace exactly where score comes from
+            _summary_obj = report.get("summary", {})
+            print(
+                "[LexMesh] DEBUG summary keys:",
+                list(_summary_obj.keys()) if isinstance(_summary_obj, dict) else type(_summary_obj),
+            )
+            print(
+                "[LexMesh] DEBUG overall_score raw:",
+                repr(_summary_obj.get("overall_score")) if isinstance(_summary_obj, dict) else "N/A",
+            )
+            print(
+                "[LexMesh] DEBUG framework_summaries keys:",
+                list(_summary_obj.get("framework_summaries", {}).keys()) if isinstance(_summary_obj, dict) else "N/A",
+            )
+            for _fw_key, _fw_val in _summary_obj.get("framework_summaries", {}).items():
+                print(
+                    f"[LexMesh] DEBUG   {_fw_key} -> score={_fw_val.get('score') if isinstance(_fw_val, dict) else _fw_val}"
+                )
+
             score = (
                 report
                 .get(
@@ -1304,6 +1324,61 @@ def dashboard():
         "run_button"
     ].on_click(
         run_analysis
+    )
+
+    # ========================================================
+    # FRAMEWORK CHANGE CALLBACK
+    # ========================================================
+    
+    def handle_framework_change():
+        if page_state.get("master_report"):
+            # Update the page state and re-render
+            selected_label = sidebar["framework_select"].value
+            selected_fw_keys = FRAMEWORKS.get(
+                selected_label,
+                FRAMEWORKS["🌐 All Standards (Full Scope)"],
+            )
+            page_state["selected_frameworks"] = selected_fw_keys
+            
+            report = filter_report_payload(
+                page_state["master_report"],
+                selected_fw_keys,
+            )
+            
+            score_container.clear()
+            posture_container.clear()
+            gap_container.clear()
+            action_container.clear()
+            export_container.clear()
+            
+            with score_container:
+                summary = report.get("summary", {})
+                framework_summaries = summary.get("framework_summaries", {})
+                create_score_cards(
+                    summary=summary,
+                    framework_summaries=framework_summaries,
+                    selected_fw_keys=selected_fw_keys,
+                )
+                
+            with posture_container:
+                create_policy_posture(report)
+                
+            with gap_container:
+                create_gap_analysis(report)
+                
+            with action_container:
+                create_action_plan(report)
+                
+            with export_container:
+                create_report_export(
+                    report=report,
+                    company=sidebar["company_name"].value or "Uploaded Organization",
+                )
+
+    sidebar[
+        "framework_select"
+    ].on_value_change(
+        handle_framework_change
     )
 
 
