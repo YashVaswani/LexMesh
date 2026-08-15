@@ -97,7 +97,7 @@ class LLMProviderChain:
         # Tier 2: Groq (Secondary Provider across all configured API Keys)
         if self.groq_clients:
             for k_idx, client in enumerate(self.groq_clients):
-                for g_model in ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"]:
+                for g_model in ["llama-3.1-8b-instant", "llama3-70b-8192", "mixtral-8x7b-32768"]:
                     for attempt in range(2):
                         try:
                             messages = []
