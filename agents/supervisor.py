@@ -7,6 +7,7 @@ calculates framework-specific statutory fine exposure and policy domain readines
 
 import json
 import re
+import time
 import uuid
 import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -68,7 +69,7 @@ class SupervisorAgent:
             elif failing_chapters:
                 exposure = "€10M or 2% global annual revenue (GDPR Art. 83(4) Tier 1)"
             else:
-                exposure = "Low Exposure — Standard Maintenance"
+                exposure = "Low Exposure — Compliance Maintenance"
         elif framework_id == "hipaa":
             if counts["not_met"] > 0 or counts["conflicting"] > 0:
                 exposure = "$1.9M+ Statutory Civil Monetary Penalty per year (45 CFR § 160)"
@@ -91,7 +92,7 @@ class SupervisorAgent:
             else:
                 exposure = "Clean Audit Posture — Unqualified SOC 2 Type II Opinion"
         else:
-            exposure = "Standard Statutory Penalty"
+            exposure = "Compliance Statutory Penalty"
 
         return {
             "framework_id": framework_id,
@@ -168,6 +169,7 @@ class SupervisorAgent:
 
             item = {
                 "Policy Domain": dom_info.get("title", "Data Governance"),
+                "Framework Compliance": f"{fw_info['icon']} {fw_info['name']}",
                 "Framework Standard": f"{fw_info['icon']} {fw_info['name']}",
                 "Requirement Citation": gap.get("article", ""),
                 "Current Status": "Legal contradiction" if "conflict" in v else ("Missing entirely" if ("not met" in v or "missing" in v) else ("Currently vague" if "partially" in v else "Fully met")),
@@ -238,12 +240,13 @@ class SupervisorAgent:
 
         all_gaps = []
 
-        # Execute sub-agents in parallel using multi-key concurrency (6 workers)
-        with ThreadPoolExecutor(max_workers=min(6, max(1, len(tasks)))) as executor:
-            future_to_task = {
-                executor.submit(self._evaluate_batch, fw_id, ch_num, reqs, policy_text): (fw_id, ch_num)
-                for fw_id, ch_num, reqs in tasks
-            }
+        # Execute sub-agents in parallel with thread pacing (max 4 workers)
+        with ThreadPoolExecutor(max_workers=min(4, max(1, len(tasks)))) as executor:
+            future_to_task = {}
+            for fw_id, ch_num, reqs in tasks:
+                future = executor.submit(self._evaluate_batch, fw_id, ch_num, reqs, policy_text)
+                future_to_task[future] = (fw_id, ch_num)
+                time.sleep(0.15)  # Smooth 150ms pacing delay between task dispatches
 
             for future in as_completed(future_to_task):
                 fw_id, ch_num = future_to_task[future]
@@ -253,7 +256,7 @@ class SupervisorAgent:
                 except Exception as e:
                     print(f"[WARNING] Error evaluating Framework '{fw_id}' Section '{ch_num}': {e}")
 
-        # Compute Framework Summaries for each standard
+        # Compute Framework Summaries for each compliance
         framework_summaries = {}
         total_score_sum = 0
         fw_count = 0
@@ -302,7 +305,7 @@ class SupervisorAgent:
             "metadata": {
                 "company_name": company_name,
                 "policy_name": policy_name,
-                "standards_analyzed": ["EU GDPR", "US HIPAA", "RBI Cyber Framework", "SOC 2 Type II"],
+                "compliances_analyzed": ["EU GDPR", "US HIPAA", "RBI Cyber Framework", "SOC 2 Type II"],
                 "analysis_date": now_str,
                 "generated_by": "LexMesh Engine v2.0 (Multi-Framework)",
                 "analyzed_by": "Parallel Agentic RAG Pipeline"

@@ -13,10 +13,10 @@ genai_client_obj = None
 genai_legacy_obj = None
 
 try:
-    from google import genai
+    import google.genai as genai
     from google.genai import types
     HAS_GENAI = True
-except Exception:
+except Exception as e:
     try:
         import google.generativeai as genai_legacy_obj
         HAS_GENAI = True
@@ -25,6 +25,7 @@ except Exception:
 
 from groq import Groq
 from config import config
+from db.supabase_client import supabase_db
 
 
 class LLMProviderChain:
@@ -92,37 +93,11 @@ class LLMProviderChain:
                             else:
                                 break  # Try next model or key
 
-        # Tier 1 Fallback: Gemini via legacy google.generativeai SDK (v1)
-        if self.legacy_gemini_active:
-            for m_name in ["models/gemini-2.5-flash", "models/gemini-2.5-flash-lite"]:
-                try:
-                    model = genai_legacy_obj.GenerativeModel(
-                        model_name=m_name,
-                        system_instruction=system_instruction
-                    )
-                    response = model.generate_content(
-                        prompt, 
-                        generation_config={
-                            "temperature": 0.0,
-                            "response_mime_type": "application/json"
-                        }
-                    )
-                    if response and response.text:
-                        return response.text
-                except Exception as e:
-                    err = str(e)
-                    print(f"[LLM-WARN] Gemini SDK v1 ({m_name}): {type(e).__name__}: {err[:200]}")
-                    if "429" in err or "RESOURCE_EXHAUSTED" in err:
-                        break
-                    elif "404" in err or "not found" in err.lower():
-                        continue
-                    else:
-                        break
 
         # Tier 2: Groq (Secondary Provider across all configured API Keys)
         if self.groq_clients:
             for k_idx, client in enumerate(self.groq_clients):
-                for g_model in ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"]:
+                for g_model in ["llama-3.1-8b-instant", "llama3-70b-8192", "mixtral-8x7b-32768"]:
                     for attempt in range(2):
                         try:
                             messages = []
@@ -157,6 +132,49 @@ class LLMProviderChain:
 llm_chain = LLMProviderChain()
 
 
+import hashlib
+
+# Global In-Memory Audit Cache to eliminate redundant LLM API calls across runs
+AUDIT_CACHE = {}
+
+def extract_relevant_policy_context(reqs_summary: list, policy_text: str) -> str:
+    """
+    Targeted Zero-Cost RAG Paragraph Matcher:
+    Extracts top relevant policy paragraphs based on requirement keyword density.
+    Shrinks prompt token payload to ~350 tokens while boosting audit precision.
+    """
+    if not policy_text or len(policy_text) < 500:
+        return policy_text[:1500] if policy_text else "No policy text provided."
+
+    paragraphs = [p.strip() for p in re.split(r'\n\s*\n|\n(?=[0-9]+\.|\b[A-Z\s]{4,}\b)', policy_text) if len(p.strip()) > 30]
+    if not paragraphs:
+        return policy_text[:1500]
+
+    # Collect keywords from requirements
+    keywords = set()
+    for req in reqs_summary:
+        text = f"{req.get('article_title', '')} {req.get('atomic_requirement', '')}".lower()
+        words = re.findall(r'\b[a-z]{4,}\b', text)
+        keywords.update(words)
+
+    # Score paragraphs by keyword overlap
+    scored_paragraphs = []
+    for idx, p in enumerate(paragraphs):
+        p_lower = p.lower()
+        score = sum(1 for kw in keywords if kw in p_lower)
+        scored_paragraphs.append((score, idx, p))
+
+    scored_paragraphs.sort(key=lambda x: x[0], reverse=True)
+
+    # Select top 2 paragraphs or fallback to first 2 paragraphs
+    top_items = [p for sc, idx, p in scored_paragraphs[:2] if sc > 0]
+    if not top_items:
+        top_items = paragraphs[:2]
+
+    context_snippet = "\n\n---\n\n".join(top_items)
+    return context_snippet[:2000]
+
+
 FRAMEWORK_CONTEXTS = {
     "gdpr": {
         "full_name": "EU General Data Protection Regulation (EU GDPR 2016/679)",
@@ -188,7 +206,7 @@ class ChapterSubAgent:
         self.framework_id = framework_id.lower()
 
     def _build_prompt(self, reqs_summary: list, policy_text: str):
-        """Build the system instruction and user prompt tailored specifically to this framework standard."""
+        """Build system instruction and prompt using targeted policy clause context."""
         fw_info = FRAMEWORK_CONTEXTS.get(self.framework_id, {
             "full_name": f"{self.framework_id.upper()} Compliance Standard",
             "citation_rule": f"Cite specific {self.framework_id.upper()} sections.",
@@ -214,13 +232,15 @@ class ChapterSubAgent:
             "Never copy-paste generic text across frameworks."
         )
 
-        prompt = f"""Company Policy Document (Excerpt):
+        relevant_excerpt = extract_relevant_policy_context(reqs_summary, policy_text)
+
+        prompt = f"""Company Policy Document (Relevant Clause Excerpt):
 \"\"\"
-{policy_text[:8000]}
+{relevant_excerpt}
 \"\"\"
 
 Requirements to audit specifically for [{fw_info['full_name']}] — Section {self.chapter_number} ({self.chapter_title}):
-{json.dumps(reqs_summary, indent=2)}
+{json.dumps(reqs_summary, separators=(',', ':'))}
 
 Return a valid JSON object containing a "verdicts" array with framework-specific audit results:
 {{
@@ -348,17 +368,44 @@ Return a valid JSON object containing a "verdicts" array with framework-specific
                 for req in chunk
             ]
 
+            # Option 4 Optimization: SHA-256 Multi-Tier Audit Caching (In-Memory + Supabase Cloud)
+            policy_hash = hashlib.sha256(policy_text.encode('utf-8')).hexdigest()[:16]
+            cache_hit = True
+            cached_chunk_verdicts = []
+            for req in chunk:
+                cache_key = f"{self.framework_id}:{req.get('id')}:{policy_hash}"
+                if cache_key in AUDIT_CACHE:
+                    cached_chunk_verdicts.append(AUDIT_CACHE[cache_key])
+                else:
+                    sp_cached = supabase_db.get_cached_verdict(self.framework_id, req.get('id'), policy_hash)
+                    if sp_cached:
+                        AUDIT_CACHE[cache_key] = sp_cached
+                        cached_chunk_verdicts.append(sp_cached)
+                    else:
+                        cache_hit = False
+                        break
+
+            if cache_hit:
+                verdicts.extend(cached_chunk_verdicts)
+                continue
+
             system_instruction, prompt = self._build_prompt(reqs_summary, policy_text)
             raw_response = llm_chain.generate(prompt, system_instruction)
             parsed = self._parse_json_response(raw_response)
 
             if parsed:
                 for item in parsed:
-                    verdicts.append(self._enrich(item, chapter_reqs))
+                    enriched = self._enrich(item, chapter_reqs)
+                    verdicts.append(enriched)
+                    req_id = item.get("requirement_id")
+                    if req_id:
+                        c_key = f"{self.framework_id}:{req_id}:{policy_hash}"
+                        AUDIT_CACHE[c_key] = enriched
+                        supabase_db.save_cached_verdict(self.framework_id, req_id, policy_hash, enriched)
             else:
                 # Fallback per requirement in chunk if chunk fails
                 for req in chunk:
-                    verdicts.append(self._enrich({
+                    fallback_item = self._enrich({
                         "requirement_id": req.get("id"),
                         "article": req.get("article_number"),
                         "article_title": req.get("article_title"),
@@ -369,6 +416,7 @@ Return a valid JSON object containing a "verdicts" array with framework-specific
                         "your_policy": "No relevant policy clause found.",
                         "analysis": "Automated analysis could not be completed for this requirement. Manual review recommended.",
                         "fix_required": f"Add a policy clause covering {req.get('article_title')} under {self.framework_id.upper()}."
-                    }, chapter_reqs))
+                    }, chapter_reqs)
+                    verdicts.append(fallback_item)
 
         return verdicts

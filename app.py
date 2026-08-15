@@ -1,7 +1,7 @@
 """
 LexMesh — Streamlit Web Interface (Policy-Centric Multi-Framework Engine)
 Interactive dashboard for document ingestion, simultaneous multi-framework parallel RAG analysis,
-user-selected compliance standard filtering, policy-centric detailed gap accordions (EU GDPR, US HIPAA, RBI Cyber, SOC 2 Type II),
+user-selected compliance filtering, policy-centric detailed gap accordions (EU GDPR, US HIPAA, RBI Cyber, SOC 2 Type II),
 metric score cards, policy-grouped action plans, and targeted PDF/JSON export.
 """
 
@@ -39,7 +39,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown('<div class="main-header">🛡️ LexMesh</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Policy-Centric Multi-Framework Compliance Engine (EU GDPR · US HIPAA · RBI Cyber · SOC 2 Type II)</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-header">Policy-Centric Compliance Engine (EU GDPR · US HIPAA · RBI Cyber · SOC 2 Type II)</div>', unsafe_allow_html=True)
 
 def extract_metadata_from_pdf(pdf_bytes: bytes) -> tuple:
     """
@@ -132,7 +132,7 @@ def filter_report_payload(report_json: dict, target_fw_keys: list) -> dict:
     # 6. Filter Action Plan Items
     plan = filtered.get("priority_action_plan", {})
     def match_item(item):
-        tag = (item.get("Framework Standard") or item.get("framework_tag", "")).lower()
+        tag = (item.get("Framework Compliance") or item.get("Framework compliance") or item.get("Framework Standard") or item.get("framework_tag", "")).lower()
         for k in target_fw_keys:
             if k == "gdpr" and "gdpr" in tag: return True
             if k == "hipaa" and "hipaa" in tag: return True
@@ -157,26 +157,26 @@ with st.sidebar:
     st.write(f"🔹 Gemini API: {'✅ Connected' if config.GEMINI_API_KEY else '❌ Missing'}")
     st.write(f"🔹 Groq API: {'✅ Connected' if config.GROQ_API_KEY else '❌ Missing'}")
     st.write(f"🔹 Supabase DB: {'✅ Connected' if supabase_db.is_connected() else '⚠️ Offline / Local Mode'}")
-    st.write(f"🔹 Orchestration: ✅ Google ADK Supervisor (Multi-Framework Pool)")
+    st.write(f"🔹 Orchestration: ✅ Google ADK Supervisor ")
     
     st.divider()
-    st.subheader("🎯 Compliance Target Selection")
+    st.subheader("🎯 Compliance  Selection")
     selected_framework_label = st.selectbox(
-        "Select compliance standard to analyze & view:",
+        "Select compliance  to analyze & view:",
         options=[
-            "🌐 All Standards (Full Scope)",
-            "🇪🇺 EU GDPR",
+            "🌐 All Compliance ",
+            " EU GDPR",
             "🏥 US HIPAA",
             "🏦 RBI Cyber Framework",
             "🛡️ SOC 2 Type II"
         ],
         index=0,
-        help="Select which compliance standard you want to inspect on the dashboard."
+        help="Select which compliance  you want to inspect on the dashboard."
     )
 
     fw_map = {
-        "🌐 All Standards (Full Scope)": ["gdpr", "hipaa", "rbi", "soc2"],
-        "🇪🇺 EU GDPR": ["gdpr"],
+        "🌐 All Compliances ": ["gdpr", "hipaa", "rbi", "soc2"],
+        "   EU GDPR": ["gdpr"],
         "🏥 US HIPAA": ["hipaa"],
         "🏦 RBI Cyber Framework": ["rbi"],
         "🛡️ SOC 2 Type II": ["soc2"]
@@ -260,7 +260,7 @@ if "active_report" in st.session_state:
     
     # TAB 1: OVERVIEW METRICS & SIDE-BY-SIDE FRAMEWORK SCORE CARDS
     with tab1:
-        st.subheader("Selected Compliance Score & Standard Breakdown")
+        st.subheader("Selected Compliance Score & Breakdown")
         
         # Overall Score Metric Banner
         m_col1, m_col2 = st.columns([1, 2])
@@ -270,11 +270,11 @@ if "active_report" in st.session_state:
             st.info(f"**Overall Posture:** {summary.get('overall_risk', 'MEDIUM RISK')}")
 
         st.divider()
-        st.subheader("Compliance Standard Score Cards")
+        st.subheader("Compliance  Score Cards")
         
         # Side-by-Side Metric Cards for Selected Frameworks
         active_fw_cards = [
-            ("gdpr", "🇪🇺 EU GDPR"),
+            ("gdpr", " EU GDPR"),
             ("hipaa", "🏥 US HIPAA"),
             ("rbi", "🏦 RBI Cyber"),
             ("soc2", "🛡️ SOC 2 Type II")
@@ -321,7 +321,7 @@ if "active_report" in st.session_state:
     # TAB 3: DETAILED POLICY GAPS (POLICY-BY-POLICY EXPANDERS WITH FRAMEWORK TABS)
     with tab3:
         st.subheader("Detailed Gap Analysis — Grouped by Company Policy Domain")
-        st.caption("Click any policy domain arrow below to view and analyze gaps comparing compliance standards side-by-side right inside that policy section!")
+        st.caption("Click any policy domain arrow below to view and analyze gaps comparing compliance  side-by-side right inside that policy section!")
         
         verdict_filter = st.multiselect(
             "Filter by Verdict", 
@@ -345,7 +345,7 @@ if "active_report" in st.session_state:
 
                 # Inner tabs for user-selected Frameworks under this Policy Domain
                 fw_tab_labels = {
-                    "gdpr": "🇪🇺 EU GDPR Gaps",
+                    "gdpr": " EU GDPR Gaps",
                     "hipaa": "🏥 US HIPAA Gaps",
                     "rbi": "🏦 RBI Cyber Framework Gaps",
                     "soc2": "🛡️ SOC 2 Type II Gaps"
@@ -379,7 +379,7 @@ if "active_report" in st.session_state:
     # TAB 4: POLICY-GROUPED ACTION PLAN
     with tab4:
         st.subheader("Priority Action Plan — Grouped by Policy Document & Domain")
-        st.caption("Remediation items organized by priority tier for selected compliance standards.")
+        st.caption("Remediation items organized by priority tier for selected compliance.")
         
         st.error("🚨 P1 — Critical Priority (Immediate Action Required)")
         if action_plan.get("p1_critical"):
@@ -406,13 +406,13 @@ if "active_report" in st.session_state:
         
         st.divider()
         st.subheader("📥 Select Compliance Scope for Export")
-        st.caption("Choose which compliance standard(s) you want to include in your downloaded JSON and PDF report.")
+        st.caption("Choose which compliance you want to include in your downloaded JSON and PDF report.")
         
         export_scope_label = st.selectbox(
-            "Select Targeted Compliance Standard for Export:",
+            "Select Targeted Compliance for Export:",
             options=[
                 "🌐 All Selected Frameworks (Master Audit Report)",
-                "🇪🇺 EU GDPR Only",
+                " EU GDPR Only",
                 "🏥 US HIPAA Only",
                 "🏦 RBI Cyber Framework Only",
                 "🛡️ SOC 2 Type II Only"
@@ -422,7 +422,7 @@ if "active_report" in st.session_state:
 
         scope_key_map = {
             "🌐 All Selected Frameworks (Master Audit Report)": selected_fw_keys,
-            "🇪🇺 EU GDPR Only": ["gdpr"],
+            " EU GDPR Only": ["gdpr"],
             "🏥 US HIPAA Only": ["hipaa"],
             "🏦 RBI Cyber Framework Only": ["rbi"],
             "🛡️ SOC 2 Type II Only": ["soc2"]
