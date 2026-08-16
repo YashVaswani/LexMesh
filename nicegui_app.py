@@ -1164,14 +1164,20 @@ def dashboard():
             )
 
             # =================================================
-            # CLEAR OLD UI
+            # CLEAR OLD UI (Safely handle client disconnects)
             # =================================================
 
-            score_container.clear()
-            posture_container.clear()
-            gap_container.clear()
-            action_container.clear()
-            export_container.clear()
+            try:
+                score_container.clear()
+                posture_container.clear()
+                gap_container.clear()
+                action_container.clear()
+                export_container.clear()
+            except RuntimeError as e:
+                if "client this element belongs to has been deleted" in str(e):
+                    print("[LexMesh] Client session ended during analysis execution. Skipping UI update.")
+                    return
+                raise e
 
             # =================================================
             # SCORE TAB
@@ -1299,14 +1305,23 @@ def dashboard():
 
         except Exception as e:
 
-            status.set_text(
-                f"❌ Analysis failed: {e}"
-            )
+            if "client this element belongs to has been deleted" in str(e):
+                print("[LexMesh] Client session disconnected during analysis pipeline.")
+                return
 
-            ui.notify(
-                f"Analysis failed: {e}",
-                type="negative",
-            )
+            print(f"[ERROR] Analysis pipeline error: {e}")
+
+            try:
+                status.set_text(
+                    f"Analysis failed: {e}"
+                )
+
+                ui.notify(
+                    f"Analysis failed: {e}",
+                    type="negative",
+                )
+            except Exception:
+                pass
 
             print()
             print(

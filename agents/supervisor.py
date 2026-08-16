@@ -240,8 +240,9 @@ class SupervisorAgent:
 
         all_gaps = []
 
-        # Execute sub-agents in parallel with high-concurrency thread pool (max 12 workers)
-        with ThreadPoolExecutor(max_workers=min(12, max(1, len(tasks)))) as executor:
+        import os
+        workers = min(6, max(2, (os.cpu_count() or 4)))
+        with ThreadPoolExecutor(max_workers=workers) as executor:
             future_to_task = {}
             for fw_id, ch_num, reqs in tasks:
                 future = executor.submit(self._evaluate_batch, fw_id, ch_num, reqs, policy_text)
