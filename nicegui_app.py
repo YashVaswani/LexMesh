@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 
 import pymupdf as fitz
-from nicegui import ui
+from nicegui import app, ui
 
 from config import config
 from db.supabase_client import supabase_db
@@ -1393,11 +1393,11 @@ def dashboard():
     )
 
 
-# ============================================================
-# START APPLICATION
-# ============================================================
-
-ui.run(
-    title="LexMesh",
-    port=8080,
-)
+if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 8080))
+    ui.run(
+        title="LexMesh",
+        port=port,
+        reload=False,
+    )
