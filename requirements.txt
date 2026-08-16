@@ -10,10 +10,8 @@ requests>=2.31.0
 google-generativeai>=0.4.0
 groq>=0.4.0
 
-# Supabase & Vector Search
+# Supabase Cloud Client
 supabase>=2.3.0
-sentence-transformers>=2.3.0
-torch>=2.0.0
 
 # Document Ingestion & PDF Processing
 pymupdf>=1.23.0
