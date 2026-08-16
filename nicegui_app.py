@@ -1110,8 +1110,7 @@ def dashboard():
             )
 
             import asyncio
-            master_report = await asyncio.get_event_loop().run_in_executor(
-                None,
+            master_report = await asyncio.to_thread(
                 adk_supervisor.run_adk_pipeline,
                 company,
                 policy,
