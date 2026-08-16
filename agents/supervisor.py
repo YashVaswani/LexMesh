@@ -240,14 +240,13 @@ class SupervisorAgent:
 
         all_gaps = []
 
-        import os
-        workers = min(6, max(2, (os.cpu_count() or 4)))
+        workers = min(8, max(4, len(tasks)))
         with ThreadPoolExecutor(max_workers=workers) as executor:
             future_to_task = {}
             for fw_id, ch_num, reqs in tasks:
                 future = executor.submit(self._evaluate_batch, fw_id, ch_num, reqs, policy_text)
                 future_to_task[future] = (fw_id, ch_num)
-                time.sleep(0.02)  # Fast 20ms pacing delay between task dispatches
+                time.sleep(0.005)  # Ultra-fast 5ms pacing delay
 
             for future in as_completed(future_to_task):
                 fw_id, ch_num = future_to_task[future]

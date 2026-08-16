@@ -19,7 +19,8 @@
 
 ## 🌟 Key Features & Capabilities
 
-- 🤖 **Google ADK Supervisor Architecture**: Uses a **Supervisor Router Agent** to oversee policy ingestion and delegate audit evaluations in parallel to **Chapter Sub-Agents** via a thread-paced execution pool.
+- 🤖 **Google ADK Supervisor Architecture**: Uses a **Supervisor Router Agent** to oversee policy ingestion and delegate audit evaluations in parallel to **Chapter Sub-Agents** via an 8-worker thread pool.
+- ⚡ **High-Speed Sub-45s Pipeline**: Evaluates 250+ requirements across 4 statutory frameworks simultaneously in **under 45 seconds** using 15-item micro-batching and `asyncio.to_thread` non-blocking execution.
 - 🌐 **Multi-Framework Statutory Engine**: Audits company policies against pre-curated statutory catalogs (250+ requirements) covering EU GDPR, US HIPAA, RBI Cyber, and SOC 2 Type II simultaneously.
 - 🎯 **Targeted Zero-Cost RAG Matcher**: Extracts top relevant policy paragraphs (~600 chars / ~350 tokens) per requirement using keyword-density scoring, eliminating context dilution and cutting API token consumption by **70%**.
 - ⚡ **Multi-Tier SHA-256 Audit Caching**: Features in-memory + Supabase Cloud (`audit_verdict_cache`) persistent caching. Re-running audits or evaluating policy revisions returns in **0.001 seconds** with **$0 API cost**.
@@ -42,7 +43,7 @@
 flowchart TD
     A[📄 User Uploads Policy PDF] --> B[🔍 Metadata Extractor & Section Chunking]
     B --> C[🤖 Google ADK Supervisor Router Agent]
-    C --> D[⚙️ Thread-Paced Concurrency Pool]
+    C --> D[⚙️ 8-Worker Parallel Thread Pool]
     
     subgraph ParallelSubAgents [Parallel Chapter Sub-Agents]
         E1[EU GDPR Sub-Agent]
@@ -72,7 +73,11 @@ flowchart TD
 LexMesh/
 ├── nicegui_app.py                 # NiceGUI Enterprise Web Dashboard & UI Entry Point
 ├── config.py                      # Multi-Key Environment Config & Key Parsing Engine
-├── requirements.txt               # Python Dependencies
+├── requirements.txt               # Lightweight Cloud Dependencies (~25 MB)
+├── vercel.json                    # Vercel Deployment Configuration
+├── Procfile                       # Procfile for Cloud Web Services
+├── api/
+│   └── index.py                   # Vercel Serverless Entry Point
 ├── gdpr_requirements_master.json  # 99 Article GDPR Statutory Requirement Catalog
 ├── hipaa_requirements_master.json # HIPAA 45 CFR § 160/164 Statutory Requirement Catalog
 ├── rbi_requirements_master.json   # RBI Master Direction Cyber Security Requirement Catalog
@@ -130,6 +135,17 @@ Start the interactive NiceGUI executive dashboard:
 python nicegui_app.py
 ```
 Open your browser at **`http://localhost:8080`**.
+
+---
+
+## 🌐 Cloud Deployment (Render & Vercel)
+
+### Deploying to Render.com (Recommended for Real-Time WebSockets)
+1. Sign in to **[dashboard.render.com](https://dashboard.render.com)**.
+2. Click **New +** -> **Web Service** -> Select `YashVaswani/LexMesh`.
+3. Set **Build Command**: `pip install -r requirements.txt` and **Start Command**: `python nicegui_app.py`.
+4. Add environment variables (`GEMINI_API_KEY`, `GROQ_API_KEY`).
+5. Click **Create Web Service**.
 
 ---
 
