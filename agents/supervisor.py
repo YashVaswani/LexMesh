@@ -125,10 +125,16 @@ class SupervisorAgent:
             "penalty_exposure": exposure
         }
 
-    def build_policy_domain_breakdown(self, all_gaps: list) -> list:
+    def build_policy_domain_breakdown(self, all_gaps: list, active_frameworks: list = None) -> list:
         """
-        Calculates readiness score and status for each of the 6 Enterprise Policy Domains across all frameworks.
+        Calculates readiness score and status for each of the 6 Enterprise Policy Domains across active frameworks.
         """
+        active_fws = active_frameworks
+        if not active_fws:
+            active_fws = list(set(g.get("framework") for g in all_gaps if g.get("framework")))
+        if not active_fws:
+            active_fws = ["gdpr", "hipaa", "rbi", "soc2"]
+
         breakdown = []
         for dom_id, dom_info in POLICY_DOMAINS.items():
             dom_gaps = [g for g in all_gaps if g.get("policy_domain") == dom_id]
@@ -148,7 +154,7 @@ class SupervisorAgent:
 
             # Per framework score in this domain
             fw_scores = {}
-            for fw_id in FRAMEWORKS.keys():
+            for fw_id in active_fws:
                 fw_dom_gaps = [g for g in dom_gaps if g.get("framework") == fw_id]
                 if fw_dom_gaps:
                     f_met = len([g for g in fw_dom_gaps if "fully" in g.get("verdict", "").lower()])
@@ -313,7 +319,7 @@ class SupervisorAgent:
             overall_risk = "HIGH RISK — Critical Compliance Omissions Across Standards"
 
         # Build Policy Domain Breakdown
-        policy_breakdown = self.build_policy_domain_breakdown(all_gaps)
+        policy_breakdown = self.build_policy_domain_breakdown(all_gaps, active_frameworks=active_fws)
 
         # Structure detailed gaps by Policy Domain -> Framework
         gaps_by_domain = {}
