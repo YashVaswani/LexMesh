@@ -86,10 +86,15 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
     elements.append(Paragraph("EU GDPR · US HIPAA · RBI Cyber Framework · SOC 2 Type II", sub_title))
     elements.append(Spacer(1, 10))
     
+    compliances = meta.get("compliances_analyzed", [])
+    if not compliances:
+        compliances = ["EU GDPR", "US HIPAA", "RBI Cyber Framework", "SOC 2 Type II"]
+    compliances_str = ", ".join(compliances)
+
     meta_data = [
         [Paragraph("Organization", bold_body), Paragraph(meta.get("company_name", "N/A"), body_style)],
         [Paragraph("Policy Analyzed", bold_body), Paragraph(meta.get("policy_name", "N/A"), body_style)],
-        [Paragraph("Compliances Evaluated", bold_body), Paragraph("EU GDPR, US HIPAA, RBI Cyber Framework, SOC 2 Type II", body_style)],
+        [Paragraph("Compliances Evaluated", bold_body), Paragraph(compliances_str, body_style)],
         [Paragraph("Analysis Date", bold_body), Paragraph(meta.get("analysis_date", "N/A"), body_style)],
         [Paragraph("Audit Engine", bold_body), Paragraph(meta.get("generated_by", "LexMesh Multi-Framework Engine v2.0"), body_style)],
     ]
@@ -156,19 +161,40 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
     elements.append(Paragraph("Compliance readiness evaluated across 6 core enterprise policy domains.", sub_title))
     elements.append(HRFlowable(width="100%", thickness=1, color=PRIMARY, spaceAfter=8))
     
-    dom_rows = [["Policy Domain", "Readiness", "Status", "GDPR", "HIPAA", "RBI", "SOC 2"]]
+    active_fws_table = []
+    if "gdpr" in fw_summaries: active_fws_table.append("gdpr")
+    if "hipaa" in fw_summaries: active_fws_table.append("hipaa")
+    if "rbi" in fw_summaries: active_fws_table.append("rbi")
+    if "soc2" in fw_summaries: active_fws_table.append("soc2")
+    if not active_fws_table:
+        active_fws_table = ["gdpr", "hipaa", "rbi", "soc2"]
+
+    fw_names_map = {
+        "gdpr": "GDPR",
+        "hipaa": "HIPAA",
+        "rbi": "RBI",
+        "soc2": "SOC 2"
+    }
+
+    headers = ["Policy Domain", "Readiness", "Status"] + [fw_names_map[fw] for fw in active_fws_table]
+    dom_rows = [headers]
+
     for dom in report_json.get("policy_domain_breakdown", []):
         fw_sc = dom.get("framework_scores", {})
-        dom_rows.append([
+        row = [
             Paragraph(f"<b>{dom.get('domain_title')}</b>", body_style),
             dom.get("score"),
-            dom.get("status"),
-            f"{fw_sc.get('gdpr', 0)}%",
-            f"{fw_sc.get('hipaa', 0)}%",
-            f"{fw_sc.get('rbi', 0)}%",
-            f"{fw_sc.get('soc2', 0)}%"
-        ])
-    t_dom = Table(dom_rows, colWidths=[174, 55, 75, 50, 50, 50, 50])
+            dom.get("status")
+        ]
+        for fw in active_fws_table:
+            row.append(f"{fw_sc.get(fw, 0)}%")
+        dom_rows.append(row)
+
+    # Split the remaining 230 points of table width (534 total width) equally among active frameworks
+    fw_width = 230.0 / len(active_fws_table)
+    widths = [174.0, 55.0, 75.0] + [fw_width] * len(active_fws_table)
+
+    t_dom = Table(dom_rows, colWidths=widths)
     t_dom.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,0), PRIMARY),
         ('TEXTCOLOR', (0,0), (-1,0), colors.white),
