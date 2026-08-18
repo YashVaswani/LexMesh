@@ -46,7 +46,8 @@ class PageNumCanvas(canvas.Canvas):
         self.setFillColor(colors.HexColor("#64748B"))
         
         self.drawString(54, 750, "LexMesh — Multi-Framework Compliance Audit Report")
-        self.drawRightString(612 - 54, 750, "EU GDPR · US HIPAA · RBI Cyber · SOC 2 · Confidential")
+        header_text = getattr(self, "active_headers_str", "EU GDPR · US HIPAA · RBI Cyber · SOC 2 · Confidential")
+        self.drawRightString(612 - 54, 750, header_text)
         self.setStrokeColor(BORDER_COLOR)
         self.setLineWidth(0.5)
         self.line(54, 742, 612 - 54, 742)
@@ -77,18 +78,32 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
     meta = report_json.get("metadata", {})
     summary = report_json.get("summary", {})
     fw_summaries = summary.get("framework_summaries", {})
-    
-    elements = []
-    
-    # PAGE 1: COVER METADATA & UNIFIED SCORE SUMMARY
-    elements.append(Paragraph("MULTI-FRAMEWORK COMPLIANCE AUDIT REPORT", ParagraphStyle('Tag', fontName='Helvetica-Bold', fontSize=9, leading=11, textColor=SECONDARY)))
-    elements.append(Paragraph("Enterprise Policy Gap Analysis", title_style))
-    elements.append(Paragraph("EU GDPR · US HIPAA · RBI Cyber Framework · SOC 2 Type II", sub_title))
-    elements.append(Spacer(1, 10))
-    
+
     compliances = meta.get("compliances_analyzed", [])
     if not compliances:
         compliances = ["EU GDPR", "US HIPAA", "RBI Cyber Framework", "SOC 2 Type II"]
+
+    fw_header_names = []
+    for c in compliances:
+        if "GDPR" in c: fw_header_names.append("EU GDPR")
+        elif "HIPAA" in c: fw_header_names.append("US HIPAA")
+        elif "RBI" in c: fw_header_names.append("RBI Cyber")
+        elif "SOC 2" in c: fw_header_names.append("SOC 2")
+        else: fw_header_names.append(c)
+
+    header_text = " · ".join(fw_header_names) + " · Confidential"
+    subtitle_text = " · ".join(compliances)
+
+    PageNumCanvas.active_headers_str = header_text
+
+    elements = []
+
+    # PAGE 1: COVER METADATA & UNIFIED SCORE SUMMARY
+    elements.append(Paragraph("MULTI-FRAMEWORK COMPLIANCE AUDIT REPORT", ParagraphStyle('Tag', fontName='Helvetica-Bold', fontSize=9, leading=11, textColor=SECONDARY)))
+    elements.append(Paragraph("Enterprise Policy Gap Analysis", title_style))
+    elements.append(Paragraph(subtitle_text, sub_title))
+    elements.append(Spacer(1, 10))
+
     compliances_str = ", ".join(compliances)
 
     meta_data = [
