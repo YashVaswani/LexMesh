@@ -15,6 +15,7 @@ from ui.components.score_cards import create_score_cards
 from ui.components.policy_posture import create_policy_posture
 from ui.components.gap_analysis import create_gap_analysis
 from ui.components.action_plan import create_action_plan
+from ui.components.compliant_areas import create_compliant_areas
 from ui.components.report_export import create_report_export
 from ui.components.lucide import lucide_icon
 
@@ -210,6 +211,11 @@ def dashboard():
                     lucide_icon("clipboard-list", size=18)
                     ui.label("Priority Action Plan")
 
+            with ui.tab("compliant", label="").classes("lex-tab-item"):
+                with ui.row().classes("items-center gap-2"):
+                    lucide_icon("check-circle", size=18)
+                    ui.label("Compliant Areas")
+
             with ui.tab("export", label="").classes("lex-tab-item"):
                 with ui.row().classes("items-center gap-2"):
                     lucide_icon("file-down", size=18)
@@ -286,6 +292,18 @@ def dashboard():
 
                     ui.label(
                         "Run an analysis to view the action plan."
+                    ).classes(
+                        "lex-empty-state"
+                    )
+
+            with ui.tab_panel(
+                "compliant"
+            ):
+
+                with ui.column().classes("w-full") as compliant_container:
+
+                    ui.label(
+                        "Run an analysis to view compliant areas."
                     ).classes(
                         "lex-empty-state"
                     )
@@ -740,6 +758,16 @@ def dashboard():
             ],
         }
 
+        # ----------------------------------------------------
+        # COMPLIANT AREAS
+        # ----------------------------------------------------
+        comp_areas = filtered.get("compliant_areas", [])
+        filtered["compliant_areas"] = [
+            item
+            for item in comp_areas
+            if matches_framework(item)
+        ]
+
         return filtered
 
     # ========================================================
@@ -1011,18 +1039,21 @@ def dashboard():
             # FRAMEWORK
             # =================================================
 
-            selected_label = (
-                sidebar[
-                    "framework_select"
-                ].value
-            )
+            selected_fw_keys = []
+            if sidebar["gdpr_checkbox"].value:
+                selected_fw_keys.append("gdpr")
+            if sidebar["hipaa_checkbox"].value:
+                selected_fw_keys.append("hipaa")
+            if sidebar["rbi_checkbox"].value:
+                selected_fw_keys.append("rbi")
+            if sidebar["soc2_checkbox"].value:
+                selected_fw_keys.append("soc2")
 
-            selected_fw_keys = FRAMEWORKS.get(
-                selected_label,
-                FRAMEWORKS[
-                    "All Standards (Full Scope)"
-                ],
-            )
+            if not selected_fw_keys:
+                status.set_text("Please select at least one evaluation framework in the sidebar.")
+                ui.notify("Please select at least one framework.", type="warning")
+                button.enable()
+                return
 
             page_state[
                 "selected_frameworks"
@@ -1115,6 +1146,7 @@ def dashboard():
                 company,
                 policy,
                 policy_text,
+                active_frameworks=selected_fw_keys,
             )
 
             # =================================================
@@ -1171,6 +1203,7 @@ def dashboard():
                 posture_container.clear()
                 gap_container.clear()
                 action_container.clear()
+                compliant_container.clear()
                 export_container.clear()
             except RuntimeError as e:
                 if "client this element belongs to has been deleted" in str(e):
@@ -1229,6 +1262,16 @@ def dashboard():
             with action_container:
 
                 create_action_plan(
+                    report
+                )
+
+            # =================================================
+            # COMPLIANT AREAS
+            # =================================================
+
+            with compliant_container:
+
+                create_compliant_areas(
                     report
                 )
 
@@ -1357,12 +1400,16 @@ def dashboard():
     
     def handle_framework_change():
         if page_state.get("master_report"):
-            # Update the page state and re-render
-            selected_label = sidebar["framework_select"].value
-            selected_fw_keys = FRAMEWORKS.get(
-                selected_label,
-                FRAMEWORKS["All Standards (Full Scope)"],
-            )
+            selected_fw_keys = []
+            if sidebar["gdpr_checkbox"].value:
+                selected_fw_keys.append("gdpr")
+            if sidebar["hipaa_checkbox"].value:
+                selected_fw_keys.append("hipaa")
+            if sidebar["rbi_checkbox"].value:
+                selected_fw_keys.append("rbi")
+            if sidebar["soc2_checkbox"].value:
+                selected_fw_keys.append("soc2")
+
             page_state["selected_frameworks"] = selected_fw_keys
             
             report = filter_report_payload(
@@ -1374,6 +1421,7 @@ def dashboard():
             posture_container.clear()
             gap_container.clear()
             action_container.clear()
+            compliant_container.clear()
             export_container.clear()
             
             with score_container:
@@ -1393,6 +1441,9 @@ def dashboard():
                 
             with action_container:
                 create_action_plan(report)
+
+            with compliant_container:
+                create_compliant_areas(report)
                 
             with export_container:
                 create_report_export(
@@ -1400,11 +1451,8 @@ def dashboard():
                     company=sidebar["company_name"].value or "Uploaded Organization",
                 )
 
-    sidebar[
-        "framework_select"
-    ].on_value_change(
-        handle_framework_change
-    )
+    for cb_key in ["gdpr_checkbox", "hipaa_checkbox", "rbi_checkbox", "soc2_checkbox"]:
+        sidebar[cb_key].on_value_change(handle_framework_change)
 
 
 if __name__ == "__main__":

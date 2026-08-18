@@ -46,9 +46,29 @@ class SupervisorAgent:
                 counts["not_met"] += 1
                 failing_chapters.add(ch)
 
-        if counts["total"] > 0:
-            raw_score = (counts["fully_met"] * 1.0 + counts["partially_met"] * 0.5) / counts["total"]
-            score = int(round(raw_score * 100))
+        # Fix scoring model: Weight each article by coverage depth & set partially_met weight to 0.7
+        article_gaps = {}
+        for gap in gaps:
+            art = gap.get("article", "General")
+            article_gaps.setdefault(art, []).append(gap)
+
+        article_scores = []
+        for art, art_gaps in article_gaps.items():
+            art_counts = {"fully": 0, "partially": 0, "not": 0}
+            for g in art_gaps:
+                v = g.get("verdict", "").lower()
+                if "fully" in v:
+                    art_counts["fully"] += 1
+                elif "partially" in v:
+                    art_counts["partially"] += 1
+                else:
+                    art_counts["not"] += 1
+            # Weighting: Fully Met = 1.0, Partially Met = 0.70, Not Met/Conflict = 0.0
+            art_score = (art_counts["fully"] * 1.0 + art_counts["partially"] * 0.7) / len(art_gaps)
+            article_scores.append(art_score)
+
+        if article_scores:
+            score = int(round((sum(article_scores) / len(article_scores)) * 100))
         else:
             score = 0
 
@@ -115,7 +135,7 @@ class SupervisorAgent:
             if dom_gaps:
                 met = len([g for g in dom_gaps if "fully" in g.get("verdict", "").lower()])
                 part = len([g for g in dom_gaps if "partially" in g.get("verdict", "").lower()])
-                dom_score = int(round(((met * 1.0 + part * 0.5) / len(dom_gaps)) * 100))
+                dom_score = int(round(((met * 1.0 + part * 0.7) / len(dom_gaps)) * 100))
             else:
                 dom_score = 0
 
@@ -133,7 +153,7 @@ class SupervisorAgent:
                 if fw_dom_gaps:
                     f_met = len([g for g in fw_dom_gaps if "fully" in g.get("verdict", "").lower()])
                     f_part = len([g for g in fw_dom_gaps if "partially" in g.get("verdict", "").lower()])
-                    fw_scores[fw_id] = int(round(((f_met * 1.0 + f_part * 0.5) / len(fw_dom_gaps)) * 100))
+                    fw_scores[fw_id] = int(round(((f_met * 1.0 + f_part * 0.7) / len(fw_dom_gaps)) * 100))
                 else:
                     fw_scores[fw_id] = 0
 
@@ -154,7 +174,7 @@ class SupervisorAgent:
     def build_policy_grouped_action_plan(self, all_gaps: list) -> dict:
         """
         Categorizes remediation items into P1 Critical, P2 High, and P3 Medium grouped by Policy Domain across all 4 frameworks.
-        Ensures equitable representation from EU GDPR, US HIPAA, RBI Cyber, and SOC 2 Type II.
+        Excludes Fully Met items completely.
         """
         by_fw_p1 = {"gdpr": [], "hipaa": [], "rbi": [], "soc2": []}
         by_fw_p2 = {"gdpr": [], "hipaa": [], "rbi": [], "soc2": []}
@@ -162,6 +182,9 @@ class SupervisorAgent:
 
         for gap in all_gaps:
             v = gap.get("verdict", "").lower()
+            if "fully" in v:
+                continue  # Fully Met requirements do not belong in the remediation plan
+
             raw_fix = gap.get("fix_required", "").strip()
             fw = gap.get("framework", "gdpr").lower()
             fw_info = catalog_manager.get_framework_info(fw)
@@ -169,8 +192,9 @@ class SupervisorAgent:
 
             item = {
                 "Policy Domain": dom_info.get("title", "Data Governance"),
-                "Framework Compliance": f"{fw_info['icon']} {fw_info['name']}",
-                "Framework Standard": f"{fw_info['icon']} {fw_info['name']}",
+                "Framework Compliance": fw_info['name'],
+                "Framework Standard": fw_info['name'],
+                "framework_tag": fw,
                 "Requirement Citation": gap.get("article", ""),
                 "Current Status": "Legal contradiction" if "conflict" in v else ("Missing entirely" if ("not met" in v or "missing" in v) else ("Currently vague" if "partially" in v else "Fully met")),
                 "Action Required": raw_fix if raw_fix else f"Update policy clause for {gap.get('article')} under {fw_info['name']}."
@@ -184,9 +208,12 @@ class SupervisorAgent:
             if "conflict" in v or "not met" in v or "missing" in v:
                 by_fw_p1[fw].append(item)
             elif "partially" in v:
-                by_fw_p2[fw].append(item)
-            else:
-                by_fw_p3[fw].append(item)
+                # Distribute partially met items: high-risk domains go to P2 High, others to P3 Medium
+                dom_id = gap.get("policy_domain", "")
+                if dom_id in ["data_governance", "access_control", "incident_response"]:
+                    by_fw_p2[fw].append(item)
+                else:
+                    by_fw_p3[fw].append(item)
 
         p1_critical, p2_high, p3_medium = [], [], []
 
@@ -202,13 +229,17 @@ class SupervisorAgent:
             "p3_medium": p3_medium
         }
 
-    def run_multi_framework_analysis(self, company_name: str, policy_name: str, policy_text: str) -> dict:
+    def run_multi_framework_analysis(self, company_name: str, policy_name: str, policy_text: str, active_frameworks: list = None) -> dict:
         """
         Main multi-framework orchestration entry point:
-        Executes Parallel Sub-Agents across all 4 catalogs simultaneously (GDPR, HIPAA, RBI, SOC 2).
+        Executes Parallel Sub-Agents across all selected frameworks simultaneously.
         """
         print(f"[INFO] Starting LexMesh Multi-Framework Parallel Analysis for '{company_name}' ({policy_name})...")
         all_catalogs = catalog_manager.load_all_catalogs()
+
+        # Default to all frameworks if none specified
+        active_fws = active_frameworks or ["gdpr", "hipaa", "rbi", "soc2"]
+        all_catalogs = {k: v for k, v in all_catalogs.items() if k in active_fws}
 
         # Build list of tasks for ThreadPoolExecutor
         tasks = []
@@ -241,27 +272,30 @@ class SupervisorAgent:
         all_gaps = []
 
         workers = min(8, max(4, len(tasks)))
-        with ThreadPoolExecutor(max_workers=workers) as executor:
-            future_to_task = {}
-            for fw_id, ch_num, reqs in tasks:
-                future = executor.submit(self._evaluate_batch, fw_id, ch_num, reqs, policy_text)
-                future_to_task[future] = (fw_id, ch_num)
-                time.sleep(0.005)  # Ultra-fast 5ms pacing delay
+        if workers > 0:
+            with ThreadPoolExecutor(max_workers=workers) as executor:
+                future_to_task = {}
+                for fw_id, ch_num, reqs in tasks:
+                    future = executor.submit(self._evaluate_batch, fw_id, ch_num, reqs, policy_text)
+                    future_to_task[future] = (fw_id, ch_num)
+                    time.sleep(0.005)  # Ultra-fast 5ms pacing delay
 
-            for future in as_completed(future_to_task):
-                fw_id, ch_num = future_to_task[future]
-                try:
-                    results = future.result()
-                    all_gaps.extend(results)
-                except Exception as e:
-                    print(f"[WARNING] Error evaluating Framework '{fw_id}' Section '{ch_num}': {e}")
+                for future in as_completed(future_to_task):
+                    fw_id, ch_num = future_to_task[future]
+                    try:
+                        results = future.result()
+                        all_gaps.extend(results)
+                    except Exception as e:
+                        print(f"[WARNING] Error evaluating Framework '{fw_id}' Section '{ch_num}': {e}")
 
-        # Compute Framework Summaries for each compliance
+        # Compute Framework Summaries for each active compliance
         framework_summaries = {}
         total_score_sum = 0
         fw_count = 0
 
         for fw_id in FRAMEWORKS.keys():
+            if fw_id not in active_fws:
+                continue
             fw_gaps = [g for g in all_gaps if g.get("framework") == fw_id]
             summary_dict = self.calculate_framework_summary(fw_id, fw_gaps)
             framework_summaries[fw_id] = summary_dict
@@ -297,6 +331,23 @@ class SupervisorAgent:
         # Build Policy-Grouped Action Plan
         action_plan = self.build_policy_grouped_action_plan(all_gaps)
 
+        # Build Compliant Areas List
+        compliant_areas = []
+        for gap in all_gaps:
+            v = gap.get("verdict", "").lower()
+            if "fully" in v:
+                fw = gap.get("framework", "gdpr").lower()
+                fw_info = catalog_manager.get_framework_info(fw)
+                dom_info = POLICY_DOMAINS.get(gap.get("policy_domain", "data_governance"), {})
+                compliant_areas.append({
+                    "Policy Domain": dom_info.get("title", "Data Governance"),
+                    "Framework Standard": fw_info['name'],
+                    "framework_tag": fw,
+                    "Requirement Citation": gap.get("article", ""),
+                    "Current Status": "Fully Compliant",
+                    "Verification Quote": gap.get("your_policy", "")
+                })
+
         report_id = f"rep_{uuid.uuid4().hex[:8]}"
         now_str = datetime.datetime.now().strftime("%d %B %Y")
 
@@ -305,7 +356,7 @@ class SupervisorAgent:
             "metadata": {
                 "company_name": company_name,
                 "policy_name": policy_name,
-                "compliances_analyzed": ["EU GDPR", "US HIPAA", "RBI Cyber Framework", "SOC 2 Type II"],
+                "compliances_analyzed": [FRAMEWORKS[fw]["name"] for fw in active_fws if fw in FRAMEWORKS],
                 "analysis_date": now_str,
                 "generated_by": "LexMesh Engine v2.0 (Multi-Framework)",
                 "analyzed_by": "Parallel Agentic RAG Pipeline"
@@ -320,9 +371,10 @@ class SupervisorAgent:
             "detailed_policy_gaps": gaps_by_domain,
             "all_gaps_flat": all_gaps,
             "priority_action_plan": action_plan,
+            "compliant_areas": compliant_areas,
             "executive_summary": (
-                f"{company_name}'s uploaded document ('{policy_name}') was evaluated against 4 primary enterprise compliance standards "
-                f"(EU GDPR, US HIPAA, RBI Cyber Framework, SOC 2 Type II) across 6 core policy domains. "
+                f"{company_name}'s uploaded document ('{policy_name}') was evaluated against selected enterprise compliance standards "
+                f"across core policy domains. "
                 f"The organization achieved a Unified Multi-Framework Compliance Score of {overall_score}%. "
                 "Framework-specific posture assessments and prioritized remediation plans are detailed below."
             ),
