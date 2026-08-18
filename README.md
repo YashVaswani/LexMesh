@@ -20,19 +20,20 @@
 ## 🌟 Key Features & Capabilities
 
 - 🤖 **Google ADK Supervisor Architecture**: Uses a **Supervisor Router Agent** to oversee policy ingestion and delegate audit evaluations in parallel to **Chapter Sub-Agents** via an 8-worker thread pool.
-- ⚡ **High-Speed Sub-45s Pipeline**: Evaluates 250+ requirements across 4 statutory frameworks simultaneously in **under 45 seconds** using 15-item micro-batching and `asyncio.to_thread` non-blocking execution.
-- 🌐 **Multi-Framework Statutory Engine**: Audits company policies against pre-curated statutory catalogs (250+ requirements) covering EU GDPR, US HIPAA, RBI Cyber, and SOC 2 Type II simultaneously.
+- ⚡ **High-Speed Sub-45s Pipeline**: Evaluates 250+ requirements across selected statutory frameworks simultaneously in **under 45 seconds** using 15-item micro-batching and `asyncio.to_thread` non-blocking execution.
+- 🏢 **Org Industry Presets & Framework Deselection**: Provides an **Organization Industry** selector with presets (SaaS, Healthcare, Banking/Fintech, Global, Custom) that automatically presets checkable switches, letting users easily include/exclude specific standards (RBI, HIPAA, GDPR, SOC 2).
+- 📊 **Weighted Article Coverage Scoring**: Calculates framework compliance scores by grouping requirement verdicts by article/control first. Weights requirements (Fully Met = 1.0, Partially Met = 0.70, Not Met = 0.0) to prevent partial coverage from dragging overall scores near 0%.
 - 🎯 **Targeted Zero-Cost RAG Matcher**: Extracts top relevant policy paragraphs (~600 chars / ~350 tokens) per requirement using keyword-density scoring, eliminating context dilution and cutting API token consumption by **70%**.
-- ⚡ **Multi-Tier SHA-256 Audit Caching**: Features in-memory + Supabase Cloud (`audit_verdict_cache`) persistent caching. Re-running audits or evaluating policy revisions returns in **0.001 seconds** with **$0 API cost**.
+- ⚡ **Persistent SHA-256 Audit Caching**: Features in-memory + Supabase Cloud database lookup fallback. Persistent database cached loader runs automatically across server restarts for instant zero-cost re-audits.
 - 🔑 **Multi-Key API Fallback Engine**: Supports comma-separated keys (`GEMINI_API_KEY=key1,key2`) and multi-model rotation across modern **Google GenAI SDK v2** (`gemini-3.1-flash-lite`, `gemini-flash-latest`) with secondary **Groq fallback** (`llama-3.3-70b-versatile`, `llama-3.1-8b-instant`).
 - 🎨 **Executive Sage & Beige Design System**: Features a high-contrast Warm Beige (`#F5F2EB`) and Forest Sage (`#23382B`) design system, Google Font **Plus Jakarta Sans** typography, Lucide vector SVG icons, and 0 emoji clutter.
-- 🎯 **Interactive Scope Selection**: Sidebar dropdown enables users to dynamically filter audit scores, policy domain gap accordions, and priority action plans by target compliance standard (`All Frameworks`, `EU GDPR`, `US HIPAA`, `RBI Cyber`, `SOC 2 Type II`).
+- 🎯 **Interactive Scope Selection**: Sidebar dropdown and switches enable users to dynamically filter audit scores, policy domain gap accordions, and action plans by active standards in real-time.
 - 🚨 **Statutory Fine & Exposure Calculator**: Evaluates statutory penalties across standards:
   - **EU GDPR**: Art. 83 Tier 1 (€10M or 2%) vs Tier 2 (€20M or 4% global annual revenue).
   - **US HIPAA**: Statutory Civil Monetary Penalty ($1.9M+/year under 45 CFR § 160).
   - **RBI Cyber**: Banking Regulation Act statutory penalties & FIU-IND enforcement directions.
   - **SOC 2**: Qualified vs Unqualified audit opinion risk.
-- 📋 **Policy-Grouped Action Plan**: Organizes remediation tasks by priority tier (**P1 Critical**, **P2 High**, **P3 Medium**) grouped by company policy domain.
+- ✅ **Separated Compliant Areas & Remediation Plan**: Action plan strictly lists actual policy gaps (P1 Critical, P2 High, P3 Medium). Fully compliant items are moved to a dedicated **Compliant Areas** section in the UI (showing verification quotes) and in PDF reports.
 - 📄 **Audit-Grade ReportLab PDF & JSON Exporter**: Renders PDF audit reports complete with wrapped regulation tables, status color indicators, policy quotes, and targeted scope downloads.
 
 ---
@@ -95,6 +96,9 @@ LexMesh/
 │   └── pdf_generator.py           # Enterprise ReportLab PDF Exporter with Text Wrapping
 ├── ui/
 │   ├── components/                # Modular NiceGUI UI Components & Lucide SVGs
+│   │   ├── action_plan.py         # Remediation plan details UI card
+│   │   ├── compliant_areas.py     # Fully met requirements & verification quotes card
+│   │   └── ...
 │   └── styles/theme.css           # Executive Warm Beige & Sage Green Design System
 ```
 

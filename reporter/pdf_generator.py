@@ -351,6 +351,39 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
         ]))
         elements.append(t_p3)
         elements.append(Spacer(1, 12))
+
+    # COMPLIANT AREAS SECTION
+    compliant_items = report_json.get("compliant_areas", [])
+    if compliant_items:
+        elements.append(Paragraph("Compliant Areas (Passed Requirements)", h1))
+        elements.append(Paragraph("Statutory requirements successfully met by operational controls in the policy document.", sub_title))
+        elements.append(HRFlowable(width="100%", thickness=1, color=PRIMARY, spaceAfter=8))
+        
+        comp_rows = [["#", "Policy Domain", "Regulation", "Citation", "Status"]]
+        for idx, item in enumerate(compliant_items, 1):
+            dom_t = item.get("Policy Domain") or item.get("policy_domain", "")
+            fw_t = item.get("Framework Standard") or item.get("framework_tag", "")
+            cit_t = item.get("Requirement Citation") or item.get("article", "")
+            stat_t = item.get("Current Status") or "Fully Compliant"
+            comp_rows.append([
+                str(idx),
+                Paragraph(dom_t, body_style),
+                Paragraph(fw_t, body_style),
+                Paragraph(cit_t, body_style),
+                Paragraph(f"<font color='#3B6349'><b>{stat_t}</b></font>", body_style)
+            ])
+        
+        elements.append(Paragraph(f"COMPLIANT AREAS ({len(compliant_items)} items)", ParagraphStyle('COMP', parent=bold_body, textColor=colors.white, backColor=COLOR_MET, spaceBefore=4, spaceAfter=4)))
+        t_comp = Table(comp_rows, colWidths=[20, 135, 130, 149, 70])
+        t_comp.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), COLOR_MET),
+            ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+            ('GRID', (0,0), (-1,-1), 0.5, BORDER_COLOR),
+            ('PADDING', (0,0), (-1,-1), 4),
+        ]))
+        elements.append(t_comp)
+        elements.append(Spacer(1, 12))
     
     # EXECUTIVE SUMMARY & DISCLAIMER
     elements.append(Paragraph("Executive Summary", h1))

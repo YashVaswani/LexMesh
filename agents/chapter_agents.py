@@ -377,8 +377,13 @@ Return a valid JSON object containing a "verdicts" array with framework-specific
                 if cache_key in AUDIT_CACHE:
                     cached_chunk_verdicts.append(AUDIT_CACHE[cache_key])
                 else:
-                    cache_hit = False
-                    break
+                    db_cached = supabase_db.get_cached_verdict(self.framework_id, req.get('id'), policy_hash)
+                    if db_cached:
+                        AUDIT_CACHE[cache_key] = db_cached
+                        cached_chunk_verdicts.append(db_cached)
+                    else:
+                        cache_hit = False
+                        break
 
             if cache_hit:
                 verdicts.extend(cached_chunk_verdicts)

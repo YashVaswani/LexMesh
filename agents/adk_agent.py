@@ -40,12 +40,12 @@ class GoogleADKSupervisorAgent(GoogleADKAgentPrimitive):
         )
         self.sub_agents = {}
 
-    def run_adk_pipeline(self, company_name: str, policy_name: str, policy_text: str, reqs_catalog: list = None, framework_id: str = "all") -> dict:
+    def run_adk_pipeline(self, company_name: str, policy_name: str, policy_text: str, reqs_catalog: list = None, framework_id: str = "all", active_frameworks: list = None) -> dict:
         """
-        Executes Google ADK hierarchical agent delegation workflow across all compliance frameworks simultaneously.
+        Executes Google ADK hierarchical agent delegation workflow across all selected compliance frameworks.
         """
         print(f"[ADK] Starting Google ADK Multi-Framework Workflow for '{company_name}'...")
-        return supervisor.run_multi_framework_analysis(company_name, policy_name, policy_text)
+        return supervisor.run_multi_framework_analysis(company_name, policy_name, policy_text, active_frameworks=active_frameworks)
 
 # Global Google ADK Orchestrator instance
 adk_supervisor = GoogleADKSupervisorAgent()
