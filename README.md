@@ -142,17 +142,6 @@ Open your browser at **`http://localhost:8080`**.
 
 ---
 
-## 🌐 Cloud Deployment (Render & Vercel)
-
-### Deploying to Render.com (Recommended for Real-Time WebSockets)
-1. Sign in to **[dashboard.render.com](https://dashboard.render.com)**.
-2. Click **New +** -> **Web Service** -> Select `YashVaswani/LexMesh`.
-3. Set **Build Command**: `pip install -r requirements.txt` and **Start Command**: `python nicegui_app.py`.
-4. Add environment variables (`GEMINI_API_KEY`, `GROQ_API_KEY`).
-5. Click **Create Web Service**.
-
----
-
 ## 📊 Compliance Coverage Summary
 
 | Framework Standard | Statutory Authority | Requirement Count | Fine / Risk Exposure |
