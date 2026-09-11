@@ -66,13 +66,13 @@ class LLMProviderChain:
     def generate(self, prompt: str, system_instruction: str = None) -> str:
         """
         Multi-Tier API Key & Model Fallback Engine:
-        1. Gemini Clients (Key 1 -> Key 2 -> ...) x Gemini Models (gemini-2.5-flash, gemini-2.0-flash, gemini-1.5-flash)
+        1. Gemini Clients (Key 1 -> Key 2 -> ...) x Gemini Models (gemini-2.0-flash, gemini-1.5-flash, gemini-1.5-pro)
         2. Groq Clients (Key 1 -> Key 2 -> ...) x Groq Models (llama-3.3-70b-versatile, llama-3.1-8b-instant)
         """
         # Tier 1: Gemini (Primary Provider across all configured API Keys)
         if self.genai_clients:
             for k_idx, client in enumerate(self.genai_clients):
-                for m_name in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]:
+                for m_name in ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]:
                     for attempt in range(2):
                         try:
                             full_content = f"{system_instruction}\n\n{prompt}" if system_instruction else prompt
@@ -370,11 +370,12 @@ Return a valid JSON object containing a "verdicts" array with framework-specific
         """
         Deterministic Policy Keyword & Semantic Clause Audit Engine:
         Evaluates policy text against regulatory mandates when LLM APIs are unavailable or quota-limited.
-        Prevents false 0% scores by extracting real matching clauses from the uploaded PDF.
+        Produces highly specific, title-tailored operational recommendations for every requirement.
         """
         title = req.get("article_title", "")
         mandate = req.get("atomic_requirement", "")
         art_num = req.get("article_number", "")
+        fw = self.framework_id.upper()
         
         req_words = set(re.findall(r'\b[a-z]{4,}\b', f"{title} {mandate}".lower()))
         ignored = {"article", "section", "shall", "must", "where", "which", "their", "under", "other", "these", "those", "about", "general", "rules", "framework", "data", "processing"}
@@ -399,19 +400,19 @@ Return a valid JSON object containing a "verdicts" array with framework-specific
                 verdict = "Fully Met"
                 conf = 0.88
                 analysis = f"Policy explicitly covers operational mandates for '{title}' (matched clause: \"{best_quote[:120]}...\")."
-                fix = f"Ensure current operational compliance procedures for {art_num} are documented and periodically audited."
+                fix = f"Maintain compliance posture for {art_num} ({title}): Formally document technical implementation specs and schedule bi-annual audit reviews under {fw} standards."
             else:
                 verdict = "Partially Met"
                 conf = 0.75
-                analysis = f"Policy references '{title}' in general terms (\"{best_quote[:120]}...\") but lacks explicit technical SLA / enforcement procedures required under {self.framework_id.upper()}."
-                fix = f"Expand policy clause for {art_num} under {self.framework_id.upper()} to specify exact operational SLAs, roles, and review cycles."
+                analysis = f"Policy mentions '{title}' in general terms (\"{best_quote[:120]}...\") but lacks explicit technical SLA, role assignments, or enforcement procedures mandated by {fw}."
+                fix = f"Update policy section for {art_num} ({title}): Incorporate explicit operational SLAs, mandatory 72-hour logging/notification workflows, designated supervisory roles, and technical controls as required under {fw}."
             your_policy = f"\"{best_quote}\""
         else:
             verdict = "Not Met"
             conf = 0.90
             your_policy = "No relevant policy clause found."
-            analysis = f"Company policy document is silent on mandates for '{title}' under {self.framework_id.upper()}."
-            fix = f"Add dedicated section in company policy addressing {art_num} ({title}) in accordance with {self.framework_id.upper()} statutory standards."
+            analysis = f"Company policy document contains no operational clause or technical safeguard addressing '{title}' under {fw}."
+            fix = f"Draft and insert a dedicated compliance clause for {art_num} ({title}): Specify mandatory operational controls, technical safeguards, employee responsibilities, and audit evidence requirements under {fw} statutory guidelines."
 
         return self._enrich({
             "requirement_id": req.get("id"),
