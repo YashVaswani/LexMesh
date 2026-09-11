@@ -6,6 +6,10 @@ Evaluates requirements in 5-item MICRO-BATCHES with temperature=0.0 and enforced
 import json
 import re
 import time
+import warnings
+
+# Suppress verbose SDK warnings (e.g. AFC deprecation notices)
+warnings.filterwarnings("ignore")
 
 # Try Google GenAI SDKs (both new 'google.genai' and classic 'google.generativeai')
 HAS_GENAI = False
@@ -62,13 +66,13 @@ class LLMProviderChain:
     def generate(self, prompt: str, system_instruction: str = None) -> str:
         """
         Multi-Tier API Key & Model Fallback Engine:
-        1. Gemini Clients (Key 1 -> Key 2 -> ...) x Gemini Models (3.1-flash-lite, flash-latest, 3.5-flash)
-        2. Groq Clients (Key 1 -> Key 2 -> ...) x Groq Models (llama-3.3-70b, llama-3.1-8b)
+        1. Gemini Clients (Key 1 -> Key 2 -> ...) x Gemini Models (gemini-2.5-flash, gemini-2.0-flash, gemini-1.5-flash)
+        2. Groq Clients (Key 1 -> Key 2 -> ...) x Groq Models (llama-3.3-70b-versatile, llama-3.1-8b-instant)
         """
         # Tier 1: Gemini (Primary Provider across all configured API Keys)
         if self.genai_clients:
             for k_idx, client in enumerate(self.genai_clients):
-                for m_name in ["gemini-3.1-flash-lite", "gemini-flash-lite-latest", "gemini-flash-latest", "gemini-3.5-flash"]:
+                for m_name in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]:
                     for attempt in range(2):
                         try:
                             full_content = f"{system_instruction}\n\n{prompt}" if system_instruction else prompt
@@ -93,11 +97,27 @@ class LLMProviderChain:
                             else:
                                 break  # Try next model or key
 
+        # Tier 1b: Legacy Gemini SDK (if active)
+        if self.legacy_gemini_active:
+            for m_name in ["gemini-1.5-flash", "gemini-1.5-pro"]:
+                try:
+                    model = genai_legacy_obj.GenerativeModel(
+                        model_name=m_name,
+                        system_instruction=system_instruction
+                    )
+                    response = model.generate_content(
+                        prompt,
+                        generation_config={"temperature": 0.0, "response_mime_type": "application/json"}
+                    )
+                    if response and response.text:
+                        return response.text
+                except Exception as e:
+                    print(f"[LLM-WARN] Legacy Gemini ({m_name}): {e}")
 
         # Tier 2: Groq (Secondary Provider across all configured API Keys)
         if self.groq_clients:
             for k_idx, client in enumerate(self.groq_clients):
-                for g_model in ["llama-3.1-8b-instant", "llama3-70b-8192", "mixtral-8x7b-32768"]:
+                for g_model in ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"]:
                     for attempt in range(2):
                         try:
                             messages = []

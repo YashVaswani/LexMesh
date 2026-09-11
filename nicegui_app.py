@@ -1,6 +1,10 @@
 import json
 import re
+import warnings
 from pathlib import Path
+
+# Suppress SDK deprecation warnings in application output logs
+warnings.filterwarnings("ignore")
 
 import pymupdf as fitz
 from nicegui import app, ui
