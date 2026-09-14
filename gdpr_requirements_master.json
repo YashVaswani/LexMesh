@@ -249,7 +249,7 @@
     "chapter_title": "Controller and processor",
     "article_number": "Art. 28",
     "article_title": "Processor",
-    "atomic_requirement": "Article 28 — Processor: Controllers may only use processors offering sufficient guarantees. Processors can't engage a sub-\nprocessor without prior specific or general written authorisation (with a right to object to changes under\ngeneral authorisation). Processing must be governed by a binding written contract specifying subject-\nmatter, duration, nature/purpose, data/subject types, and each party's obligations — requiring the\nprocessor to: act only on documented controller instructions; ensure staff confidentiality; implement Art.\n32 security; respect sub-processor conditions; help the controller respond to subject-rights requests and\nmeet Art. 32–36 obligations; delete/return data at contract end; and provide compliance\ninformation/allow audits (flagging any instruction it believes is unlawful). The same obligations must\nflow down to any sub-processor, with the initial processor remaining liable for the sub-processor's\nfailures. Commission- or regulator-approved standard contractual clauses may be used. A processor that\noversteps into determining its own purposes/means becomes a controller for that processing."
+    "atomic_requirement": "Article 28 — Processor: Controllers may only use processors offering sufficient guarantees. Processors can't engage a sub-\nprocessor without prior specific or general written authorisation (with a right to object to changes under\ngeneral authorisation). Processing must be governed by a binding written contract specifying subject-\nmatter, duration, nature/purpose, data/subject types, and each party's obligations — requiring the\nprocessor to: act only on documented controller instructions; ensure staff confidentiality; implement Art.\n32 security; respect sub-processor conditions; help the controller respond to subject-rights requests and\nmeet Art. 32–36 obligations; delete/return data at contract end; and provide compliance\ninformation/allow audits (flagging any instruction it believes is unlawful). The same obligations must\nflow down to any sub-processor, with the initial processor remaining liable for the sub-processor's\nfailures. Commission- or regulator-approved compliance contractual clauses may be used. A processor that\noversteps into determining its own purposes/means becomes a controller for that processing."
   },
   {
     "id": "REQ-GDPR-029",
@@ -411,7 +411,7 @@
     "chapter_title": "Transfers of personal data to third countries or international organisations",
     "article_number": "Art. 46",
     "article_title": "Transfers subject to appropriate safeguards",
-    "atomic_requirement": "Article 46 — Transfers subject to appropriate safeguards: Absent an adequacy decision, transfers are allowed with appropriate safeguards plus enforceable\nrights/remedies for subjects. No specific regulator authorisation needed for: binding public-authority\ninstruments; binding corporate rules (Art. 47); Commission-adopted or regulator-adopted/Commission-\napproved standard contractual clauses; an approved code of conduct with binding commitments; or\napproved certification with binding commitments. Regulator authorisation is needed for ad hoc\ncontractual clauses or administrative arrangements between public bodies with enforceable rights."
+    "atomic_requirement": "Article 46 — Transfers subject to appropriate safeguards: Absent an adequacy decision, transfers are allowed with appropriate safeguards plus enforceable\nrights/remedies for subjects. No specific regulator authorisation needed for: binding public-authority\ninstruments; binding corporate rules (Art. 47); Commission-adopted or regulator-adopted/Commission-\napproved compliance contractual clauses; an approved code of conduct with binding commitments; or\napproved certification with binding commitments. Regulator authorisation is needed for ad hoc\ncontractual clauses or administrative arrangements between public bodies with enforceable rights."
   },
   {
     "id": "REQ-GDPR-047",
@@ -510,7 +510,7 @@
     "chapter_title": "Independent supervisory authorities",
     "article_number": "Art. 57",
     "article_title": "Tasks",
-    "atomic_requirement": "Article 57 — Tasks: Includes enforcing GDPR, raising public/child awareness, advising government, informing subjects of\ntheir rights, handling and investigating complaints, cooperating with other regulators, conducting\ninvestigations, adopting standard contractual clauses, maintaining DPIA-requirement lists, approving\ncodes of conduct/certification criteria, accrediting monitoring/certification bodies, approving BCRs, and\ncontributing to the EDPB — generally free of charge to the complainant (fees/refusal allowed for\nunfounded or excessive requests)."
+    "atomic_requirement": "Article 57 — Tasks: Includes enforcing GDPR, raising public/child awareness, advising government, informing subjects of\ntheir rights, handling and investigating complaints, cooperating with other regulators, conducting\ninvestigations, adopting compliance contractual clauses, maintaining DPIA-requirement lists, approving\ncodes of conduct/certification criteria, accrediting monitoring/certification bodies, approving BCRs, and\ncontributing to the EDPB — generally free of charge to the complainant (fees/refusal allowed for\nunfounded or excessive requests)."
   },
   {
     "id": "REQ-GDPR-058",
@@ -573,7 +573,7 @@
     "chapter_title": "Cooperation and consistency",
     "article_number": "Art. 64",
     "article_title": "Opinion of the Board",
-    "atomic_requirement": "Article 64 — Opinion of the Board: The EDPB must give an opinion before a regulator adopts certain EU-wide-impact decisions (DPIA lists,\ncode-of-conduct/certification approvals, standard contractual clauses, BCR approvals), and can be asked\nto weigh in on other general or multi-state matters; opinions come within about 8 weeks (extendable by\n6), and the regulator must give the opinion \"utmost account,\" reporting back on whether it will follow it."
+    "atomic_requirement": "Article 64 — Opinion of the Board: The EDPB must give an opinion before a regulator adopts certain EU-wide-impact decisions (DPIA lists,\ncode-of-conduct/certification approvals, compliance contractual clauses, BCR approvals), and can be asked\nto weigh in on other general or multi-state matters; opinions come within about 8 weeks (extendable by\n6), and the regulator must give the opinion \"utmost account,\" reporting back on whether it will follow it."
   },
   {
     "id": "REQ-GDPR-065",
@@ -834,7 +834,7 @@
     "chapter_title": "Delegated and implementing acts",
     "article_number": "Art. 93",
     "article_title": "Committee procedure",
-    "atomic_requirement": "Article 93 — Committee procedure: The Commission is assisted by a standing committee, using standard or urgency examination procedures\nas referenced elsewhere in the Regulation.\nCHAPTER XI — Final provisions (Articles 94–99)"
+    "atomic_requirement": "Article 93 — Committee procedure: The Commission is assisted by a standing committee, using compliance or urgency examination procedures\nas referenced elsewhere in the Regulation.\nCHAPTER XI — Final provisions (Articles 94–99)"
   },
   {
     "id": "REQ-GDPR-094",

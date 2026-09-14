@@ -155,4 +155,35 @@ class SupabaseManager:
             print(f"[ERROR] Failed to fetch report {report_id}: {e}")
             return {}
 
+    def get_cached_verdict(self, framework_id: str, requirement_id: str, policy_hash: str) -> dict:
+        """Fetches SHA-256 cached audit verdict from Supabase Cloud table."""
+        if not self.is_connected():
+            return None
+        try:
+            cache_id = f"{framework_id}:{requirement_id}:{policy_hash}"
+            res = self.client.table("audit_verdict_cache").select("verdict_data").eq("id", cache_id).execute()
+            if res.data and len(res.data) > 0:
+                return res.data[0].get("verdict_data")
+        except Exception:
+            pass
+        return None
+
+    def save_cached_verdict(self, framework_id: str, requirement_id: str, policy_hash: str, verdict_data: dict) -> bool:
+        """Stores SHA-256 audit verdict into Supabase Cloud table for zero-cost repeat audits."""
+        if not self.is_connected():
+            return False
+        try:
+            cache_id = f"{framework_id}:{requirement_id}:{policy_hash}"
+            payload = {
+                "id": cache_id,
+                "framework": framework_id,
+                "requirement_id": requirement_id,
+                "policy_hash": policy_hash,
+                "verdict_data": verdict_data
+            }
+            self.client.table("audit_verdict_cache").upsert(payload).execute()
+            return True
+        except Exception:
+            return False
+
 supabase_db = SupabaseManager()

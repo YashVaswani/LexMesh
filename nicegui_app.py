@@ -1,9 +1,13 @@
 import json
 import re
+import warnings
 from pathlib import Path
 
+# Suppress SDK deprecation warnings in application output logs
+warnings.filterwarnings("ignore")
+
 import pymupdf as fitz
-from nicegui import ui, app
+from nicegui import app, ui
 
 from config import config
 from db.supabase_client import supabase_db
@@ -16,7 +20,23 @@ from ui.components.score_cards import create_score_cards
 from ui.components.policy_posture import create_policy_posture
 from ui.components.gap_analysis import create_gap_analysis
 from ui.components.action_plan import create_action_plan
+from ui.components.compliant_areas import create_compliant_areas
 from ui.components.report_export import create_report_export
+from ui.components.lucide import lucide_icon
+
+# Load Custom Enterprise Theme CSS & Lucide Icons CDN
+theme_css_path = Path(__file__).parent / "ui" / "styles" / "theme.css"
+if theme_css_path.exists():
+    ui.add_head_html(f"<style>{theme_css_path.read_text(encoding='utf-8')}</style>", shared=True)
+
+ui.add_head_html('''
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        if (window.lucide) lucide.createIcons();
+    });
+</script>
+''', shared=True)
 
 
 # ============================================================
@@ -24,26 +44,26 @@ from ui.components.report_export import create_report_export
 # ============================================================
 
 FRAMEWORKS = {
-    "🌐 All Standards (Full Scope)": [
+    "All Standards (Full Scope)": [
         "gdpr",
         "hipaa",
         "rbi",
         "soc2",
     ],
 
-    "🇪🇺 EU GDPR": [
+    "EU GDPR": [
         "gdpr",
     ],
 
-    "🏥 US HIPAA": [
+    "US HIPAA": [
         "hipaa",
     ],
 
-    "🏦 RBI Cyber Framework": [
+    "RBI Cyber Framework": [
         "rbi",
     ],
 
-    "🛡️ SOC 2 Type II": [
+    "SOC 2 Type II": [
         "soc2",
     ],
 }
@@ -133,6 +153,18 @@ def dashboard():
         ui.navigate.to('/login')
         return
 
+
+    # Set Quasar Brand Colors for this page
+    ui.colors(
+        primary='#4e795d',
+        secondary='#eae3d2',
+        accent='#8a7642',
+        dark='#101713',
+        positive='#3b6349',
+        negative='#9e3232',
+        info='#3b6b78',
+        warning='#b45339',
+    )
 
     # ========================================================
     # PAGE STATE
@@ -224,30 +256,35 @@ def dashboard():
             "w-full lex-dashboard-tabs"
         ) as tabs:
 
-            ui.tab(
-                "score",
-                label="📊 Score & Framework",
-            )
+            with ui.tab("score", label="").classes("lex-tab-item"):
+                with ui.row().classes("items-center gap-2"):
+                    lucide_icon("bar-chart-3", size=18)
+                    ui.label("Score & Framework")
 
-            ui.tab(
-                "posture",
-                label="📑 Policy Posture",
-            )
+            with ui.tab("posture", label="").classes("lex-tab-item"):
+                with ui.row().classes("items-center gap-2"):
+                    lucide_icon("file-check", size=18)
+                    ui.label("Executive Posture")
 
-            ui.tab(
-                "gaps",
-                label="🔍 Detailed Policy Gaps",
-            )
+            with ui.tab("gaps", label="").classes("lex-tab-item"):
+                with ui.row().classes("items-center gap-2"):
+                    lucide_icon("shield-alert", size=18)
+                    ui.label("Detailed Policy Gaps")
 
-            ui.tab(
-                "action",
-                label="📋 Policy Action Plan",
-            )
+            with ui.tab("action", label="").classes("lex-tab-item"):
+                with ui.row().classes("items-center gap-2"):
+                    lucide_icon("clipboard-list", size=18)
+                    ui.label("Priority Action Plan")
 
-            ui.tab(
-                "export",
-                label="📥 Report Export",
-            )
+            with ui.tab("compliant", label="").classes("lex-tab-item"):
+                with ui.row().classes("items-center gap-2"):
+                    lucide_icon("check-circle", size=18)
+                    ui.label("Compliant Areas")
+
+            with ui.tab("export", label="").classes("lex-tab-item"):
+                with ui.row().classes("items-center gap-2"):
+                    lucide_icon("file-down", size=18)
+                    ui.label("Report Export")
 
         # ====================================================
         # TAB PANELS
@@ -268,16 +305,13 @@ def dashboard():
                 "score"
             ):
 
-                score_container = (
-                    ui.column()
-                    .classes("w-full")
-                )
+                with ui.column().classes("w-full") as score_container:
 
-                ui.label(
-                    "No scores available."
-                ).classes(
-                    "lex-empty-state"
-                )
+                    ui.label(
+                        "Upload a company policy PDF and click Run Analysis to view compliance scores."
+                    ).classes(
+                        "lex-empty-state"
+                    )
 
             # =================================================
             # POLICY POSTURE
@@ -287,16 +321,13 @@ def dashboard():
                 "posture"
             ):
 
-                posture_container = (
-                    ui.column()
-                    .classes("w-full")
-                )
+                with ui.column().classes("w-full") as posture_container:
 
-                ui.label(
-                    "Run an analysis to view policy posture."
-                ).classes(
-                    "lex-empty-state"
-                )
+                    ui.label(
+                        "Run an analysis to view policy posture."
+                    ).classes(
+                        "lex-empty-state"
+                    )
 
             # =================================================
             # DETAILED GAPS
@@ -306,16 +337,13 @@ def dashboard():
                 "gaps"
             ):
 
-                gap_container = (
-                    ui.column()
-                    .classes("w-full")
-                )
+                with ui.column().classes("w-full") as gap_container:
 
-                ui.label(
-                    "Run an analysis to view detailed gaps."
-                ).classes(
-                    "lex-empty-state"
-                )
+                    ui.label(
+                        "Run an analysis to view detailed gaps."
+                    ).classes(
+                        "lex-empty-state"
+                    )
 
             # =================================================
             # ACTION PLAN
@@ -325,16 +353,25 @@ def dashboard():
                 "action"
             ):
 
-                action_container = (
-                    ui.column()
-                    .classes("w-full")
-                )
+                with ui.column().classes("w-full") as action_container:
 
-                ui.label(
-                    "Run an analysis to view the action plan."
-                ).classes(
-                    "lex-empty-state"
-                )
+                    ui.label(
+                        "Run an analysis to view the action plan."
+                    ).classes(
+                        "lex-empty-state"
+                    )
+
+            with ui.tab_panel(
+                "compliant"
+            ):
+
+                with ui.column().classes("w-full") as compliant_container:
+
+                    ui.label(
+                        "Run an analysis to view compliant areas."
+                    ).classes(
+                        "lex-empty-state"
+                    )
 
             # =================================================
             # EXPORT
@@ -344,16 +381,13 @@ def dashboard():
                 "export"
             ):
 
-                export_container = (
-                    ui.column()
-                    .classes("w-full")
-                )
+                with ui.column().classes("w-full") as export_container:
 
-                ui.label(
-                    "Run an analysis to enable exports."
-                ).classes(
-                    "lex-empty-state"
-                )
+                    ui.label(
+                        "Run an analysis to enable exports."
+                    ).classes(
+                        "lex-empty-state"
+                    )
 
     # ========================================================
     # PDF METADATA EXTRACTION
@@ -789,6 +823,16 @@ def dashboard():
             ],
         }
 
+        # ----------------------------------------------------
+        # COMPLIANT AREAS
+        # ----------------------------------------------------
+        comp_areas = filtered.get("compliant_areas", [])
+        filtered["compliant_areas"] = [
+            item
+            for item in comp_areas
+            if matches_framework(item)
+        ]
+
         return filtered
 
     # ========================================================
@@ -906,8 +950,7 @@ def dashboard():
             # ------------------------------------------------
 
             status.set_text(
-                f"📄 {uploaded_file.name} "
-                f"uploaded and ready for analysis."
+                f"Document {uploaded_file.name} uploaded and ready for analysis."
             )
 
             ui.notify(
@@ -1017,7 +1060,7 @@ def dashboard():
         ):
 
             status.set_text(
-                "⚠️ Please upload a PDF first."
+                "Please upload a company policy PDF document first."
             )
 
             ui.notify(
@@ -1061,18 +1104,21 @@ def dashboard():
             # FRAMEWORK
             # =================================================
 
-            selected_label = (
-                sidebar[
-                    "framework_select"
-                ].value
-            )
+            selected_fw_keys = []
+            if sidebar["gdpr_checkbox"].value:
+                selected_fw_keys.append("gdpr")
+            if sidebar["hipaa_checkbox"].value:
+                selected_fw_keys.append("hipaa")
+            if sidebar["rbi_checkbox"].value:
+                selected_fw_keys.append("rbi")
+            if sidebar["soc2_checkbox"].value:
+                selected_fw_keys.append("soc2")
 
-            selected_fw_keys = FRAMEWORKS.get(
-                selected_label,
-                FRAMEWORKS[
-                    "🌐 All Standards (Full Scope)"
-                ],
-            )
+            if not selected_fw_keys:
+                status.set_text("Please select at least one evaluation framework in the sidebar.")
+                ui.notify("Please select at least one framework.", type="warning")
+                button.enable()
+                return
 
             page_state[
                 "selected_frameworks"
@@ -1145,7 +1191,7 @@ def dashboard():
             # =================================================
 
             status.set_text(
-                "🤖 Running LexMesh compliance analysis..."
+                "Running LexMesh compliance analysis..."
             )
 
             print()
@@ -1166,6 +1212,7 @@ def dashboard():
                 company,
                 policy,
                 policy_text,
+                active_frameworks=selected_fw_keys,
                 user_id=auth.get_current_user()
             )
             master_report = await asyncio.get_event_loop().run_in_executor(None, func)
@@ -1216,14 +1263,21 @@ def dashboard():
             )
 
             # =================================================
-            # CLEAR OLD UI
+            # CLEAR OLD UI (Safely handle client disconnects)
             # =================================================
 
-            score_container.clear()
-            posture_container.clear()
-            gap_container.clear()
-            action_container.clear()
-            export_container.clear()
+            try:
+                score_container.clear()
+                posture_container.clear()
+                gap_container.clear()
+                action_container.clear()
+                compliant_container.clear()
+                export_container.clear()
+            except RuntimeError as e:
+                if "client this element belongs to has been deleted" in str(e):
+                    print("[LexMesh] Client session ended during analysis execution. Skipping UI update.")
+                    return
+                raise e
 
             # =================================================
             # SCORE TAB
@@ -1280,6 +1334,16 @@ def dashboard():
                 )
 
             # =================================================
+            # COMPLIANT AREAS
+            # =================================================
+
+            with compliant_container:
+
+                create_compliant_areas(
+                    report
+                )
+
+            # =================================================
             # EXPORT
             # =================================================
 
@@ -1326,7 +1390,7 @@ def dashboard():
             )
 
             status.set_text(
-                f"✅ Analysis completed successfully. "
+                f"Analysis completed successfully. "
                 f"Overall Score: {score}%"
             )
 
@@ -1351,14 +1415,23 @@ def dashboard():
 
         except Exception as e:
 
-            status.set_text(
-                f"❌ Analysis failed: {e}"
-            )
+            if "client this element belongs to has been deleted" in str(e):
+                print("[LexMesh] Client session disconnected during analysis pipeline.")
+                return
 
-            ui.notify(
-                f"Analysis failed: {e}",
-                type="negative",
-            )
+            print(f"[ERROR] Analysis pipeline error: {e}")
+
+            try:
+                status.set_text(
+                    f"Analysis failed: {e}"
+                )
+
+                ui.notify(
+                    f"Analysis failed: {e}",
+                    type="negative",
+                )
+            except Exception:
+                pass
 
             print()
             print(
@@ -1395,12 +1468,16 @@ def dashboard():
     
     def handle_framework_change():
         if page_state.get("master_report"):
-            # Update the page state and re-render
-            selected_label = sidebar["framework_select"].value
-            selected_fw_keys = FRAMEWORKS.get(
-                selected_label,
-                FRAMEWORKS["🌐 All Standards (Full Scope)"],
-            )
+            selected_fw_keys = []
+            if sidebar["gdpr_checkbox"].value:
+                selected_fw_keys.append("gdpr")
+            if sidebar["hipaa_checkbox"].value:
+                selected_fw_keys.append("hipaa")
+            if sidebar["rbi_checkbox"].value:
+                selected_fw_keys.append("rbi")
+            if sidebar["soc2_checkbox"].value:
+                selected_fw_keys.append("soc2")
+
             page_state["selected_frameworks"] = selected_fw_keys
             
             report = filter_report_payload(
@@ -1412,6 +1489,7 @@ def dashboard():
             posture_container.clear()
             gap_container.clear()
             action_container.clear()
+            compliant_container.clear()
             export_container.clear()
             
             with score_container:
@@ -1431,6 +1509,9 @@ def dashboard():
                 
             with action_container:
                 create_action_plan(report)
+
+            with compliant_container:
+                create_compliant_areas(report)
                 
             with export_container:
                 create_report_export(
@@ -1438,20 +1519,17 @@ def dashboard():
                     company=sidebar["company_name"].value or "Uploaded Organization",
                 )
 
-    sidebar[
-        "framework_select"
-    ].on_value_change(
-        handle_framework_change
+    for cb_key in ["gdpr_checkbox", "hipaa_checkbox", "rbi_checkbox", "soc2_checkbox"]:
+        sidebar[cb_key].on_value_change(handle_framework_change)
+
+
+if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 8080))
+    ui.run(
+        title="LexMesh",
+        favicon="🛡️",
+        port=port,
+        storage_secret=config.NICEGUI_STORAGE_SECRET,
+        reload=False,
     )
-
-
-# ============================================================
-# START APPLICATION
-# ============================================================
-
-ui.run(
-    title="LexMesh",
-    favicon="🛡️",
-    port=8080,
-    storage_secret=config.NICEGUI_STORAGE_SECRET,
-)

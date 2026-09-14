@@ -11,7 +11,7 @@ FRAMEWORKS = {
         "id": "gdpr",
         "name": "EU GDPR",
         "full_name": "General Data Protection Regulation (EU) 2016/679",
-        "icon": "🇪🇺",
+        "icon": "shield-check",
         "catalog_file": "gdpr_requirements_master.json",
         "table_name": "gdpr_requirements",
         "penalty_type": "GDPR Statutory Fine Tiers (Art. 83)",
@@ -33,7 +33,7 @@ FRAMEWORKS = {
         "id": "hipaa",
         "name": "US HIPAA",
         "full_name": "Health Insurance Portability and Accountability Act",
-        "icon": "🏥",
+        "icon": "activity",
         "catalog_file": "hipaa_requirements_master.json",
         "table_name": "hipaa_requirements",
         "penalty_type": "HITECH / HIPAA Statutory Civil Monetary Penalties (CMP)",
@@ -48,7 +48,7 @@ FRAMEWORKS = {
         "id": "rbi",
         "name": "RBI Cyber Framework",
         "full_name": "RBI Master Direction — Cyber Security Framework for Banks & Financial Entities",
-        "icon": "🏦",
+        "icon": "building-2",
         "catalog_file": "rbi_requirements_master.json",
         "table_name": "rbi_requirements",
         "penalty_type": "Banking Regulation Act Statutory Penalties & Supervisory Enforcement",
@@ -63,7 +63,7 @@ FRAMEWORKS = {
         "id": "soc2",
         "name": "SOC 2 Type II",
         "full_name": "AICPA SOC 2 Type II — Trust Services Criteria",
-        "icon": "🛡️",
+        "icon": "lock",
         "catalog_file": "soc2_requirements_master.json",
         "table_name": "soc2_requirements",
         "penalty_type": "Audit Qualification Risk (Unqualified vs Qualified/Adverse Opinion)",
@@ -80,37 +80,37 @@ POLICY_DOMAINS = {
     "data_governance": {
         "id": "data_governance",
         "title": "Data Governance & Privacy Notice",
-        "icon": "📄",
+        "icon": "file-text",
         "description": "General principles, transparency, privacy notices, data controller/processor roles, and governance frameworks."
     },
     "access_control": {
         "id": "access_control",
         "title": "Access Control & Technical Safeguards",
-        "icon": "🔒",
+        "icon": "lock",
         "description": "Encryption standards, user access management, network security, authentication, and technical safeguards."
     },
     "incident_response": {
         "id": "incident_response",
         "title": "Incident Response & Breach Notification",
-        "icon": "🚨",
+        "icon": "shield-alert",
         "description": "Breach identification, 72h supervisory notification, data subject alerts, SOC monitoring, and IR procedures."
     },
     "data_subject_rights": {
         "id": "data_subject_rights",
         "title": "Data Subject Rights & Consent",
-        "icon": "👤",
+        "icon": "user-check",
         "description": "Explicit consent mechanisms, Right of Access, Rectification, Erasure, Portability, and Right to Object."
     },
     "vendor_risk": {
         "id": "vendor_risk",
         "title": "Third-Party & Vendor Risk Management",
-        "icon": "🤝",
+        "icon": "handshake",
         "description": "Data Processing Agreements (DPAs), Business Associate Agreements (BAAs), vendor audits, and cross-border transfers."
     },
     "data_retention": {
         "id": "data_retention",
         "title": "Data Retention & Disposal",
-        "icon": "⏳",
+        "icon": "clock",
         "description": "Storage limitation, data destruction protocols, archiving policies, and audit log retention."
     }
 }
