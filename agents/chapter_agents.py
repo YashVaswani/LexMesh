@@ -82,7 +82,7 @@ class LLMProviderChain:
         if self.genai_clients:
             for k_idx, client in enumerate(self.genai_clients):
                 for m_name in ["gemini-3.6-flash"]:
-                    for attempt in range(3):
+                    for attempt in range(2):
                         try:
                             full_content = f"{system_instruction}\n\n{prompt}" if system_instruction else prompt
                             response = client.models.generate_content(
@@ -104,13 +104,14 @@ class LLMProviderChain:
                                 type(e).__name__, err[:200],
                             )
                             if "429" in err or "RESOURCE_EXHAUSTED" in err:
-                                time.sleep(2.5 * (attempt + 1))
+                                # Key quota exhausted — immediately rotate to next API key without delaying
+                                break
                             elif "503" in err or "UNAVAILABLE" in err:
-                                time.sleep(2.0 * (attempt + 1))
+                                time.sleep(0.5)
                             elif "404" in err or "not found" in err.lower():
-                                break  # Model not available, try next key
+                                break
                             else:
-                                break  # Try next key
+                                break
 
         # Tier 1b: Legacy Gemini SDK (if active)
         if self.legacy_gemini_active:
