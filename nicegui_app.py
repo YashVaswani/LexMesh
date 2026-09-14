@@ -1043,7 +1043,7 @@ def dashboard():
                 type="positive",
             )
 
-            logger.info("PDF ready for analysis: %s (%d bytes)", page_state['pdf_name'], len(pdf_bytes))
+            logger.info("PDF ready for analysis: %s (%d bytes)", page_state['pdf_name'], len(pdf_data))
 
         except Exception as e:
 
