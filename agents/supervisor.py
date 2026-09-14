@@ -283,14 +283,15 @@ class SupervisorAgent:
 
         all_gaps = []
 
-        workers = min(8, max(4, len(tasks)))
+        # Paced concurrency to stay comfortably within Gemini free tier rate limits (15 RPM)
+        workers = min(3, max(1, len(tasks)))
         if workers > 0:
             with ThreadPoolExecutor(max_workers=workers) as executor:
                 future_to_task = {}
                 for fw_id, ch_num, reqs in tasks:
                     future = executor.submit(self._evaluate_batch, fw_id, ch_num, reqs, policy_text)
                     future_to_task[future] = (fw_id, ch_num)
-                    time.sleep(0.005)  # Ultra-fast 5ms pacing delay
+                    time.sleep(0.3)  # 300ms pacing delay between task submissions
 
                 for future in as_completed(future_to_task):
                     fw_id, ch_num = future_to_task[future]

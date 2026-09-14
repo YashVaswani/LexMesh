@@ -137,6 +137,7 @@ class SupabaseManager:
         policy_name: str,
         overall_score: int,
         report_json: dict,
+        user_id: str = None,
     ) -> bool:
         """
         Saves a complete Gap Analysis Report JSON into `compliance_reports`.
@@ -151,6 +152,8 @@ class SupabaseManager:
                 "overall_score": overall_score,
                 "report_data":   report_json,
             }
+            if user_id:
+                payload["user_id"] = user_id
             self.client.table("compliance_reports").upsert(payload).execute()
             logger.info(
                 "Report %s saved to Supabase (company=%s, score=%d).",
@@ -158,20 +161,33 @@ class SupabaseManager:
             )
             return True
         except Exception as e:
+            # Fallback if user_id column does not exist in table schema
+            if user_id and "user_id" in str(e):
+                try:
+                    payload.pop("user_id", None)
+                    self.client.table("compliance_reports").upsert(payload).execute()
+                    logger.info(
+                        "Report %s saved to Supabase without user_id column.", report_id
+                    )
+                    return True
+                except Exception:
+                    pass
             logger.error(
                 "Failed to save report %s: %s", report_id, e, exc_info=True
             )
             return False
 
-    def save_report(self, master_report: dict) -> bool:
+    def save_report(self, master_report: dict, user_id: str = None, **kwargs) -> bool:
         meta    = master_report.get("metadata", {})
         summary = master_report.get("summary", {})
+        uid     = user_id or kwargs.get("user_id") or meta.get("user_id")
         return self.save_compliance_report(
             report_id     = master_report.get("report_id", "rep_001"),
             company_name  = meta.get("company_name", "Organization"),
             policy_name   = meta.get("policy_name", "Policy"),
             overall_score = summary.get("overall_score", 0),
             report_json   = master_report,
+            user_id       = uid,
         )
 
     def get_compliance_report(self, report_id: str, user_id: str = None) -> dict:
@@ -238,10 +254,16 @@ class SupabaseManager:
             self.client.table("audit_verdict_cache").upsert(payload).execute()
             return True
         except Exception as e:
-            logger.warning(
-                "Could not cache verdict for %s:%s: %s",
-                framework_id, requirement_id, e,
-            )
+            err_str = str(e)
+            if "audit_verdict_cache" in err_str or "PGRST205" in err_str:
+                logger.debug(
+                    "Supabase audit_verdict_cache table not present, skipping remote cache."
+                )
+            else:
+                logger.warning(
+                    "Could not cache verdict for %s:%s: %s",
+                    framework_id, requirement_id, e,
+                )
             return False
 
 

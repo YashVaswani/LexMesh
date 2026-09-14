@@ -81,8 +81,8 @@ class LLMProviderChain:
         # Tier 1: Gemini (Primary Provider across all configured API Keys)
         if self.genai_clients:
             for k_idx, client in enumerate(self.genai_clients):
-                for m_name in ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-2.0-flash"]:
-                    for attempt in range(2):
+                for m_name in ["gemini-3.6-flash"]:
+                    for attempt in range(3):
                         try:
                             full_content = f"{system_instruction}\n\n{prompt}" if system_instruction else prompt
                             response = client.models.generate_content(
@@ -104,15 +104,17 @@ class LLMProviderChain:
                                 type(e).__name__, err[:200],
                             )
                             if "429" in err or "RESOURCE_EXHAUSTED" in err:
-                                time.sleep(1.0 * (attempt + 1))
+                                time.sleep(2.5 * (attempt + 1))
+                            elif "503" in err or "UNAVAILABLE" in err:
+                                time.sleep(2.0 * (attempt + 1))
                             elif "404" in err or "not found" in err.lower():
-                                break  # Model not available, try next model for this key
+                                break  # Model not available, try next key
                             else:
-                                break  # Try next model or key
+                                break  # Try next key
 
         # Tier 1b: Legacy Gemini SDK (if active)
         if self.legacy_gemini_active:
-            for m_name in ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-pro"]:
+            for m_name in ["gemini-3.6-flash"]:
                 try:
                     model = genai_legacy_obj.GenerativeModel(
                         model_name=m_name,
@@ -132,10 +134,7 @@ class LLMProviderChain:
             for k_idx, client in enumerate(self.groq_clients):
                 for g_model in [
                     "llama-3.3-70b-versatile",
-                    "llama3-70b-8192",
-                    "llama3-8b-8192",
                     "llama-3.1-8b-instant",
-                    "mixtral-8x7b-32768",
                 ]:
                     for attempt in range(2):
                         try:
