@@ -54,3 +54,15 @@ def create_header():
             )
 
             lucide_icon("moon", size=20, class_name="text-emerald-200 dark:text-emerald-400")
+
+            import auth
+            def on_logout():
+                auth.sign_out()
+                ui.navigate.to('/login')
+
+            ui.button(
+                icon="logout",
+                on_click=on_logout
+            ).props(
+                "flat round color=emerald"
+            ).tooltip("Log out")

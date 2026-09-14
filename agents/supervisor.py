@@ -238,10 +238,10 @@ class SupervisorAgent:
             "p3_medium": p3_medium
         }
 
-    def run_multi_framework_analysis(self, company_name: str, policy_name: str, policy_text: str, active_frameworks: list = None) -> dict:
+    def run_multi_framework_analysis(self, company_name: str, policy_name: str, policy_text: str, active_frameworks: list = None, **kwargs) -> dict:
         """
         Main multi-framework orchestration entry point:
-        Executes Parallel Sub-Agents across all selected frameworks simultaneously.
+        Executes Parallel Sub-Agents across all selected catalogs simultaneously.
         """
         logger.info(
             "Starting LexMesh Multi-Framework Parallel Analysis for '%s' (%s)...",
@@ -402,7 +402,7 @@ class SupervisorAgent:
         # Save report to Supabase if connected
         if supabase_db.is_connected():
             try:
-                supabase_db.save_report(master_report)
+                supabase_db.save_report(master_report, user_id=kwargs.get('user_id'))
             except Exception as e:
                 logger.warning(
                     "Could not persist report to Supabase: %s", e, exc_info=True
@@ -410,10 +410,10 @@ class SupervisorAgent:
 
         return master_report
 
-    def run_analysis(self, company_name: str, policy_name: str, policy_text: str, reqs_catalog: list = None, framework_id: str = "gdpr") -> dict:
+    def run_analysis(self, company_name: str, policy_name: str, policy_text: str, reqs_catalog: list = None, framework_id: str = "gdpr", **kwargs) -> dict:
         """
         Primary execution entry point. Always runs full multi-framework analysis.
         """
-        return self.run_multi_framework_analysis(company_name, policy_name, policy_text)
+        return self.run_multi_framework_analysis(company_name, policy_name, policy_text, **kwargs)
 
 supervisor = SupervisorAgent()

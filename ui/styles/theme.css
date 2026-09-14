@@ -112,11 +112,15 @@ body.q-dark, body.body--dark, .q-dark, body[dark] {
    GLOBAL BODY & TYPOGRAPHY
    ============================================================ */
 
-body, button, input, select, textarea, .q-tab, .q-field, .q-btn, .q-item {
+body, button, input, select, textarea, .q-tab, .q-btn, .q-item {
     background-color: var(--lex-bg) !important;
     color: var(--lex-text) !important;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     font-weight: 500;
+}
+
+.q-field {
+    background-color: transparent !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -331,6 +335,10 @@ body.body--dark .lex-analysis-status,
 .q-field--focused .q-icon,
 .q-field__native {
     color: var(--lex-text) !important;
+}
+
+.q-field__native, .q-field__input {
+    background-color: transparent !important;
 }
 
 .q-menu {

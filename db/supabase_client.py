@@ -174,7 +174,7 @@ class SupabaseManager:
             report_json   = master_report,
         )
 
-    def get_compliance_report(self, report_id: str) -> dict:
+    def get_compliance_report(self, report_id: str, user_id: str = None) -> dict:
         if not self.is_connected():
             return {}
         try:
