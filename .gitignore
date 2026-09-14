@@ -21,3 +21,7 @@ Thumbs.db
 # Output PDFs & Generated Test Files
 *.pdf
 scratch/
+
+# Log files
+lexmesh.log
+lexmesh.log.*

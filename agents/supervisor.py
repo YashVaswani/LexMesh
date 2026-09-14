@@ -14,10 +14,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from agents.chapter_agents import ChapterSubAgent
 from db.supabase_client import supabase_db
 from ingestion.catalog_manager import catalog_manager, FRAMEWORKS, POLICY_DOMAINS
+from logger import get_logger
+
+logger = get_logger("agents.supervisor")
 
 class SupervisorAgent:
     def __init__(self):
-        print("[INFO] Initializing Supervisor Router Agent (Multi-Framework Engine)...")
+        logger.info("Initializing Supervisor Router Agent (Multi-Framework Engine)...")
 
     def _evaluate_batch(self, framework_id: str, section_num: str, reqs: list, policy_text: str) -> list:
         section_title = reqs[0].get("chapter_title", f"Section {section_num}") if reqs else f"Section {section_num}"
@@ -240,7 +243,10 @@ class SupervisorAgent:
         Main multi-framework orchestration entry point:
         Executes Parallel Sub-Agents across all selected catalogs simultaneously.
         """
-        print(f"[INFO] Starting LexMesh Multi-Framework Parallel Analysis for '{company_name}' ({policy_name})...")
+        logger.info(
+            "Starting LexMesh Multi-Framework Parallel Analysis for '%s' (%s)...",
+            company_name, policy_name,
+        )
         all_catalogs = catalog_manager.load_all_catalogs()
 
         # Default to all frameworks if none specified
@@ -292,7 +298,10 @@ class SupervisorAgent:
                         results = future.result()
                         all_gaps.extend(results)
                     except Exception as e:
-                        print(f"[WARNING] Error evaluating Framework '{fw_id}' Section '{ch_num}': {e}")
+                        logger.warning(
+                            "Error evaluating Framework '%s' Section '%s': %s",
+                            fw_id, ch_num, e, exc_info=True,
+                        )
 
         # Compute Framework Summaries for each active compliance
         framework_summaries = {}
@@ -395,7 +404,9 @@ class SupervisorAgent:
             try:
                 supabase_db.save_report(master_report, user_id=kwargs.get('user_id'))
             except Exception as e:
-                print(f"[WARNING] Could not persist report to Supabase: {e}")
+                logger.warning(
+                    "Could not persist report to Supabase: %s", e, exc_info=True
+                )
 
         return master_report
 

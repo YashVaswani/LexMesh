@@ -12,7 +12,9 @@ from nicegui import app, ui
 from config import config
 from db.supabase_client import supabase_db
 from agents.adk_agent import adk_supervisor
-import auth
+from logger import get_logger
+
+logger = get_logger("app")
 
 from ui.components.header import create_header
 from ui.components.sidebar import create_sidebar
@@ -36,6 +38,28 @@ ui.add_head_html('''
         if (window.lucide) lucide.createIcons();
     });
 </script>
+''', shared=True)
+
+# OpenGraph & SEO Meta Tags — rich link previews when shared on Slack/WhatsApp/LinkedIn
+ui.add_head_html('''
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="LexMesh — AI-powered multi-framework compliance engine for GDPR, HIPAA, RBI, and SOC 2. Upload your policy PDF and get instant gap analysis with a prioritised action plan.">
+<meta name="keywords" content="compliance, GDPR, HIPAA, SOC2, RBI, AI compliance, policy analysis, LexMesh">
+<meta name="author" content="LexMesh">
+
+<!-- OpenGraph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="LexMesh — AI-Powered Compliance Engine">
+<meta property="og:description" content="Instantly audit your company policy PDF against GDPR, HIPAA, RBI &amp; SOC 2 with AI-powered multi-framework gap analysis and a prioritised action plan.">
+<meta property="og:image" content="https://placehold.co/1200x630/101713/eae3d2?text=LexMesh+Compliance+Engine">
+<meta property="og:site_name" content="LexMesh">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LexMesh — AI-Powered Compliance Engine">
+<meta name="twitter:description" content="Upload your policy PDF. Get instant GDPR, HIPAA, RBI &amp; SOC 2 compliance scores, gap analysis, and a prioritised action plan.">
+<meta name="twitter:image" content="https://placehold.co/1200x630/101713/eae3d2?text=LexMesh+Compliance+Engine">
 ''', shared=True)
 
 
@@ -1018,43 +1042,21 @@ def dashboard():
                 type="positive",
             )
 
-            print(
-                "[LexMesh] PDF READY FOR ANALYSIS"
-            )
+            logger.info("PDF ready for analysis: %s (%d bytes)", page_state['pdf_name'], len(pdf_bytes))
 
         except Exception as e:
 
-            page_state[
-                "pdf_bytes"
-            ] = None
+            page_state["pdf_bytes"] = None
+            page_state["pdf_name"] = ""
 
-            page_state[
-                "pdf_name"
-            ] = ""
-
-            status.set_text(
-                f"❌ Upload failed: {e}"
-            )
+            status.set_text(f"❌ Upload failed: {e}")
 
             ui.notify(
                 f"Upload failed: {e}",
                 type="negative",
             )
 
-            print()
-            print(
-                "=========================================="
-            )
-            print(
-                "[LexMesh] UPLOAD ERROR"
-            )
-            print(
-                "=========================================="
-            )
-
-            import traceback
-
-            traceback.print_exc()
+            logger.error("PDF upload error: %s", e, exc_info=True)
 
     # --------------------------------------------------------
     # THIS IS THE IMPORTANT CHANGE
@@ -1072,16 +1074,7 @@ def dashboard():
 
     async def run_analysis():
 
-        print()
-        print(
-            "=========================================="
-        )
-        print(
-            "[LexMesh] RUN BUTTON CLICKED"
-        )
-        print(
-            "=========================================="
-        )
+        logger.info("=== RUN ANALYSIS TRIGGERED ===")
 
         # ----------------------------------------------------
         # GET CURRENT PAGE PDF
@@ -1091,22 +1084,10 @@ def dashboard():
             "pdf_bytes"
         )
 
-        print(
-            "[LexMesh] PDF STATE:",
-            (
-                "AVAILABLE"
-                if pdf_bytes
-                else "EMPTY"
-            ),
-        )
-
-        print(
-            "[LexMesh] PDF SIZE:",
-            (
-                len(pdf_bytes)
-                if pdf_bytes
-                else 0
-            ),
+        logger.debug(
+            "PDF state: %s (%d bytes)",
+            "AVAILABLE" if pdf_bytes else "EMPTY",
+            len(pdf_bytes) if pdf_bytes else 0,
         )
 
         # ----------------------------------------------------
@@ -1183,19 +1164,9 @@ def dashboard():
                 "selected_frameworks"
             ] = selected_fw_keys
 
-            print(
-                "[LexMesh] Company:",
-                company,
-            )
-
-            print(
-                "[LexMesh] Policy:",
-                policy,
-            )
-
-            print(
-                "[LexMesh] Frameworks:",
-                selected_fw_keys,
+            logger.info(
+                "Analysis requested — Company: %s | Policy: %s | Frameworks: %s",
+                company, policy, selected_fw_keys,
             )
 
             # =================================================
@@ -1206,9 +1177,7 @@ def dashboard():
                 "📖 Reading policy PDF..."
             )
 
-            print(
-                "[LexMesh] Opening PDF..."
-            )
+            logger.info("Opening PDF for text extraction...")
 
             doc = fitz.open(
                 stream=pdf_bytes,
@@ -1233,10 +1202,7 @@ def dashboard():
                 policy_pages
             )
 
-            print(
-                "[LexMesh] Extracted characters:",
-                len(policy_text),
-            )
+            logger.info("Extracted %d characters from policy PDF.", len(policy_text))
 
             if not policy_text.strip():
 
@@ -1253,17 +1219,7 @@ def dashboard():
                 "Running LexMesh compliance analysis..."
             )
 
-            print()
-            print(
-                "=========================================="
-            )
-            print(
-                "[LexMesh] CALLING ADK PIPELINE"
-            )
-            print(
-                "=========================================="
-            )
-
+            logger.info("Calling ADK pipeline...")
             import asyncio
             import functools
             func = functools.partial(
@@ -1301,15 +1257,9 @@ def dashboard():
                 "master_report"
             ] = master_report
 
-            print(
-                "[LexMesh] ADK PIPELINE COMPLETED"
-            )
-
-            print(
-                "[LexMesh] Report keys:",
-                list(
-                    master_report.keys()
-                ),
+            logger.info(
+                "ADK pipeline completed. Report keys: %s",
+                list(master_report.keys()),
             )
 
             # =================================================
@@ -1334,7 +1284,7 @@ def dashboard():
                 export_container.clear()
             except RuntimeError as e:
                 if "client this element belongs to has been deleted" in str(e):
-                    print("[LexMesh] Client session ended during analysis execution. Skipping UI update.")
+                    logger.warning("Client session ended during analysis. Skipping UI update.")
                     return
                 raise e
 
@@ -1417,24 +1367,17 @@ def dashboard():
             # SUCCESS
             # =================================================
 
-            # DEBUG: Trace exactly where score comes from
+            # Trace overall score
             _summary_obj = report.get("summary", {})
-            print(
-                "[LexMesh] DEBUG summary keys:",
+            logger.debug(
+                "Summary keys: %s | overall_score: %s | framework scores: %s",
                 list(_summary_obj.keys()) if isinstance(_summary_obj, dict) else type(_summary_obj),
-            )
-            print(
-                "[LexMesh] DEBUG overall_score raw:",
                 repr(_summary_obj.get("overall_score")) if isinstance(_summary_obj, dict) else "N/A",
+                {
+                    k: v.get("score") if isinstance(v, dict) else v
+                    for k, v in _summary_obj.get("framework_summaries", {}).items()
+                } if isinstance(_summary_obj, dict) else "N/A",
             )
-            print(
-                "[LexMesh] DEBUG framework_summaries keys:",
-                list(_summary_obj.get("framework_summaries", {}).keys()) if isinstance(_summary_obj, dict) else "N/A",
-            )
-            for _fw_key, _fw_val in _summary_obj.get("framework_summaries", {}).items():
-                print(
-                    f"[LexMesh] DEBUG   {_fw_key} -> score={_fw_val.get('score') if isinstance(_fw_val, dict) else _fw_val}"
-                )
 
             score = (
                 report
@@ -1458,54 +1401,21 @@ def dashboard():
                 type="positive",
             )
 
-            print()
-            print(
-                "=========================================="
-            )
-            print(
-                "[LexMesh] ANALYSIS SUCCESS"
-            )
-            print(
-                f"[LexMesh] Overall Score: {score}%"
-            )
-            print(
-                "=========================================="
-            )
+            logger.info("=== ANALYSIS SUCCESS | Overall Score: %s%% ===", score)
 
         except Exception as e:
 
             if "client this element belongs to has been deleted" in str(e):
-                print("[LexMesh] Client session disconnected during analysis pipeline.")
+                logger.warning("Client session disconnected during analysis pipeline.")
                 return
 
-            print(f"[ERROR] Analysis pipeline error: {e}")
+            logger.error("Analysis pipeline error: %s", e, exc_info=True)
 
             try:
-                status.set_text(
-                    f"Analysis failed: {e}"
-                )
-
-                ui.notify(
-                    f"Analysis failed: {e}",
-                    type="negative",
-                )
+                status.set_text(f"Analysis failed: {e}")
+                ui.notify(f"Analysis failed: {e}", type="negative")
             except Exception:
                 pass
-
-            print()
-            print(
-                "=========================================="
-            )
-            print(
-                "[LexMesh] ANALYSIS ERROR"
-            )
-            print(
-                "=========================================="
-            )
-
-            import traceback
-
-            traceback.print_exc()
 
         finally:
 
@@ -1582,11 +1492,68 @@ def dashboard():
         sidebar[cb_key].on_value_change(handle_framework_change)
 
 
+# ============================================================
+# CUSTOM 404 PAGE
+# ============================================================
+
+@ui.page("/404")
+def not_found_page():
+    ui.colors(
+        primary='#4e795d',
+        dark='#101713',
+    )
+    with ui.column().classes("w-full min-h-screen items-center justify-center gap-6").style(
+        "background: linear-gradient(135deg, #101713 0%, #1a2e20 50%, #101713 100%); "
+        "min-height: 100vh; display: flex; flex-direction: column; "
+        "align-items: center; justify-content: center; padding: 2rem;"
+    ):
+        # Shield icon
+        ui.html('''
+        <div style="
+            width: 100px; height: 100px;
+            background: linear-gradient(135deg, #4e795d, #3b6349);
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 48px;
+            box-shadow: 0 0 40px rgba(78,121,93,0.4);
+            margin-bottom: 8px;
+        ">🛡️</div>
+        ''')
+
+        ui.label("404").style(
+            "font-size: 6rem; font-weight: 900; "
+            "background: linear-gradient(135deg, #4e795d, #eae3d2); "
+            "-webkit-background-clip: text; -webkit-text-fill-color: transparent; "
+            "background-clip: text; line-height: 1; margin: 0;"
+        )
+
+        ui.label("Page Not Found").style(
+            "font-size: 1.5rem; font-weight: 600; color: #eae3d2; margin-top: 4px;"
+        )
+
+        ui.label(
+            "The page you're looking for doesn't exist or has been moved."
+        ).style(
+            "color: #8a9e8f; font-size: 1rem; text-align: center; max-width: 400px;"
+        )
+
+        ui.button(
+            "← Return to LexMesh Dashboard",
+            on_click=lambda: ui.navigate.to("/")
+        ).style(
+            "margin-top: 1rem; "
+            "background: linear-gradient(135deg, #4e795d, #3b6349); "
+            "color: #eae3d2; border: none; padding: 12px 28px; "
+            "border-radius: 8px; font-size: 1rem; font-weight: 600; "
+            "cursor: pointer; box-shadow: 0 4px 20px rgba(78,121,93,0.35); "
+            "transition: all 0.2s ease;"
+        )
+
+
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 8080))
     ui.run(
-        title="LexMesh",
+        title="LexMesh — AI Compliance Engine",
         favicon="🛡️",
         port=port,
         storage_secret=config.NICEGUI_STORAGE_SECRET,
