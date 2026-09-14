@@ -13,6 +13,7 @@ from config import config
 from db.supabase_client import supabase_db
 from agents.adk_agent import adk_supervisor
 from logger import get_logger
+import auth
 
 logger = get_logger("app")
 

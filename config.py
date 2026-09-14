@@ -43,6 +43,8 @@ class Config:
         "EMBEDDING_MODEL_NAME",
         "sentence-transformers/all-MiniLM-L6-v2",
     )
+    # NiceGUI app.storage.user session secret (set NICEGUI_STORAGE_SECRET in env)
+    NICEGUI_STORAGE_SECRET = os.getenv("NICEGUI_STORAGE_SECRET", "lexmesh-default-secret-change-in-prod")
 
     @classmethod
     def validate(cls):
