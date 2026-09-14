@@ -92,56 +92,115 @@ def login_page():
     if auth.get_current_user():
         ui.navigate.to('/')
         return
+        
+    ui.colors(primary='#558b63', secondary='#34d399', accent='#059669', positive='#558b63')
 
-    with ui.column().classes("w-full h-screen items-center justify-center bg-slate-50 dark:bg-slate-900"):
-        with ui.card().classes("w-96 p-8 items-center gap-4 shadow-lg"):
-            ui.icon("shield").classes("text-blue-500 text-6xl mb-2")
-            ui.label("LexMesh Login").classes("text-2xl font-bold text-slate-900 dark:text-white")
-            
-            email = ui.input("Email").classes("w-full")
-            password = ui.input("Password", password=True, password_toggle_button=True).classes("w-full")
-            
-            def do_login():
-                success, msg = auth.sign_in(email.value, password.value)
-                if success:
-                    ui.notify("Logged in successfully!", type="positive")
-                    ui.navigate.to('/')
-                else:
-                    ui.notify(msg, type="negative")
+    # Main wrapper with gradient background to mimic the design
+    with ui.column().classes("w-full h-screen items-center justify-center relative overflow-hidden").style("background: linear-gradient(135deg, #f3f8f4 0%, #e8f2ea 100%);"):
+        
+        # Decorative circles (optional, just for background vibe)
+        ui.element('div').classes('absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full opacity-30 blur-3xl bg-[#d1e8d6]')
+        ui.element('div').classes('absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full opacity-30 blur-3xl bg-[#cce3d2]')
 
-            ui.button("Log In", on_click=do_login).classes("w-full mt-4").props("color=primary")
+        with ui.card().classes("w-96 p-10 items-center shadow-[0_15px_40px_-5px_rgba(78,121,93,0.4)] border-2 border-[#4e795d]/60 rounded-3xl bg-[#f8f6f0]/95 backdrop-blur-sm z-10 gap-0"):
             
-            with ui.row().classes("w-full justify-center mt-4"):
-                ui.label("Don't have an account?").classes("text-slate-500")
-                ui.link("Sign Up", "/signup").classes("text-blue-500 font-medium")
+            # Shield Icon in a circle
+            with ui.element('div').classes('w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mb-4'):
+                from ui.components.lucide import lucide_icon
+                lucide_icon("shield", size=32, class_name="text-emerald-500")
+            
+            # Titles
+            ui.label("LexMesh").classes("text-3xl font-bold text-slate-800 tracking-tight mb-1")
+            ui.label("Sign in to your account").classes("text-sm text-slate-500 font-medium mb-8")
+            
+            # Form Container
+            with ui.column().classes("w-full gap-4"):
+                # Email Input
+                email = ui.input("Email").classes("w-full text-md").props('outlined rounded bg-color="white" color="emerald"')
+                with email.add_slot('prepend'):
+                    ui.icon('mail_outline').classes('text-slate-400')
+                
+                # Password Input
+                password = ui.input("Password", password=True, password_toggle_button=True).classes("w-full text-md").props('outlined rounded bg-color="white" color="emerald"')
+                with password.add_slot('prepend'):
+                    ui.icon('lock_outline').classes('text-slate-400')
+                
+                # Login Action
+                def do_login():
+                    if not email.value or not password.value:
+                        ui.notify("Please enter both email and password.", type="warning")
+                        return
+                    success, msg = auth.sign_in(email.value, password.value)
+                    if success:
+                        ui.notify("Logged in successfully!", type="positive")
+                        ui.navigate.to('/')
+                    else:
+                        ui.notify(msg, type="negative")
+
+                ui.button("LOG IN", on_click=do_login).classes("w-full mt-2 h-12 rounded-lg font-bold text-white shadow-lg shadow-emerald-500/30 tracking-wider").props("color=primary unelevated icon-right=arrow_forward")
+            
+            # Footer Divider
+            with ui.row().classes("w-full items-center justify-center mt-8 gap-3"):
+                ui.element('div').classes("h-px bg-slate-200 flex-grow")
+                with ui.row().classes("items-center gap-1 text-sm font-medium"):
+                    ui.label("Don't have an account?").classes("text-slate-500")
+                    ui.link("Sign Up", "/signup").classes("text-emerald-600 hover:text-emerald-700 transition-colors")
+                ui.element('div').classes("h-px bg-slate-200 flex-grow")
 
 @ui.page("/signup")
 def signup_page():
     if auth.get_current_user():
         ui.navigate.to('/')
         return
+        
+    ui.colors(primary='#558b63', secondary='#34d399', accent='#059669', positive='#558b63')
 
-    with ui.column().classes("w-full h-screen items-center justify-center bg-slate-50 dark:bg-slate-900"):
-        with ui.card().classes("w-96 p-8 items-center gap-4 shadow-lg"):
-            ui.icon("shield").classes("text-blue-500 text-6xl mb-2")
-            ui.label("LexMesh Sign Up").classes("text-2xl font-bold text-slate-900 dark:text-white")
-            
-            email = ui.input("Email").classes("w-full")
-            password = ui.input("Password", password=True, password_toggle_button=True).classes("w-full")
-            
-            def do_signup():
-                success, msg = auth.sign_up(email.value, password.value)
-                if success:
-                    ui.notify("Signed up successfully!", type="positive")
-                    ui.navigate.to('/')
-                else:
-                    ui.notify(msg, type="negative")
+    # Main wrapper with gradient background
+    with ui.column().classes("w-full h-screen items-center justify-center relative overflow-hidden").style("background: linear-gradient(135deg, #f3f8f4 0%, #e8f2ea 100%);"):
+        
+        ui.element('div').classes('absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full opacity-30 blur-3xl bg-[#d1e8d6]')
+        ui.element('div').classes('absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full opacity-30 blur-3xl bg-[#cce3d2]')
 
-            ui.button("Sign Up", on_click=do_signup).classes("w-full mt-4").props("color=primary")
+        with ui.card().classes("w-96 p-10 items-center shadow-[0_15px_40px_-5px_rgba(78,121,93,0.4)] border-2 border-[#4e795d]/60 rounded-3xl bg-[#f8f6f0]/95 backdrop-blur-sm z-10 gap-0"):
             
-            with ui.row().classes("w-full justify-center mt-4"):
-                ui.label("Already have an account?").classes("text-slate-500")
-                ui.link("Log In", "/login").classes("text-blue-500 font-medium")
+            with ui.element('div').classes('w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mb-4'):
+                from ui.components.lucide import lucide_icon
+                lucide_icon("shield", size=32, class_name="text-emerald-500")
+            
+            ui.label("LexMesh").classes("text-3xl font-bold text-slate-800 tracking-tight mb-1")
+            ui.label("Create a new account").classes("text-sm text-slate-500 font-medium mb-8")
+            
+            with ui.column().classes("w-full gap-4"):
+                email = ui.input("Email").classes("w-full text-md").props('outlined rounded bg-color="white" color="emerald"')
+                with email.add_slot('prepend'):
+                    ui.icon('mail_outline').classes('text-slate-400')
+                
+                password = ui.input("Password", password=True, password_toggle_button=True).classes("w-full text-md").props('outlined rounded bg-color="white" color="emerald"')
+                with password.add_slot('prepend'):
+                    ui.icon('lock_outline').classes('text-slate-400')
+                
+                def do_signup():
+                    if not email.value or not password.value:
+                        ui.notify("Please enter both email and password.", type="warning")
+                        return
+                    if len(password.value) < 6:
+                        ui.notify("Password must be at least 6 characters.", type="warning")
+                        return
+                    success, msg = auth.sign_up(email.value, password.value)
+                    if success:
+                        ui.notify("Signed up successfully! Welcome to LexMesh.", type="positive")
+                        ui.navigate.to('/')
+                    else:
+                        ui.notify(msg, type="negative")
+
+                ui.button("SIGN UP", on_click=do_signup).classes("w-full mt-2 h-12 rounded-lg font-bold text-white shadow-lg shadow-emerald-500/30 tracking-wider").props("color=primary unelevated icon-right=person_add")
+            
+            with ui.row().classes("w-full items-center justify-center mt-8 gap-3"):
+                ui.element('div').classes("h-px bg-slate-200 flex-grow")
+                with ui.row().classes("items-center gap-1 text-sm font-medium"):
+                    ui.label("Already have an account?").classes("text-slate-500")
+                    ui.link("Log In", "/login").classes("text-emerald-600 hover:text-emerald-700 transition-colors")
+                ui.element('div').classes("h-px bg-slate-200 flex-grow")
 
 # ============================================================
 # DASHBOARD
