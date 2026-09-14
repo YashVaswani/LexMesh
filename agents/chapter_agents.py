@@ -11,6 +11,9 @@ import warnings
 # Suppress verbose SDK warnings (e.g. AFC deprecation notices)
 warnings.filterwarnings("ignore")
 
+from logger import get_logger
+logger = get_logger("agents.chapter")
+
 # Try Google GenAI SDKs (both new 'google.genai' and classic 'google.generativeai')
 HAS_GENAI = False
 genai_client_obj = None
@@ -21,10 +24,12 @@ try:
     from google.genai import types
     HAS_GENAI = True
 except Exception as e:
+    logger.debug("google.genai not available (%s), trying legacy SDK.", e)
     try:
         import google.generativeai as genai_legacy_obj
         HAS_GENAI = True
-    except Exception:
+    except Exception as e2:
+        logger.warning("Neither google.genai nor google.generativeai available: %s", e2)
         HAS_GENAI = False
 
 from groq import Groq
@@ -46,22 +51,26 @@ class LLMProviderChain:
                     if 'genai' in globals() and genai is not None:
                         c = genai.Client(api_key=key)
                         self.genai_clients.append(c)
-                        print(f"[INFO] Google GenAI Client #{idx+1} (SDK v2) initialized.")
+                        logger.info("Google GenAI Client #%d (SDK v2) initialized.", idx + 1)
                     elif genai_legacy_obj is not None:
                         genai_legacy_obj.configure(api_key=key)
                         self.legacy_gemini_active = True
-                        print(f"[INFO] Google GenerativeAI Client #{idx+1} (SDK v1) initialized.")
+                        logger.info("Google GenerativeAI Client #%d (SDK v1) initialized.", idx + 1)
                 except Exception as e:
-                    print(f"[WARNING] Gemini Client #{idx+1} initialization error: {e}")
+                    logger.warning(
+                        "Gemini Client #%d initialization error: %s", idx + 1, e
+                    )
 
         if self.groq_keys:
             for idx, key in enumerate(self.groq_keys):
                 try:
                     c = Groq(api_key=key)
                     self.groq_clients.append(c)
-                    print(f"[INFO] Groq Client #{idx+1} initialized.")
+                    logger.info("Groq Client #%d initialized.", idx + 1)
                 except Exception as e:
-                    print(f"[WARNING] Groq Client #{idx+1} initialization error: {e}")
+                    logger.warning(
+                        "Groq Client #%d initialization error: %s", idx + 1, e
+                    )
 
     def generate(self, prompt: str, system_instruction: str = None) -> str:
         """
@@ -89,7 +98,11 @@ class LLMProviderChain:
                             break
                         except Exception as e:
                             err = str(e)
-                            print(f"[LLM-WARN] Gemini Key #{k_idx+1} ({m_name}, attempt {attempt+1}): {type(e).__name__}: {err[:200]}")
+                            logger.warning(
+                                "Gemini Key #%d (%s, attempt %d): %s: %s",
+                                k_idx + 1, m_name, attempt + 1,
+                                type(e).__name__, err[:200],
+                            )
                             if "429" in err or "RESOURCE_EXHAUSTED" in err:
                                 time.sleep(1.0 * (attempt + 1))
                             elif "404" in err or "not found" in err.lower():
@@ -112,7 +125,7 @@ class LLMProviderChain:
                     if response and response.text:
                         return response.text
                 except Exception as e:
-                    print(f"[LLM-WARN] Legacy Gemini ({m_name}): {e}")
+                    logger.warning("Legacy Gemini (%s): %s", m_name, e)
 
         # Tier 2: Groq (Secondary Provider across all configured API Keys)
         if self.groq_clients:
@@ -138,10 +151,14 @@ class LLMProviderChain:
                             break
                         except Exception as e:
                             err = str(e)
-                            print(f"[LLM-WARN] Groq Key #{k_idx+1} ({g_model}, attempt {attempt+1}): {type(e).__name__}: {err[:250]}")
+                            logger.warning(
+                                "Groq Key #%d (%s, attempt %d): %s: %s",
+                                k_idx + 1, g_model, attempt + 1,
+                                type(e).__name__, err[:250],
+                            )
                             if "429" in err or "rate_limit" in err.lower():
                                 if "tokens per day" in err.lower() or "tpd" in err.lower():
-                                    break  # Daily limit hit on this key, try next model or next key
+                                    break  # Daily limit hit on this key
                                 time.sleep(1.5 * (attempt + 1))
                             else:
                                 break
@@ -435,7 +452,10 @@ Return a valid JSON object containing a "verdicts" array with framework-specific
         if not chapter_reqs:
             return []
 
-        print(f"[AGENTS] Sub-Agent evaluating {len(chapter_reqs)} requirements for Framework: '{self.framework_id.upper()}', Section: '{self.chapter_number}'...")
+        logger.info(
+            "Sub-Agent evaluating %d requirements — Framework: %s, Section: %s",
+            len(chapter_reqs), self.framework_id.upper(), self.chapter_number,
+        )
 
         verdicts = []
         CHUNK_SIZE = 5  # Micro-batch 5 requirements per LLM call for 100% reliable non-truncated JSON generation
