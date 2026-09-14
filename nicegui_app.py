@@ -519,18 +519,17 @@ def dashboard():
             else:
 
                 company_match = re.search(
-                    r"([A-Za-z0-9\s&]+"
-                    r"(?:Pvt Ltd|Ltd|Inc|Corp|"
+                    r"\b([A-Z][A-Za-z0-9&]*(?:\s+[A-Z][A-Za-z0-9&]*){0,4}\s+"
+                    r"(?:Pvt\s+Ltd|Ltd|Inc|Corp|"
                     r"Corporation|Technologies|"
-                    r"Systems|AI))",
+                    r"Systems|AI))\b",
                     first_page_text,
                 )
 
                 if company_match:
 
                     company = (
-                        company_match
-                        .group(1)
+                        re.sub(r"\s+", " ", company_match.group(1))
                         .strip()
                     )
 

@@ -75,13 +75,13 @@ class LLMProviderChain:
     def generate(self, prompt: str, system_instruction: str = None) -> str:
         """
         Multi-Tier API Key & Model Fallback Engine:
-        1. Gemini Clients (Key 1 -> Key 2 -> ...) x Gemini Models (gemini-2.0-flash, gemini-1.5-flash, gemini-1.5-pro)
-        2. Groq Clients (Key 1 -> Key 2 -> ...) x Groq Models (llama-3.3-70b-versatile, llama-3.1-8b-instant)
+        1. Gemini Clients (Key 1 -> Key 2 -> ...) x Gemini Models (gemini-3.6-flash, gemini-2.5-flash, gemini-2.0-flash)
+        2. Groq Clients (Key 1 -> Key 2 -> ...) x Groq Models (llama-3.3-70b-versatile, llama3-70b-8192, llama3-8b-8192, llama-3.1-8b-instant)
         """
         # Tier 1: Gemini (Primary Provider across all configured API Keys)
         if self.genai_clients:
             for k_idx, client in enumerate(self.genai_clients):
-                for m_name in ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]:
+                for m_name in ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-2.0-flash"]:
                     for attempt in range(2):
                         try:
                             full_content = f"{system_instruction}\n\n{prompt}" if system_instruction else prompt
@@ -112,7 +112,7 @@ class LLMProviderChain:
 
         # Tier 1b: Legacy Gemini SDK (if active)
         if self.legacy_gemini_active:
-            for m_name in ["gemini-1.5-flash", "gemini-1.5-pro"]:
+            for m_name in ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-pro"]:
                 try:
                     model = genai_legacy_obj.GenerativeModel(
                         model_name=m_name,
@@ -130,7 +130,13 @@ class LLMProviderChain:
         # Tier 2: Groq (Secondary Provider across all configured API Keys)
         if self.groq_clients:
             for k_idx, client in enumerate(self.groq_clients):
-                for g_model in ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"]:
+                for g_model in [
+                    "llama-3.3-70b-versatile",
+                    "llama3-70b-8192",
+                    "llama3-8b-8192",
+                    "llama-3.1-8b-instant",
+                    "mixtral-8x7b-32768",
+                ]:
                     for attempt in range(2):
                         try:
                             messages = []
