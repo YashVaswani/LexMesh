@@ -106,7 +106,7 @@ class SupabaseManager:
             except Exception:
                 return []
 
-    def save_compliance_report(self, report_id: str, company_name: str, policy_name: str, overall_score: int, report_json: dict) -> bool:
+    def save_compliance_report(self, report_id: str, company_name: str, policy_name: str, overall_score: int, report_json: dict, user_id: str = None) -> bool:
         """
         Saves a complete Gap Analysis Report JSON into `compliance_reports`.
         """
@@ -120,13 +120,15 @@ class SupabaseManager:
                 "overall_score": overall_score,
                 "report_data": report_json
             }
+            if user_id:
+                payload["user_id"] = user_id
             res = self.client.table("compliance_reports").upsert(payload).execute()
             return True
         except Exception as e:
             print(f"[ERROR] Failed to save report {report_id}: {e}")
             return False
 
-    def save_report(self, master_report: dict) -> bool:
+    def save_report(self, master_report: dict, user_id: str = None) -> bool:
         meta = master_report.get("metadata", {})
         summary = master_report.get("summary", {})
         return self.save_compliance_report(
@@ -134,14 +136,18 @@ class SupabaseManager:
             company_name=meta.get("company_name", "Organization"),
             policy_name=meta.get("policy_name", "Policy"),
             overall_score=summary.get("overall_score", 0),
-            report_json=master_report
+            report_json=master_report,
+            user_id=user_id
         )
 
-    def get_compliance_report(self, report_id: str) -> dict:
+    def get_compliance_report(self, report_id: str, user_id: str = None) -> dict:
         if not self.is_connected():
             return {}
         try:
-            res = self.client.table("compliance_reports").select("*").eq("id", report_id).execute()
+            query = self.client.table("compliance_reports").select("*").eq("id", report_id)
+            if user_id:
+                query = query.eq("user_id", user_id)
+            res = query.execute()
             if res.data:
                 return res.data[0].get("report_data", {})
             return {}

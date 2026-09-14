@@ -3,11 +3,12 @@ import re
 from pathlib import Path
 
 import pymupdf as fitz
-from nicegui import ui
+from nicegui import ui, app
 
 from config import config
 from db.supabase_client import supabase_db
 from agents.adk_agent import adk_supervisor
+import auth
 
 from ui.components.header import create_header
 from ui.components.sidebar import create_sidebar
@@ -66,12 +67,72 @@ if theme_path.exists():
     )
 
 
+@ui.page("/login")
+def login_page():
+    if auth.get_current_user():
+        ui.navigate.to('/')
+        return
+
+    with ui.column().classes("w-full h-screen items-center justify-center bg-slate-50 dark:bg-slate-900"):
+        with ui.card().classes("w-96 p-8 items-center gap-4 shadow-lg"):
+            ui.icon("shield").classes("text-blue-500 text-6xl mb-2")
+            ui.label("LexMesh Login").classes("text-2xl font-bold text-slate-900 dark:text-white")
+            
+            email = ui.input("Email").classes("w-full")
+            password = ui.input("Password", password=True, password_toggle_button=True).classes("w-full")
+            
+            def do_login():
+                success, msg = auth.sign_in(email.value, password.value)
+                if success:
+                    ui.notify("Logged in successfully!", type="positive")
+                    ui.navigate.to('/')
+                else:
+                    ui.notify(msg, type="negative")
+
+            ui.button("Log In", on_click=do_login).classes("w-full mt-4").props("color=primary")
+            
+            with ui.row().classes("w-full justify-center mt-4"):
+                ui.label("Don't have an account?").classes("text-slate-500")
+                ui.link("Sign Up", "/signup").classes("text-blue-500 font-medium")
+
+@ui.page("/signup")
+def signup_page():
+    if auth.get_current_user():
+        ui.navigate.to('/')
+        return
+
+    with ui.column().classes("w-full h-screen items-center justify-center bg-slate-50 dark:bg-slate-900"):
+        with ui.card().classes("w-96 p-8 items-center gap-4 shadow-lg"):
+            ui.icon("shield").classes("text-blue-500 text-6xl mb-2")
+            ui.label("LexMesh Sign Up").classes("text-2xl font-bold text-slate-900 dark:text-white")
+            
+            email = ui.input("Email").classes("w-full")
+            password = ui.input("Password", password=True, password_toggle_button=True).classes("w-full")
+            
+            def do_signup():
+                success, msg = auth.sign_up(email.value, password.value)
+                if success:
+                    ui.notify("Signed up successfully!", type="positive")
+                    ui.navigate.to('/')
+                else:
+                    ui.notify(msg, type="negative")
+
+            ui.button("Sign Up", on_click=do_signup).classes("w-full mt-4").props("color=primary")
+            
+            with ui.row().classes("w-full justify-center mt-4"):
+                ui.label("Already have an account?").classes("text-slate-500")
+                ui.link("Log In", "/login").classes("text-blue-500 font-medium")
+
 # ============================================================
 # DASHBOARD
 # ============================================================
 
 @ui.page("/")
 def dashboard():
+    if not auth.get_current_user():
+        ui.navigate.to('/login')
+        return
+
 
     # ========================================================
     # PAGE STATE
@@ -1099,13 +1160,15 @@ def dashboard():
             )
 
             import asyncio
-            master_report = await asyncio.get_event_loop().run_in_executor(
-                None,
+            import functools
+            func = functools.partial(
                 adk_supervisor.run_adk_pipeline,
                 company,
                 policy,
                 policy_text,
+                user_id=auth.get_current_user()
             )
+            master_report = await asyncio.get_event_loop().run_in_executor(None, func)
 
             # =================================================
             # VALIDATE REPORT
@@ -1390,4 +1453,5 @@ ui.run(
     title="LexMesh",
     favicon="🛡️",
     port=8080,
+    storage_secret=config.NICEGUI_STORAGE_SECRET,
 )

@@ -67,3 +67,18 @@ def create_header():
             ).classes(
                 "text-slate-500 dark:text-blue-400 text-xl"
             )
+
+            # ------------------------------------------------
+            # LOGOUT BUTTON
+            # ------------------------------------------------
+            import auth
+            def on_logout():
+                auth.sign_out()
+                ui.navigate.to('/login')
+
+            ui.button(
+                icon="logout",
+                on_click=on_logout
+            ).props(
+                "flat round color=primary"
+            ).tooltip("Log out")
