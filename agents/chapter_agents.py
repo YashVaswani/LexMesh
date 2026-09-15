@@ -81,7 +81,12 @@ class LLMProviderChain:
         # Tier 1: Gemini (Primary Provider across all configured API Keys)
         if self.genai_clients:
             for k_idx, client in enumerate(self.genai_clients):
-                for m_name in ["gemini-3.6-flash"]:
+                for m_name in [
+                    "gemini-2.5-flash",
+                    "gemini-2.0-flash",
+                    "gemini-1.5-flash",
+                    "gemini-3.6-flash",
+                ]:
                     for attempt in range(2):
                         try:
                             full_content = f"{system_instruction}\n\n{prompt}" if system_instruction else prompt
@@ -104,7 +109,7 @@ class LLMProviderChain:
                                 type(e).__name__, err[:200],
                             )
                             if "429" in err or "RESOURCE_EXHAUSTED" in err:
-                                # Key quota exhausted — immediately rotate to next API key without delaying
+                                # Key quota exhausted — break model loop to immediately rotate to next API key
                                 break
                             elif "503" in err or "UNAVAILABLE" in err:
                                 time.sleep(0.5)
@@ -115,7 +120,7 @@ class LLMProviderChain:
 
         # Tier 1b: Legacy Gemini SDK (if active)
         if self.legacy_gemini_active:
-            for m_name in ["gemini-3.6-flash"]:
+            for m_name in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-3.6-flash"]:
                 try:
                     model = genai_legacy_obj.GenerativeModel(
                         model_name=m_name,
@@ -136,6 +141,8 @@ class LLMProviderChain:
                 for g_model in [
                     "llama-3.3-70b-versatile",
                     "llama-3.1-8b-instant",
+                    "mixtral-8x7b-32768",
+                    "gemma2-9b-it",
                 ]:
                     for attempt in range(2):
                         try:

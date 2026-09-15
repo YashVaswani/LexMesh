@@ -170,8 +170,8 @@ class SupabaseManager:
                         "Report %s saved to Supabase without user_id column.", report_id
                     )
                     return True
-                except Exception:
-                    pass
+                except Exception as fb_err:
+                    logger.warning("Fallback save without user_id also encountered error: %s", fb_err)
             logger.error(
                 "Failed to save report %s: %s", report_id, e, exc_info=True
             )
