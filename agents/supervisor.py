@@ -283,7 +283,9 @@ class SupervisorAgent:
 
         all_gaps = []
 
-        workers = min(8, max(4, len(tasks)))
+        # Keep concurrency low to avoid hammering gemini-3.6-flash quota.
+        # 3 workers with proper backoff outperforms 8 workers all hitting 429.
+        workers = min(3, max(1, len(tasks)))
         if workers > 0:
             with ThreadPoolExecutor(max_workers=workers) as executor:
                 future_to_task = {}
