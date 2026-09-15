@@ -45,6 +45,11 @@ class LLMProviderChain:
         self.legacy_gemini_active = False
         self.groq_clients = []
 
+        # Circuit breaker: track which keys/providers are exhausted this run
+        self._gemini_exhausted = set()   # indices of exhausted Gemini keys
+        self._groq_exhausted = set()     # indices of exhausted Groq keys
+        self._groq_dead_models = set()   # decommissioned/404 Groq model IDs (shared across threads)
+
         if HAS_GENAI and self.gemini_keys:
             for idx, key in enumerate(self.gemini_keys):
                 try:
@@ -74,128 +79,118 @@ class LLMProviderChain:
 
     def generate(self, prompt: str, system_instruction: str = None) -> str:
         """
-        Multi-Tier API Key & Model Fallback Engine:
-        1. Gemini Clients (Key 1 -> Key 2) — gemini-3.6-flash (only live model as of Sept 2026)
-        2. Groq Clients (Key 1 -> Key 2) — llama3-70b-8192, llama3-8b-8192 (stable available models)
+        Multi-Tier LLM Engine with Circuit Breaker:
+        - Tier 1: Gemini (gemini-3.6-flash only — all others deprecated as of Sept 2026)
+        - Tier 2: Groq (current live models as of Sept 2026)
+        - Circuit Breaker: Exhausted/dead keys are skipped immediately — NO sleeping.
+          Rule-based fallback kicks in instantly when all LLMs fail.
         """
-        # Tier 1: Gemini (Primary Provider)
-        # NOTE: gemini-2.5-flash, gemini-2.0-flash, gemini-1.5-flash are all deprecated/404.
-        # Only gemini-3.6-flash is live. Try it first with proper 429 backoff.
-        GEMINI_MODELS = ["gemini-3.6-flash"]
-
+        # ── TIER 1: Gemini ─────────────────────────────────────────────
+        # Only gemini-3.6-flash is live. gemini-2.5/2.0/1.5-flash are all 404.
         if self.genai_clients:
             for k_idx, client in enumerate(self.genai_clients):
-                for m_name in GEMINI_MODELS:
-                    for attempt in range(3):
-                        try:
-                            full_content = f"{system_instruction}\n\n{prompt}" if system_instruction else prompt
-                            response = client.models.generate_content(
-                                model=m_name,
-                                contents=full_content,
-                                config=types.GenerateContentConfig(
-                                    temperature=0.0,
-                                    response_mime_type="application/json"
-                                )
-                            )
-                            if response and response.text:
-                                return response.text
-                            break
-                        except Exception as e:
-                            err = str(e)
-                            logger.warning(
-                                "Gemini Key #%d (%s, attempt %d): %s: %s",
-                                k_idx + 1, m_name, attempt + 1,
-                                type(e).__name__, err[:200],
-                            )
-                            if "429" in err or "RESOURCE_EXHAUSTED" in err:
-                                # Exponential backoff: 2s, 5s, 12s
-                                wait = [2, 5, 12][min(attempt, 2)]
-                                logger.info("Gemini 429 — backing off %ds before retry (key #%d)...", wait, k_idx + 1)
-                                time.sleep(wait)
-                                # After max retries on this key, rotate to next key
-                                if attempt == 2:
-                                    break
-                            elif "503" in err or "UNAVAILABLE" in err:
-                                wait = [1, 3][min(attempt, 1)]
-                                time.sleep(wait)
-                            elif "404" in err or "not found" in err.lower():
-                                break  # Model gone, no point retrying
-                            else:
-                                break
+                # Circuit breaker: skip keys marked as quota-exhausted
+                if k_idx in self._gemini_exhausted:
+                    continue
 
-        # Tier 1b: Legacy Gemini SDK fallback (if active)
+                try:
+                    full_content = f"{system_instruction}\n\n{prompt}" if system_instruction else prompt
+                    response = client.models.generate_content(
+                        model="gemini-3.6-flash",
+                        contents=full_content,
+                        config=types.GenerateContentConfig(
+                            temperature=0.0,
+                            response_mime_type="application/json"
+                        )
+                    )
+                    if response and response.text:
+                        return response.text
+
+                except Exception as e:
+                    err = str(e)
+                    logger.warning(
+                        "Gemini Key #%d (gemini-3.6-flash): %s: %s",
+                        k_idx + 1, type(e).__name__, err[:200],
+                    )
+                    if "429" in err or "RESOURCE_EXHAUSTED" in err:
+                        # Mark key as exhausted — don't retry or sleep, move on immediately
+                        self._gemini_exhausted.add(k_idx)
+                        logger.info("Gemini Key #%d quota exhausted — circuit breaker tripped, skipping.", k_idx + 1)
+                    # All other errors (503, 404, etc.) — fall through to next key
+
+        # ── TIER 1b: Legacy Gemini SDK ─────────────────────────────────
         if self.legacy_gemini_active:
-            for m_name in ["gemini-3.6-flash"]:
-                for attempt in range(2):
-                    try:
-                        model = genai_legacy_obj.GenerativeModel(
-                            model_name=m_name,
-                            system_instruction=system_instruction
-                        )
-                        response = model.generate_content(
-                            prompt,
-                            generation_config={"temperature": 0.0, "response_mime_type": "application/json"}
-                        )
-                        if response and response.text:
-                            return response.text
-                        break
-                    except Exception as e:
-                        err = str(e)
-                        logger.warning("Legacy Gemini (%s, attempt %d): %s", m_name, attempt + 1, err[:200])
-                        if "429" in err or "RESOURCE_EXHAUSTED" in err:
-                            time.sleep(3 * (attempt + 1))
-                        else:
-                            break
+            try:
+                model = genai_legacy_obj.GenerativeModel(
+                    model_name="gemini-3.6-flash",
+                    system_instruction=system_instruction
+                )
+                response = model.generate_content(
+                    prompt,
+                    generation_config={"temperature": 0.0, "response_mime_type": "application/json"}
+                )
+                if response and response.text:
+                    return response.text
+            except Exception as e:
+                logger.warning("Legacy Gemini (gemini-3.6-flash): %s", str(e)[:200])
 
-        # Tier 2: Groq (Secondary Provider)
-        # NOTE: llama-3.3-70b-versatile (404), llama-3.1-8b-instant (404),
-        #       mixtral-8x7b-32768 (decommissioned), gemma2-9b-it (decommissioned).
-        # Using stable available models: llama3-70b-8192, llama3-8b-8192
+        # ── TIER 2: Groq ───────────────────────────────────────────────
+        # Current live models as of Sept 2026 (per groq.com/docs/models):
         GROQ_MODELS = [
-            "llama3-70b-8192",
-            "llama3-8b-8192",
-            "llama-3.1-70b-versatile",
+            "llama-3.3-70b-versatile",
+            "llama-3.1-8b-instant",
+            "meta-llama/llama-4-scout-17b-16e-instruct",
         ]
 
         if self.groq_clients:
             for k_idx, client in enumerate(self.groq_clients):
+                # Circuit breaker: skip quota-exhausted Groq keys
+                if k_idx in self._groq_exhausted:
+                    continue
+
                 for g_model in GROQ_MODELS:
-                    for attempt in range(2):
-                        try:
-                            messages = []
-                            if system_instruction:
-                                messages.append({"role": "system", "content": system_instruction})
-                            messages.append({"role": "user", "content": prompt})
+                    # Skip models already known to be dead/decommissioned
+                    if g_model in self._groq_dead_models:
+                        continue
 
-                            response = client.chat.completions.create(
-                                model=g_model,
-                                messages=messages,
-                                temperature=0.0,
-                                max_tokens=4096
-                            )
-                            if response and response.choices:
-                                raw = response.choices[0].message.content
-                                if raw and len(raw.strip()) > 10:
-                                    return raw
-                            break
-                        except Exception as e:
-                            err = str(e)
-                            logger.warning(
-                                "Groq Key #%d (%s, attempt %d): %s: %s",
-                                k_idx + 1, g_model, attempt + 1,
-                                type(e).__name__, err[:250],
-                            )
-                            if "429" in err or "rate_limit" in err.lower():
-                                if "tokens per day" in err.lower() or "tpd" in err.lower():
-                                    break  # Daily limit hit on this key, skip model
-                                time.sleep(2 * (attempt + 1))
-                            elif "404" in err or "not found" in err.lower() or "does not exist" in err.lower():
-                                break  # Model gone, skip
-                            elif "decommissioned" in err.lower() or "no longer supported" in err.lower():
-                                break  # Retired model, skip
-                            else:
+                    try:
+                        messages = []
+                        if system_instruction:
+                            messages.append({"role": "system", "content": system_instruction})
+                        messages.append({"role": "user", "content": prompt})
+
+                        response = client.chat.completions.create(
+                            model=g_model,
+                            messages=messages,
+                            temperature=0.0,
+                            max_tokens=4096
+                        )
+                        if response and response.choices:
+                            raw = response.choices[0].message.content
+                            if raw and len(raw.strip()) > 10:
+                                return raw
+                        break
+
+                    except Exception as e:
+                        err = str(e)
+                        logger.warning(
+                            "Groq Key #%d (%s): %s: %s",
+                            k_idx + 1, g_model, type(e).__name__, err[:200],
+                        )
+                        if "429" in err or "rate_limit" in err.lower():
+                            if "tokens per day" in err.lower() or "tpd" in err.lower():
+                                self._groq_exhausted.add(k_idx)
+                                logger.info("Groq Key #%d daily quota hit — circuit breaker tripped.", k_idx + 1)
                                 break
+                            # Temporary rate limit — skip this model, try next
+                        elif ("decommissioned" in err.lower() or "no longer supported" in err.lower()
+                              or "404" in err or "does not exist" in err.lower()):
+                            # Model is dead — blacklist it so all threads skip it
+                            self._groq_dead_models.add(g_model)
+                            logger.info("Groq model '%s' is dead — blacklisted for this run.", g_model)
+                        # All errors: fall through to next model immediately
 
+        # All providers failed — rule-based fallback will handle it
         return None
 
 
