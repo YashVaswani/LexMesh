@@ -8,6 +8,8 @@ warnings.filterwarnings("ignore")
 
 import pymupdf as fitz
 from nicegui import app, ui
+from fastapi import Request
+from fastapi.responses import JSONResponse
 
 from config import config
 from db.supabase_client import supabase_db
@@ -16,6 +18,27 @@ from logger import get_logger
 import auth
 
 logger = get_logger("app")
+
+@app.post("/api/confirm-email")
+async def api_confirm_email(request: Request):
+    """Receives the Supabase access/refresh tokens from the /confirm page JS
+    and validates the session server-side."""
+    try:
+        body = await request.json()
+        access_token = body.get("access_token", "")
+        refresh_token = body.get("refresh_token", "")
+        if not access_token:
+            return JSONResponse({"success": False, "error": "Missing token"}, status_code=400)
+        # We do NOT set the NiceGUI session here (different request context).
+        # Just validate the token with Supabase to confirm the user is real.
+        # The user will log in normally after this.
+        res = supabase_db.client.auth.get_user(access_token)
+        if res and res.user:
+            return JSONResponse({"success": True})
+        return JSONResponse({"success": False, "error": "Token validation failed"})
+    except Exception as e:
+        return JSONResponse({"success": False, "error": str(e)}, status_code=500)
+
 
 from ui.components.header import create_header
 from ui.components.sidebar import create_sidebar
@@ -138,6 +161,22 @@ def login_page():
             ui.label("LexMesh").classes("text-3xl font-bold text-slate-800 tracking-tight mb-1")
             ui.label("Sign in to your account").classes("text-sm text-slate-500 font-medium mb-8")
             
+            # Show confirmation success banner if redirected from email verification
+            ui.add_body_html('''
+            <script>
+            (function() {
+                var urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('confirmed') === '1') {
+                    var banner = document.createElement('div');
+                    banner.style.cssText = 'background:#d1fae5;border:1px solid #6ee7b7;color:#065f46;border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:0.875rem;text-align:center;font-weight:500;';
+                    banner.innerHTML = '✅ Email verified! You can now log in.';
+                    var card = document.querySelector('.nicegui-card');
+                    if (card) card.prepend(banner);
+                }
+            })();
+            </script>
+            ''')
+            
             # Form Container
             with ui.column().classes("w-full gap-4"):
                 # Email Input
@@ -160,7 +199,11 @@ def login_page():
                         ui.notify("Logged in successfully!", type="positive")
                         ui.navigate.to('/')
                     else:
-                        ui.notify(msg, type="negative")
+                        err = str(msg)
+                        if 'email' in err.lower() and 'confirm' in err.lower():
+                            ui.notify("Please verify your email first. Check your inbox.", type="warning", timeout=6000)
+                        else:
+                            ui.notify(err, type="negative")
 
                 ui.button("LOG IN", on_click=do_login).classes("w-full mt-2 h-12 rounded-lg font-bold text-white shadow-lg shadow-emerald-500/30 tracking-wider").props("color=primary unelevated icon-right=arrow_forward")
             
@@ -212,7 +255,18 @@ def signup_page():
                         ui.notify("Password must be at least 6 characters.", type="warning")
                         return
                     success, msg = auth.sign_up(email.value, password.value)
-                    if success:
+                    if success and msg == "CHECK_EMAIL":
+                        # Clear the form and show a verification pending message
+                        email.value = ''
+                        password.value = ''
+                        ui.notify(
+                            "Account created! Please check your inbox and click the verification link to activate your account.",
+                            type="positive",
+                            timeout=8000
+                        )
+                        # Navigate to a confirmation-pending page
+                        ui.navigate.to('/verify-email')
+                    elif success:
                         ui.notify("Signed up successfully! Welcome to LexMesh.", type="positive")
                         ui.navigate.to('/')
                     else:
@@ -226,6 +280,81 @@ def signup_page():
                     ui.label("Already have an account?").classes("text-slate-500")
                     ui.link("Log In", "/login").classes("text-emerald-600 hover:text-emerald-700 transition-colors")
                 ui.element('div').classes("h-px bg-slate-200 flex-grow")
+
+# ============================================================
+# EMAIL VERIFICATION PENDING PAGE
+# ============================================================
+
+@ui.page("/verify-email")
+def verify_email_page():
+    ui.colors(primary='#558b63', secondary='#34d399', accent='#059669', positive='#558b63')
+    with ui.column().classes("w-full h-screen items-center justify-center").style("background: linear-gradient(135deg, #f3f8f4 0%, #e8f2ea 100%);"):
+        with ui.card().classes("w-96 p-10 items-center shadow-[0_15px_40px_-5px_rgba(78,121,93,0.4)] border-2 border-[#4e795d]/60 rounded-3xl bg-[#f8f6f0]/95 z-10 gap-0"):
+            with ui.element('div').classes('w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center mb-6'):
+                ui.icon('mark_email_read').classes('text-emerald-500 text-5xl')
+            ui.label('Check Your Email').classes('text-2xl font-bold text-slate-800 mb-3 text-center')
+            ui.label('We have sent a verification link to your email address.').classes('text-sm text-slate-500 text-center mb-2')
+            ui.label('Please click the link in the email to activate your account, then log in.').classes('text-sm text-slate-500 text-center mb-8')
+            ui.button('Go to Login', on_click=lambda: ui.navigate.to('/login')).classes('w-full h-12 rounded-lg font-bold text-white').props('color=primary unelevated icon-right=login')
+
+# ============================================================
+# EMAIL CONFIRMATION CALLBACK PAGE (Supabase redirects here)
+# ============================================================
+
+@ui.page("/confirm")
+def confirm_page():
+    """Supabase redirects here after user clicks the email confirmation link.
+    URL contains: /confirm#access_token=...&refresh_token=...&type=signup
+    We extract the tokens via JS, set the session, then redirect to login.
+    """
+    ui.colors(primary='#558b63')
+    with ui.column().classes("w-full h-screen items-center justify-center").style("background: linear-gradient(135deg, #f3f8f4 0%, #e8f2ea 100%);"):
+        with ui.card().classes("w-96 p-10 items-center shadow-[0_15px_40px_-5px_rgba(78,121,93,0.4)] border-2 border-[#4e795d]/60 rounded-3xl bg-[#f8f6f0]/95 z-10 gap-0"):
+            with ui.element('div').classes('w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center mb-6'):
+                ui.icon('verified_user').classes('text-emerald-500 text-5xl')
+            status_label = ui.label('Verifying your email...').classes('text-xl font-bold text-slate-800 mb-3 text-center')
+            sub_label = ui.label('Please wait a moment.').classes('text-sm text-slate-500 text-center mb-8')
+            login_btn = ui.button('Go to Login', on_click=lambda: ui.navigate.to('/login')).classes('w-full h-12 rounded-lg font-bold text-white').props('color=primary unelevated icon-right=login')
+            login_btn.set_visibility(False)
+
+    # JS: Read tokens from the URL hash fragment and POST them to a server endpoint
+    ui.add_body_html('''
+    <script>
+    (function() {
+        var hash = window.location.hash.substring(1);
+        var params = {};
+        hash.split('&').forEach(function(part) {
+            var item = part.split('=');
+            if (item.length === 2) params[item[0]] = decodeURIComponent(item[1]);
+        });
+        var accessToken = params['access_token'];
+        var refreshToken = params['refresh_token'];
+        var type = params['type'];
+        if (accessToken && (type === 'signup' || type === 'email_change' || type === 'recovery')) {
+            fetch('/api/confirm-email', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({access_token: accessToken, refresh_token: refreshToken})
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    window.location.href = '/login?confirmed=1';
+                } else {
+                    document.querySelector('.text-xl').textContent = 'Verification Failed';
+                    document.querySelector('.text-sm').textContent = data.error || 'Invalid or expired link. Please sign up again.';
+                }
+            })
+            .catch(function() {
+                document.querySelector('.text-xl').textContent = 'Error';
+                document.querySelector('.text-sm').textContent = 'Something went wrong. Please try again.';
+            });
+        } else {
+            window.location.href = '/login';
+        }
+    })();
+    </script>
+    ''')
 
 # ============================================================
 # DASHBOARD
