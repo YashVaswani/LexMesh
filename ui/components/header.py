@@ -2,7 +2,17 @@ from nicegui import ui
 from ui.components.lucide import lucide_icon
 
 
-def create_header():
+def create_header(on_nav_change=None, active_tab="dashboard"):
+    """Create the top header bar.
+
+    Parameters
+    ----------
+    on_nav_change : callable | None
+        Callback invoked with the new tab name ("dashboard" or "audit")
+        when the user clicks a navigation pill.
+    active_tab : str
+        The currently active tab, either "dashboard" or "audit".
+    """
 
     dark_mode = ui.dark_mode()
 
@@ -37,7 +47,13 @@ def create_header():
                 )
 
         # ====================================================
-        # RIGHT — THEME TOGGLE
+        # CENTER — spacer for layout balance
+        # ====================================================
+
+        ui.element("div")
+
+        # ====================================================
+        # RIGHT — THEME TOGGLE + LOGOUT
         # ====================================================
 
         with ui.row().classes(
@@ -66,3 +82,5 @@ def create_header():
             ).props(
                 "flat round color=emerald"
             ).tooltip("Log out")
+
+    return {}

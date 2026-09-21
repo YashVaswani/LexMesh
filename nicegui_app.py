@@ -41,13 +41,14 @@ async def api_confirm_email(request: Request):
 
 
 from ui.components.header import create_header
-from ui.components.sidebar import create_sidebar
+from ui.components.sidebar import create_sidebar, create_dashboard_sidebar
 from ui.components.score_cards import create_score_cards
 from ui.components.policy_posture import create_policy_posture
 from ui.components.gap_analysis import create_gap_analysis
 from ui.components.action_plan import create_action_plan
 from ui.components.compliant_areas import create_compliant_areas
 from ui.components.report_export import create_report_export
+from ui.components.dashboard_landing import create_dashboard_landing
 from ui.components.lucide import lucide_icon
 
 # Load Custom Enterprise Theme CSS & Lucide Icons CDN
@@ -361,7 +362,14 @@ def confirm_page():
 # ============================================================
 
 @ui.page("/")
-def dashboard():
+def root_redirect():
+    """Always redirect / to /dashboard so the URL is clean."""
+    ui.navigate.to('/dashboard')
+
+@ui.page("/dashboard")
+@ui.page("/audit")
+@ui.page("/frameworks")
+def dashboard(request: Request):
     if not auth.get_current_user():
         ui.navigate.to('/login')
         return
@@ -399,37 +407,73 @@ def dashboard():
     }
 
     # ========================================================
+    # VIEW STATE
+    # ========================================================
+
+    initial_tab = "dashboard"
+    if request:
+        if request.url.path == "/audit":
+            initial_tab = "audit"
+        elif request.url.path == "/frameworks":
+            initial_tab = "frameworks"
+
+    # ========================================================
     # HEADER
     # ========================================================
 
-    create_header()
-
-    # ========================================================
-    # SIDEBAR
-    # ========================================================
-
-    sidebar = create_sidebar(
-
-        gemini_connected=bool(
-            config.GEMINI_API_KEY
-        ),
-
-        groq_connected=bool(
-            config.GROQ_API_KEY
-        ),
-
-        supabase_connected=bool(
-            supabase_db.is_connected()
-        ),
+    header = create_header(
+        active_tab=initial_tab,
     )
 
     # ========================================================
-    # MAIN CONTENT
+    # SIDEBAR — only on audit page
     # ========================================================
 
-    with ui.column().classes(
+    if initial_tab == "audit":
+        sidebar = create_sidebar(
+            gemini_connected=bool(
+                config.GEMINI_API_KEY
+            ),
+            groq_connected=bool(
+                config.GROQ_API_KEY
+            ),
+            supabase_connected=bool(
+                supabase_db.is_connected()
+            ),
+        )
+        # Show only audit controls in sidebar
+        sidebar["dash_nav_container"].set_visibility(False)
+        sidebar["audit_controls_container"].set_visibility(True)
+
+    # ========================================================
+    # DASHBOARD LANDING VIEW
+    # ========================================================
+
+    if initial_tab == "dashboard":
+        with ui.column().classes("w-full p-6 gap-5"):
+            create_dashboard_landing(
+                on_run_new_audit=lambda: ui.navigate.to('/audit'),
+            )
+        return  # Dashboard page is complete, no audit UI needed
+
+    # ========================================================
+    # FRAMEWORKS PAGE
+    # ========================================================
+
+    if initial_tab == "frameworks":
+        from ui.components.frameworks_page import create_frameworks_page
+        create_frameworks_page()
+        return
+
+    # ========================================================
+    # AUDIT VIEW (existing interface)
+    # ========================================================
+
+    audit_view = ui.column().classes(
         "w-full p-6 gap-5"
-    ):
+    )
+
+    with audit_view:
 
         # ----------------------------------------------------
         # TITLE
@@ -632,7 +676,7 @@ def dashboard():
             # ------------------------------------------------
 
             company_match = re.search(
-                r"Company\s*[:\t]?\s*([^\n\r]+)",
+                r"(?:Company|Organization)\s*(?:Name)?\s*[:\t]\s*([^\n\r]+)",
                 first_page_text,
                 re.IGNORECASE,
             )
