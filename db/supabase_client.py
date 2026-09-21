@@ -209,6 +209,29 @@ class SupabaseManager:
             )
             return {}
 
+    def get_all_reports(self, user_id: str = None) -> list:
+        """
+        Fetches metadata for all compliance reports, ordered by creation date descending.
+        Excludes the heavy report_data JSON payload for performance.
+        """
+        if not self.is_connected():
+            return []
+        try:
+            query = (
+                self.client.table("compliance_reports")
+                .select("id, company_name, policy_name, overall_score, created_at, framework_summaries:report_data->summary->framework_summaries")
+            )
+            if user_id:
+                query = query.eq("user_id", user_id)
+                
+            res = query.order("created_at", desc=True).execute()
+            return res.data or []
+        except Exception as e:
+            logger.error(
+                "Failed to fetch all reports: %s", e, exc_info=True
+            )
+            return []
+
     def get_cached_verdict(
         self, framework_id: str, requirement_id: str, policy_hash: str
     ) -> dict:

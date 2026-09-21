@@ -1,0 +1,552 @@
+from nicegui import ui
+from ui.components.lucide import lucide_icon
+from db.supabase_client import supabase_db
+from datetime import datetime
+
+def create_dashboard_landing(on_run_new_audit=None):
+    """Render the executive Dashboard Landing Page.
+
+    Parameters
+    ----------
+    on_run_new_audit : callable | None
+        Callback invoked when the user clicks the "Run New Audit" button.
+    """
+
+    # ========================================================
+    # PAGE TITLE ROW
+    # ========================================================
+
+    with ui.row().classes(
+        "w-full items-center justify-between"
+    ):
+        with ui.column().classes("gap-1"):
+            ui.label(
+                "Compliance Dashboard"
+            ).classes(
+                "text-3xl font-bold lex-page-title"
+            )
+
+            ui.label(
+                "Enterprise compliance overview and audit history"
+            ).classes(
+                "text-sm lex-page-subtitle"
+            )
+
+        if on_run_new_audit:
+            ui.button(
+                "Run New Audit",
+                on_click=on_run_new_audit,
+            ).classes(
+                "lex-run-button"
+            ).style(
+                "width: auto !important; "
+                "padding: 0 32px !important;"
+            ).props("unelevated no-caps")
+
+    # ========================================================
+    # FETCH REAL DATA
+    # ========================================================
+    
+    reports = supabase_db.get_all_reports()
+    
+    total_audits = len(reports)
+    
+    last_audit_str = "None"
+    recent_audits_data = []
+    chart_dates = []
+    chart_scores = []
+    
+    framework_scores = {}
+    avg_by_framework = {}
+    
+    if reports:
+        # Calculate framework averages
+        # Map DB framework names to chart labels
+        name_map = {
+            "SOC 2 Type II": "SOC 2",
+            "RBI Cyber Framework": "RBI Cyber",
+            "US HIPAA": "HIPAA",
+            "EU GDPR": "GDPR"
+        }
+        for r in reports:
+            fw_summaries = r.get("framework_summaries") or {}
+            for fw_key, fw_data in fw_summaries.items():
+                raw_name = fw_data.get("framework_name", "")
+                mapped_name = name_map.get(raw_name)
+                # Fallbacks in case names change slightly
+                if not mapped_name:
+                    if "SOC" in raw_name: mapped_name = "SOC 2"
+                    elif "RBI" in raw_name: mapped_name = "RBI Cyber"
+                    elif "HIPAA" in raw_name: mapped_name = "HIPAA"
+                    elif "GDPR" in raw_name: mapped_name = "GDPR"
+                    else: mapped_name = raw_name
+                
+                score = fw_data.get("score", 0)
+                if mapped_name:
+                    framework_scores.setdefault(mapped_name, []).append(score)
+            
+        avg_by_framework = {
+            fw: round(sum(scores) / len(scores), 1) if scores else 0
+            for fw, scores in framework_scores.items()
+        }
+        
+        # Sort descending (newest first) in case the DB didn't
+        reports.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+        
+        # Last Audit
+        last_dt_str = reports[0].get("created_at")
+        if last_dt_str:
+            try:
+                # Handle standard ISO8601 from Supabase
+                dt = datetime.fromisoformat(last_dt_str.replace("Z", "+00:00"))
+                last_audit_str = dt.strftime("%b %d, %Y")
+            except:
+                last_audit_str = str(last_dt_str)[:10]
+
+        # Recent Reports (Top 5)
+        for r in reports[:5]:
+            dt_str = r.get("created_at", "")
+            fmt_date = ""
+            if dt_str:
+                try:
+                    dt = datetime.fromisoformat(dt_str.replace("Z", "+00:00"))
+                    fmt_date = dt.strftime("%b %d, %Y")
+                except:
+                    fmt_date = str(dt_str)[:10]
+                    
+            recent_audits_data.append({
+                "company": r.get("company_name", "Unknown"),
+                "policy": r.get("policy_name", "Unknown"),
+                "score": r.get("overall_score", 0),
+                "date": fmt_date,
+            })
+            
+        # Score Trend Chart (Last 10, chronological)
+        trend_reports = reports[:10]
+        trend_reports.reverse()
+        for r in trend_reports:
+            dt_str = r.get("created_at", "")
+            if dt_str:
+                try:
+                    dt = datetime.fromisoformat(dt_str.replace("Z", "+00:00"))
+                    chart_dates.append(dt.strftime("%b %d"))
+                except:
+                    chart_dates.append("")
+            else:
+                chart_dates.append("")
+            chart_scores.append(r.get("overall_score", 0))
+
+    # ========================================================
+    # (Frameworks explanation moved to standalone page)
+    # ========================================================
+
+    # ========================================================
+    # KPI STAT CARDS
+    # ========================================================
+
+    with ui.row().classes("w-full gap-5 mt-4 items-stretch"):
+
+        _kpi_card(
+            icon="file-text",
+            label="TOTAL AUDITS RUN",
+            value=str(total_audits),
+            color="var(--lex-sage)",
+        )
+
+        _kpi_card(
+            icon="layers",
+            label="FRAMEWORKS COVERED",
+            value=str(len(avg_by_framework)) if avg_by_framework else "0",
+            color="var(--lex-blue)",
+            on_click=lambda: ui.navigate.to('/frameworks')
+        )
+
+        _kpi_card(
+            icon="calendar",
+            label="LAST AUDIT",
+            value=last_audit_str,
+            color="var(--lex-beige-dark)",
+        )
+
+
+    # ========================================================
+    # CHARTS ROW
+    # ========================================================
+
+    with ui.row().classes("w-full gap-5 mt-2"):
+
+        # ---------------------------------------------------
+        # COMPLIANCE SCORE TREND (Area Line Chart)
+        # ---------------------------------------------------
+
+        with ui.column().classes(
+            "flex-1 lex-score-card"
+        ).style("min-width: 0;"):
+
+            with ui.row().classes(
+                "items-center gap-2 mb-2"
+            ):
+                lucide_icon(
+                    "trending-up",
+                    size=20,
+                    class_name="lex-pipeline-icon",
+                )
+
+                ui.label(
+                    "Compliance Score Trend"
+                ).classes(
+                    "lex-section-heading"
+                ).style(
+                    "margin: 0 !important;"
+                )
+
+            ui.echart({
+                "tooltip": {
+                    "trigger": "axis",
+                },
+                "xAxis": {
+                    "type": "category",
+                    "data": chart_dates,
+                    "axisLabel": {
+                        "color": "#647269",
+                        "fontFamily": "Plus Jakarta Sans",
+                        "fontWeight": 600,
+                    },
+                    "axisLine": {
+                        "lineStyle": {"color": "#d4cbc0"},
+                    },
+                },
+                "yAxis": {
+                    "type": "value",
+                    "min": 0,
+                    "max": 100,
+                    "axisLabel": {
+                        "formatter": "{value}%",
+                        "color": "#647269",
+                        "fontFamily": "Plus Jakarta Sans",
+                        "fontWeight": 600,
+                    },
+                    "splitLine": {
+                        "lineStyle": {
+                            "color": "#e6dfd3",
+                            "type": "dashed",
+                        },
+                    },
+                },
+                "series": [
+                    {
+                        "name": "Compliance Score",
+                        "type": "line",
+                        "smooth": True,
+                        "data": chart_scores,
+                        "lineStyle": {
+                            "color": "#4e795d",
+                            "width": 3,
+                        },
+                        "itemStyle": {
+                            "color": "#4e795d",
+                        },
+                        "areaStyle": {
+                            "color": {
+                                "type": "linear",
+                                "x": 0,
+                                "y": 0,
+                                "x2": 0,
+                                "y2": 1,
+                                "colorStops": [
+                                    {
+                                        "offset": 0,
+                                        "color": "rgba(78, 121, 93, 0.35)",
+                                    },
+                                    {
+                                        "offset": 1,
+                                        "color": "rgba(78, 121, 93, 0.02)",
+                                    },
+                                ],
+                            },
+                        },
+                        "symbol": "circle",
+                        "symbolSize": 8,
+                    }
+                ],
+                "grid": {
+                    "left": "3%",
+                    "right": "4%",
+                    "bottom": "3%",
+                    "top": "10%",
+                    "containLabel": True,
+                },
+            }).classes("w-full").style("height: 320px;")
+
+        # ---------------------------------------------------
+        # AVERAGE SCORE BY FRAMEWORK (Horizontal Bar Chart)
+        # ---------------------------------------------------
+
+        with ui.column().classes(
+            "flex-1 lex-score-card"
+        ).style("min-width: 0;"):
+
+            with ui.row().classes(
+                "items-center gap-2 mb-2"
+            ):
+                lucide_icon(
+                    "bar-chart-3",
+                    size=20,
+                    class_name="lex-target-icon",
+                )
+
+                ui.label(
+                    "Average Score by Framework"
+                ).classes(
+                    "lex-section-heading"
+                ).style(
+                    "margin: 0 !important;"
+                )
+
+            # Prepare framework chart data
+            color_lookup = {
+                "SOC 2": "#8a7642",
+                "RBI Cyber": "#b45339",
+                "HIPAA": "#2e7067",
+                "GDPR": "#4e795d"
+            }
+            framework_order = ["SOC 2", "RBI Cyber", "HIPAA", "GDPR"]
+            series_data = [
+                {
+                    "value": avg_by_framework.get(fw, 0),
+                    "itemStyle": {
+                        "color": color_lookup[fw],
+                        "borderRadius": [0, 6, 6, 0]
+                    }
+                }
+                for fw in framework_order
+            ]
+
+            ui.echart({
+                "tooltip": {
+                    "trigger": "axis",
+                    "axisPointer": {"type": "shadow"},
+                },
+                "xAxis": {
+                    "type": "value",
+                    "min": 0,
+                    "max": 100,
+                    "axisLabel": {
+                        "formatter": "{value}%",
+                        "color": "#647269",
+                        "fontFamily": "Plus Jakarta Sans",
+                        "fontWeight": 600,
+                    },
+                    "splitLine": {
+                        "lineStyle": {
+                            "color": "#e6dfd3",
+                            "type": "dashed",
+                        },
+                    },
+                },
+                "yAxis": {
+                    "type": "category",
+                    "data": [
+                        "SOC 2",
+                        "RBI Cyber",
+                        "HIPAA",
+                        "GDPR",
+                    ],
+                    "axisLabel": {
+                        "color": "#1b2721",
+                        "fontFamily": "Plus Jakarta Sans",
+                        "fontWeight": 700,
+                        "fontSize": 13,
+                    },
+                    "axisLine": {
+                        "lineStyle": {"color": "#d4cbc0"},
+                    },
+                },
+                "series": [
+                    {
+                        "type": "bar",
+                        "data": series_data,
+                        "barWidth": "45%",
+                    }
+                ],
+                "grid": {
+                    "left": "3%",
+                    "right": "6%",
+                    "bottom": "3%",
+                    "top": "8%",
+                    "containLabel": True,
+                },
+            }).classes("w-full").style("height: 320px;")
+
+    # ========================================================
+    # RECENT AUDIT REPORTS TABLE
+    # ========================================================
+
+    with ui.column().classes("w-full lex-score-card mt-2"):
+
+        with ui.row().classes(
+            "items-center gap-2 mb-3"
+        ):
+            lucide_icon(
+                "clipboard-list",
+                size=20,
+                class_name="lex-pipeline-icon",
+            )
+
+            ui.label(
+                "Recent Audit Reports"
+            ).classes(
+                "lex-section-heading"
+            ).style(
+                "margin: 0 !important;"
+            )
+
+        # The data is now dynamically pulled from Supabase via recent_audits_data
+
+        # Table header
+        with ui.row().classes(
+            "w-full items-center px-4 py-2"
+        ).style(
+            "border-bottom: 2px solid var(--lex-border);"
+        ):
+            ui.label("COMPANY").classes(
+                "flex-1 text-xs font-extrabold tracking-widest"
+            ).style("color: var(--lex-muted);")
+
+            ui.label("POLICY").classes(
+                "flex-1 text-xs font-extrabold tracking-widest"
+            ).style("color: var(--lex-muted);")
+
+            ui.label("SCORE").classes(
+                "text-xs font-extrabold tracking-widest"
+            ).style(
+                "color: var(--lex-muted); "
+                "width: 80px; text-align: center;"
+            )
+
+            ui.label("DATE").classes(
+                "text-xs font-extrabold tracking-widest"
+            ).style(
+                "color: var(--lex-muted); "
+                "width: 140px; text-align: center;"
+            )
+
+
+
+        # Table rows
+        if not recent_audits_data:
+            with ui.row().classes("w-full justify-center p-4"):
+                ui.label("No audits found. Run a new audit to see data here.").classes("text-sm text-gray-500")
+                
+        for audit in recent_audits_data:
+            _score = audit["score"]
+
+            if _score >= 80:
+                pill_bg = "#3b6349"
+            elif _score >= 60:
+                pill_bg = "#b45339"
+            else:
+                pill_bg = "#9e3232"
+
+            with ui.row().classes(
+                "w-full items-center px-4 py-3"
+            ).style(
+                "border-bottom: 1px solid var(--lex-border); "
+                "transition: background 0.15s ease;"
+            ):
+                ui.label(
+                    audit["company"]
+                ).classes(
+                    "flex-1 font-bold"
+                ).style(
+                    "color: var(--lex-text); "
+                    "font-size: 0.95rem;"
+                )
+
+                ui.label(
+                    audit["policy"]
+                ).classes(
+                    "flex-1 font-semibold"
+                ).style(
+                    "color: var(--lex-muted); "
+                    "font-size: 0.9rem;"
+                )
+
+                ui.label(
+                    f"{_score}%"
+                ).style(
+                    f"background: {pill_bg}; "
+                    "color: #ffffff; "
+                    "border-radius: 999px; "
+                    "padding: 4px 14px; "
+                    "font-weight: 800; "
+                    "font-size: 0.85rem; "
+                    "width: 80px; "
+                    "text-align: center;"
+                )
+
+                ui.label(
+                    audit["date"]
+                ).classes(
+                    "font-semibold"
+                ).style(
+                    "color: var(--lex-muted); "
+                    "font-size: 0.85rem; "
+                    "width: 140px; "
+                    "text-align: center;"
+                )
+
+
+
+
+# ============================================================
+# INTERNAL KPI CARD HELPER
+# ============================================================
+
+def _kpi_card(icon: str, label: str, value: str, color: str, on_click=None):
+    """Render a single KPI stat card with strict alignment."""
+
+    card = ui.column().classes(
+        "flex-1 lex-score-card justify-between gap-3 h-36"
+    ).style("min-width: 180px;")
+    
+    if on_click:
+        card.classes("cursor-pointer hover:bg-slate-50 transition-colors")
+        card.on('click', on_click)
+
+    with card:
+
+        with ui.row().classes(
+            "items-center gap-3 flex-nowrap w-full"
+        ):
+            # Icon badge
+            with ui.element("div").classes("shrink-0").style(
+                f"width: 42px; height: 42px; "
+                f"border-radius: 12px; "
+                f"background: {color}20; "
+                f"display: flex; align-items: center; "
+                f"justify-content: center;"
+            ):
+                lucide_icon(
+                    icon,
+                    size=22,
+                    class_name="",
+                    extra_style=f"color: {color};",
+                )
+
+            ui.label(
+                label
+            ).classes(
+                "lex-card-title flex-1 leading-tight font-extrabold"
+            ).style("font-size: 0.75rem; letter-spacing: 0.05em;")
+
+        ui.label(
+            value
+        ).style(
+            f"font-size: 2.2rem; "
+            f"font-weight: 900; "
+            f"color: var(--lex-text); "
+            f"line-height: 1; "
+            f"margin-top: 0;"
+        )
+

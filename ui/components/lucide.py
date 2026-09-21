@@ -27,6 +27,8 @@ LUCIDE_SVGS = {
     "user-check": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-check {class_name}"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>',
     "handshake": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-handshake {class_name}"><path d="m11 17 2 2a1 1 0 0 0 1.41 0l6.59-6.59a1 1 0 0 0 0-1.41l-2-2a1 1 0 0 0-1.41 0L14 12"/><path d="m7 11 2-2a1 1 0 0 1 1.41 0l2 2a1 1 0 0 1 0 1.41L5.83 19a2 2 0 0 1-2.83 0v0a2 2 0 0 1 0-2.83L7 11z"/><path d="m11 7 2-2a1 1 0 0 1 1.41 0l6.59 6.59a1 1 0 0 1 0 1.41l-2 2a1 1 0 0 1-1.41 0L14 12"/></svg>',
     "clock": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock {class_name}"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+    "calendar": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar {class_name}"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>',
+    "trending-up": '<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up {class_name}"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>',
 }
 
 EMOJI_TO_LUCIDE = {
@@ -55,5 +57,8 @@ def lucide_html(name, size=24, class_name=""):
     template = LUCIDE_SVGS.get(key, LUCIDE_SVGS.get("file-text", LUCIDE_SVGS["info"]))
     return template.format(size=size, class_name=class_name)
 
-def lucide_icon(name, size=24, class_name=""):
-    return ui.html(lucide_html(name, size=size, class_name=class_name))
+def lucide_icon(name, size=24, class_name="", extra_style=""):
+    el = ui.html(lucide_html(name, size=size, class_name=class_name))
+    if extra_style:
+        el.style(extra_style)
+    return el
