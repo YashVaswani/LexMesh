@@ -567,6 +567,24 @@ body.body--dark .lex-posture-banner,
     color: var(--lex-sage) !important;
 }
 
+.lex-domain-badge {
+    background: #e2ebe5 !important;
+    color: #1b3825 !important;
+    border: 1.5px solid #4e795d !important;
+    font-weight: 800 !important;
+    font-size: 0.8rem !important;
+    padding: 4px 12px !important;
+    border-radius: 8px !important;
+}
+
+body.q-dark .lex-domain-badge,
+body.body--dark .lex-domain-badge,
+.q-dark .lex-domain-badge {
+    background: #23382b !important;
+    color: #e2ebe5 !important;
+    border-color: #7ca689 !important;
+}
+
 
 /* ============================================================
    DETAILED GAP ANALYSIS ACCORDIONS

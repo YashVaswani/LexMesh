@@ -76,13 +76,33 @@ def create_policy_posture(report):
             "—",
         )
 
-        verdict = item.get(
-            "status",
+        raw_status = str(
             item.get(
-                "verdict",
-                "—",
-            ),
+                "status",
+                item.get("verdict", "")
+            ) or ""
+        ).strip()
+
+        # Sanitize status: remove any red/green/yellow emojis or bullets
+        cleaned = (
+            raw_status.replace("🟢", "")
+            .replace("🟡", "")
+            .replace("🔴", "")
+            .replace("●", "")
+            .replace("•", "")
+            .strip()
         )
+        lower_status = cleaned.lower()
+        if "fully" in lower_status or ("compliant" in lower_status and "non" not in lower_status):
+            verdict = "Fully Met"
+        elif "part" in lower_status:
+            verdict = "Partially Met"
+        elif "not" in lower_status or "non" in lower_status or "unmet" in lower_status or "missing" in lower_status:
+            verdict = "Not Met"
+        elif cleaned:
+            verdict = cleaned
+        else:
+            verdict = "—"
 
         with ui.card().classes(
             "w-full lex-domain-card"

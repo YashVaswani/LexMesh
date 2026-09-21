@@ -149,11 +149,11 @@ class SupervisorAgent:
                 dom_score = 0
 
             if dom_score >= 65:
-                status = "🟢 Compliant"
+                status = "Fully Met"
             elif dom_score >= 35:
-                status = "🟡 Partial"
+                status = "Partially Met"
             else:
-                status = "🔴 Non-Compliant"
+                status = "Not Met"
 
             # Per framework score in this domain
             fw_scores = {}

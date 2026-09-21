@@ -474,25 +474,25 @@ def dashboard():
                     lucide_icon("bar-chart-3", size=18)
                     ui.label("Score & Framework")
 
-            with ui.tab("posture", label="").classes("lex-tab-item"):
+            with ui.tab("action", label="").classes("lex-tab-item"):
                 with ui.row().classes("items-center gap-2"):
-                    lucide_icon("file-check", size=18)
-                    ui.label("Executive Posture")
+                    lucide_icon("clipboard-list", size=18)
+                    ui.label("Priority Action Plan")
 
             with ui.tab("gaps", label="").classes("lex-tab-item"):
                 with ui.row().classes("items-center gap-2"):
                     lucide_icon("shield-alert", size=18)
                     ui.label("Detailed Policy Gaps")
 
-            with ui.tab("action", label="").classes("lex-tab-item"):
-                with ui.row().classes("items-center gap-2"):
-                    lucide_icon("clipboard-list", size=18)
-                    ui.label("Priority Action Plan")
-
             with ui.tab("compliant", label="").classes("lex-tab-item"):
                 with ui.row().classes("items-center gap-2"):
                     lucide_icon("check-circle", size=18)
                     ui.label("Compliant Areas")
+
+            with ui.tab("posture", label="").classes("lex-tab-item"):
+                with ui.row().classes("items-center gap-2"):
+                    lucide_icon("file-check", size=18)
+                    ui.label("Executive Posture")
 
             with ui.tab("export", label="").classes("lex-tab-item"):
                 with ui.row().classes("items-center gap-2"):
@@ -511,7 +511,7 @@ def dashboard():
         ):
 
             # =================================================
-            # SCORE TAB
+            # 1. SCORE TAB
             # =================================================
 
             with ui.tab_panel(
@@ -527,23 +527,23 @@ def dashboard():
                     )
 
             # =================================================
-            # POLICY POSTURE
+            # 2. ACTION PLAN
             # =================================================
 
             with ui.tab_panel(
-                "posture"
+                "action"
             ):
 
-                with ui.column().classes("w-full") as posture_container:
+                with ui.column().classes("w-full") as action_container:
 
                     ui.label(
-                        "Run an analysis to view policy posture."
+                        "Run an analysis to view the action plan."
                     ).classes(
                         "lex-empty-state"
                     )
 
             # =================================================
-            # DETAILED GAPS
+            # 3. DETAILED GAPS
             # =================================================
 
             with ui.tab_panel(
@@ -559,20 +559,8 @@ def dashboard():
                     )
 
             # =================================================
-            # ACTION PLAN
+            # 4. COMPLIANT AREAS
             # =================================================
-
-            with ui.tab_panel(
-                "action"
-            ):
-
-                with ui.column().classes("w-full") as action_container:
-
-                    ui.label(
-                        "Run an analysis to view the action plan."
-                    ).classes(
-                        "lex-empty-state"
-                    )
 
             with ui.tab_panel(
                 "compliant"
@@ -587,7 +575,23 @@ def dashboard():
                     )
 
             # =================================================
-            # EXPORT
+            # 5. POLICY POSTURE
+            # =================================================
+
+            with ui.tab_panel(
+                "posture"
+            ):
+
+                with ui.column().classes("w-full") as posture_container:
+
+                    ui.label(
+                        "Run an analysis to view policy posture."
+                    ).classes(
+                        "lex-empty-state"
+                    )
+
+            # =================================================
+            # 6. EXPORT
             # =================================================
 
             with ui.tab_panel(
