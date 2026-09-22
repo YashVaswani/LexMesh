@@ -228,6 +228,12 @@ def generate_compliance_pdf(report_json: dict, output_filepath: str = "Complianc
     elements.append(HRFlowable(width="100%", thickness=1, color=PRIMARY, spaceAfter=8))
     
     all_gaps = report_json.get("all_gaps_flat", report_json.get("detailed_gaps", []))
+    # Filter out Fully Met items — they have their own dedicated Compliant Areas section
+    all_gaps = [
+        g for g in all_gaps
+        if "fully" not in str(g.get("verdict") or g.get("status") or "").lower()
+        and str(g.get("verdict") or g.get("status") or "").strip().lower() not in ("met", "compliant")
+    ]
     
     # Group gaps by framework to ensure every standard is explicitly represented
     gaps_by_fw = {"gdpr": [], "hipaa": [], "rbi": [], "soc2": []}

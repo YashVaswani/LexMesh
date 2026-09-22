@@ -39,6 +39,13 @@ def create_gap_analysis(report):
                         framework_gaps
                     )
 
+    # Filter out Fully Met / Compliant items — they belong exclusively in the Compliant Areas tab
+    gaps = [
+        g for g in gaps
+        if "fully" not in str(g.get("verdict") or g.get("status") or "").lower()
+        and str(g.get("verdict") or g.get("status") or "").strip().lower() not in ("met", "compliant")
+    ]
+
     ui.label(
         "Detailed Policy Gaps"
     ).classes(
@@ -46,7 +53,7 @@ def create_gap_analysis(report):
     )
 
     ui.label(
-        f"{len(gaps)} findings identified"
+        f"{len(gaps)} compliance gaps requiring remediation"
     ).classes(
         "lex-section-subtitle"
     )

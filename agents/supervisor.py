@@ -332,10 +332,15 @@ class SupervisorAgent:
         # Build Policy Domain Breakdown
         policy_breakdown = self.build_policy_domain_breakdown(all_gaps, active_frameworks=active_fws)
 
-        # Structure detailed gaps by Policy Domain -> Framework
+        # Structure detailed gaps by Policy Domain -> Framework (excluding Fully Met items)
         gaps_by_domain = {}
         for dom_id, dom_info in POLICY_DOMAINS.items():
-            dom_gaps = [g for g in all_gaps if g.get("policy_domain") == dom_id]
+            dom_gaps = [
+                g for g in all_gaps 
+                if g.get("policy_domain") == dom_id 
+                and "fully" not in str(g.get("verdict") or g.get("status") or "").lower()
+                and str(g.get("verdict") or g.get("status") or "").strip().lower() not in ("met", "compliant")
+            ]
             fw_grouped = {}
             for fw_id, fw_info in FRAMEWORKS.items():
                 fw_grouped[fw_id] = [g for g in dom_gaps if g.get("framework") == fw_id]
