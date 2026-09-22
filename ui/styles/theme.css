@@ -495,6 +495,16 @@ body.body--dark .lex-analysis-status,
     border-radius: 14px !important;
     margin-top: 14px !important;
     box-shadow: 0 4px 14px rgba(78, 121, 93, 0.4) !important;
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease !important;
+}
+
+.lex-run-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(78, 121, 93, 0.55) !important;
+}
+
+.lex-run-button:active {
+    transform: translateY(0px) scale(0.98);
 }
 
 
@@ -507,7 +517,41 @@ body.body--dark .lex-analysis-status,
     border: 2px solid var(--lex-card-border) !important;
     border-radius: 22px !important;
     padding: 24px !important;
-    box-shadow: var(--lex-shadow-lg) !important;
+    box-shadow: var(--lex-shadow) !important;
+    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                box-shadow 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                border-color 0.28s ease !important;
+}
+
+.lex-score-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--lex-sage) !important;
+    box-shadow: 0 16px 36px -6px rgba(35, 56, 43, 0.16) !important;
+}
+
+body.q-dark .lex-score-card:hover,
+body.body--dark .lex-score-card:hover,
+.q-dark .lex-score-card:hover {
+    box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.65), 0 0 20px rgba(124, 166, 137, 0.22) !important;
+    border-color: var(--lex-sage) !important;
+}
+
+.lex-icon-badge {
+    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.25s ease !important;
+}
+
+.lex-score-card:hover .lex-icon-badge {
+    transform: scale(1.1);
+}
+
+.lex-table-row {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border-radius: 12px !important;
+}
+
+.lex-table-row:hover {
+    background: var(--lex-surface-hover) !important;
+    transform: translateX(4px);
 }
 
 .lex-card-title {

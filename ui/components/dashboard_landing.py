@@ -203,6 +203,25 @@ def create_dashboard_landing(on_run_new_audit=None):
             ui.echart({
                 "tooltip": {
                     "trigger": "axis",
+                    "axisPointer": {
+                        "type": "cross",
+                        "lineStyle": {
+                            "color": "#4e795d",
+                            "type": "dashed",
+                            "width": 1.5,
+                        },
+                    },
+                    "backgroundColor": "rgba(26, 36, 31, 0.94)",
+                    "borderColor": "#4e795d",
+                    "borderWidth": 1.5,
+                    "padding": [10, 14],
+                    "textStyle": {
+                        "color": "#f5f2eb",
+                        "fontFamily": "Plus Jakarta Sans",
+                        "fontWeight": 600,
+                        "fontSize": 12,
+                    },
+                    "formatter": "{b}<br/><span style='display:inline-block;margin-right:6px;border-radius:50%;width:8px;height:8px;background-color:#7ca689;'></span>{a}: <b>{c}%</b>",
                 },
                 "xAxis": {
                     "type": "category",
@@ -245,6 +264,16 @@ def create_dashboard_landing(on_run_new_audit=None):
                         },
                         "itemStyle": {
                             "color": "#4e795d",
+                        },
+                        "emphasis": {
+                            "focus": "series",
+                            "itemStyle": {
+                                "color": "#7ca689",
+                                "borderColor": "#ffffff",
+                                "borderWidth": 2.5,
+                                "shadowBlur": 12,
+                                "shadowColor": "rgba(78, 121, 93, 0.6)",
+                            },
                         },
                         "areaStyle": {
                             "color": {
@@ -325,7 +354,23 @@ def create_dashboard_landing(on_run_new_audit=None):
             ui.echart({
                 "tooltip": {
                     "trigger": "axis",
-                    "axisPointer": {"type": "shadow"},
+                    "axisPointer": {
+                        "type": "shadow",
+                        "shadowStyle": {
+                            "color": "rgba(78, 121, 93, 0.12)",
+                        },
+                    },
+                    "backgroundColor": "rgba(26, 36, 31, 0.94)",
+                    "borderColor": "#4e795d",
+                    "borderWidth": 1.5,
+                    "padding": [10, 14],
+                    "textStyle": {
+                        "color": "#f5f2eb",
+                        "fontFamily": "Plus Jakarta Sans",
+                        "fontWeight": 600,
+                        "fontSize": 12,
+                    },
+                    "formatter": "{b}: <b>{c}% Average Score</b>",
                 },
                 "xAxis": {
                     "type": "value",
@@ -367,6 +412,13 @@ def create_dashboard_landing(on_run_new_audit=None):
                         "type": "bar",
                         "data": series_data,
                         "barWidth": "45%",
+                        "emphasis": {
+                            "focus": "self",
+                            "itemStyle": {
+                                "shadowBlur": 12,
+                                "shadowColor": "rgba(0, 0, 0, 0.3)",
+                            },
+                        },
                     }
                 ],
                 "grid": {
@@ -449,10 +501,9 @@ def create_dashboard_landing(on_run_new_audit=None):
                 pill_bg = "#9e3232"
 
             with ui.row().classes(
-                "w-full items-center px-4 py-3"
+                "w-full items-center px-4 py-3 lex-table-row cursor-pointer"
             ).style(
-                "border-bottom: 1px solid var(--lex-border); "
-                "transition: background 0.15s ease;"
+                "border-bottom: 1px solid var(--lex-border);"
             ):
                 ui.label(
                     audit["company"]
@@ -507,11 +558,11 @@ def _kpi_card(icon: str, label: str, value: str, color: str, on_click=None):
     """Render a single KPI stat card with strict alignment."""
 
     card = ui.column().classes(
-        "flex-1 lex-score-card justify-between gap-3 h-36"
+        "flex-1 lex-score-card justify-between gap-3 h-36 cursor-pointer"
     ).style("min-width: 180px;")
     
     if on_click:
-        card.classes("cursor-pointer hover:bg-slate-50 transition-colors")
+        card.classes("hover:bg-slate-50 transition-colors")
         card.on('click', on_click)
 
     with card:
@@ -520,7 +571,7 @@ def _kpi_card(icon: str, label: str, value: str, color: str, on_click=None):
             "items-center gap-3 flex-nowrap w-full"
         ):
             # Icon badge
-            with ui.element("div").classes("shrink-0").style(
+            with ui.element("div").classes("shrink-0 lex-icon-badge").style(
                 f"width: 42px; height: 42px; "
                 f"border-radius: 12px; "
                 f"background: {color}20; "
