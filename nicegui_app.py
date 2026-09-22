@@ -69,6 +69,102 @@ ui.add_head_html('''
         if (window.lucide) lucide.createIcons();
     });
 </script>
+
+<!-- Custom favicon: branded mesh-shield icon -->
+<link rel="icon" type="image/png" href="/static/favicon.png">
+<link rel="shortcut icon" href="/static/favicon.png">
+<link rel="apple-touch-icon" href="/static/favicon.png">
+''', shared=True)
+
+# Plausible privacy-friendly analytics (no cookies, GDPR-compliant)
+ui.add_head_html(
+    '<script defer data-domain="lexmesh.onrender.com" src="https://plausible.io/js/script.js"></script>',
+    shared=True,
+)
+
+# Cookie Consent Banner — injected once, self-dismisses via localStorage
+ui.add_head_html('''
+<style>
+  #lex-cookie-banner {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: rgba(15, 23, 18, 0.96);
+    border: 1px solid rgba(78, 121, 93, 0.55);
+    border-radius: 16px;
+    padding: 14px 22px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(78,121,93,0.18);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    max-width: 640px;
+    width: calc(100vw - 48px);
+    font-family: \'Plus Jakarta Sans\', Inter, sans-serif;
+    animation: lex-cookie-slide-in 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  @keyframes lex-cookie-slide-in {
+    from { opacity: 0; transform: translateX(-50%) translateY(24px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+  #lex-cookie-banner p {
+    flex: 1;
+    margin: 0;
+    font-size: 0.82rem;
+    color: #c8c0b0;
+    line-height: 1.55;
+  }
+  #lex-cookie-banner a {
+    color: #7ca689;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  #lex-cookie-accept {
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #4e795d, #3b6349);
+    color: #eae3d2;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 22px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+    letter-spacing: 0.02em;
+  }
+  #lex-cookie-accept:hover { opacity: 0.88; transform: scale(1.03); }
+  #lex-cookie-banner.lex-cookie-hide {
+    animation: lex-cookie-slide-out 0.3s ease forwards;
+  }
+  @keyframes lex-cookie-slide-out {
+    to { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  }
+</style>
+<script>
+(function() {
+  if (localStorage.getItem(\'lex_cookie_accepted\') === \'1\') return;
+  document.addEventListener(\'DOMContentLoaded\', function() {
+    var banner = document.createElement(\'div\');
+    banner.id = \'lex-cookie-banner\';
+    banner.innerHTML = [
+      \'<p>🔒 We use <strong>essential session cookies</strong> for authentication and audit state only. \',
+      \'No analytics cookies, no tracking pixels. Uploaded documents are processed in-memory and never stored. \',
+      \'<a href="/privacy" target="_blank">Privacy Policy</a></p>\',
+      \'<button id="lex-cookie-accept">Got it</button>\'
+    ].join(\'\');
+    document.body.appendChild(banner);
+    document.getElementById(\'lex-cookie-accept\').addEventListener(\'click\', function() {
+      localStorage.setItem(\'lex_cookie_accepted\', \'1\');
+      banner.classList.add(\'lex-cookie-hide\');
+      setTimeout(function() { banner.remove(); }, 320);
+    });
+  });
+})();
+</script>
 ''', shared=True)
 
 # OpenGraph & SEO Meta Tags — rich link previews when shared on Slack/WhatsApp/LinkedIn
@@ -1390,10 +1486,6 @@ def dashboard(request: Request):
 
             logger.error("PDF upload error: %s", e, exc_info=True)
 
-    # --------------------------------------------------------
-    # UPLOAD & CLEAR EVENT WIRING (Strict 1-Document Policy)
-    # --------------------------------------------------------
-
     sidebar[
         "uploaded_file"
     ].on_upload(
@@ -1425,6 +1517,45 @@ def dashboard(request: Request):
         ui.notify("File exceeds limit or is not a PDF (Max 25 MB).", type="warning")
 
     sidebar["uploaded_file"].on("rejected", handle_upload_rejected)
+
+    # --------------------------------------------------------
+    # DEMO MODE — auto-load sample GDPR PDF when ?demo=1
+    # --------------------------------------------------------
+
+    _is_demo = (
+        request is not None
+        and request.query_params.get("demo") == "1"
+    )
+    if _is_demo:
+        _sample_pdf_path = Path(__file__).parent / "GDPR_Condensed_Articles_1-99.pdf"
+        if _sample_pdf_path.exists():
+            _sample_bytes = _sample_pdf_path.read_bytes()
+            _sample_name = "GDPR_Sample_Policy.pdf"
+
+            page_state["pdf_bytes"] = _sample_bytes
+            page_state["pdf_name"] = _sample_name
+
+            # Auto-populate sidebar labels
+            if "attached_file_container" in sidebar:
+                sidebar["attached_file_name_label"].text = _sample_name
+                sidebar["attached_file_container"].set_visibility(True)
+
+            # Extract & populate company / policy fields
+            _demo_company, _demo_policy = extract_metadata_from_pdf(_sample_bytes, _sample_name)
+            sidebar["company_name"].value = _demo_company or "Sample Organisation"
+            sidebar["company_name"].update()
+            sidebar["policy_name"].value = _demo_policy or "GDPR Condensed Policy"
+            sidebar["policy_name"].update()
+
+            status.set_text(
+                "🎬 Demo mode: GDPR sample policy loaded. Select frameworks and click 'Run Audit' to see results."
+            )
+            ui.notify(
+                "Sample GDPR policy loaded! Click 'Run Audit' to try LexMesh.",
+                type="positive",
+                timeout=5000,
+            )
+
 
     # ========================================================
     # RUN ANALYSIS
@@ -1934,7 +2065,7 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     ui.run(
         title="LexMesh — AI Compliance Engine",
-        favicon="🛡️",
+        favicon="/static/favicon.png",
         port=port,
         storage_secret=config.NICEGUI_STORAGE_SECRET,
         reload=False,
