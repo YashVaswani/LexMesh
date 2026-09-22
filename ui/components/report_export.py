@@ -64,7 +64,7 @@ def create_report_export(
 
         with ui.button().props("unelevated").classes("lex-export-pdf-button") as pdf_button:
             lucide_icon("file-down", size=18, class_name="mr-2")
-            ui.label("Render PDF Report")
+            ui.label("Download PDF Report")
 
     result_label = ui.label(
         ""
