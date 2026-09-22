@@ -15,6 +15,7 @@ from fastapi.responses import JSONResponse
 from config import config
 from db.supabase_client import supabase_db
 from agents.adk_agent import adk_supervisor
+from agents.triage_agent import triage_document
 from logger import get_logger
 import auth
 
@@ -1497,6 +1498,106 @@ def dashboard(request: Request):
                     "No readable text was found "
                     "inside the uploaded PDF."
                 )
+
+            # =================================================
+            # DOCUMENT TRIAGE — POLICY-ONLY GATE
+            # =================================================
+
+            status.set_text(
+                "🔍 Classifying document type..."
+            )
+
+            logger.info("Running document triage classification...")
+
+            import asyncio as _aio_triage
+            import functools as _ft_triage
+            triage_result = await _aio_triage.get_event_loop().run_in_executor(
+                None,
+                _ft_triage.partial(triage_document, policy_text),
+            )
+
+            if not triage_result["is_policy"]:
+                logger.info(
+                    "Triage REJECTED document: type='%s', reason='%s'",
+                    triage_result.get("document_type", "Unknown"),
+                    triage_result.get("reason", ""),
+                )
+
+                doc_type = triage_result.get("document_type", "Non-Policy Document")
+                reason = triage_result.get("reason", "This document does not appear to be a company policy.")
+
+                # ---- Rejection UI ----
+                rejection_msg = (
+                    f"⚠️ Document Rejected — This appears to be a "
+                    f"{doc_type}, not a company policy."
+                )
+                status.set_text(rejection_msg)
+                ui.notify(
+                    f"Not a policy document: {reason}",
+                    type="warning",
+                    close_button=True,
+                )
+
+                # Clear all tab containers and show rejection state
+                try:
+                    score_container.clear()
+                    posture_container.clear()
+                    gap_container.clear()
+                    action_container.clear()
+                    compliant_container.clear()
+                    export_container.clear()
+                except RuntimeError:
+                    button.enable()
+                    return
+
+                # Score tab: show 0% with rejection explanation
+                with score_container:
+                    with ui.card().classes("w-full p-6").style(
+                        "background: linear-gradient(135deg, #fef3cd 0%, #fff8e1 100%); "
+                        "border: 2px solid #f0ad4e; border-radius: 12px;"
+                    ):
+                        with ui.column().classes("w-full items-center gap-4"):
+                            ui.label("0%").style(
+                                "font-size: 4rem; font-weight: 900; color: #856404; line-height: 1;"
+                            )
+                            ui.label("NOT A POLICY DOCUMENT").style(
+                                "font-size: 1.2rem; font-weight: 700; color: #856404; "
+                                "letter-spacing: 0.05em;"
+                            )
+                            ui.separator()
+                            ui.label(f"Document Type: {doc_type}").style(
+                                "font-size: 1rem; font-weight: 600; color: #664d03;"
+                            )
+                            ui.label(reason).style(
+                                "font-size: 0.95rem; color: #664d03; text-align: center; "
+                                "max-width: 600px;"
+                            )
+                            ui.label(
+                                "Please upload a company policy document "
+                                "(e.g., Privacy Policy, Security Policy, Data Protection Policy) "
+                                "to receive a compliance score."
+                            ).style(
+                                "font-size: 0.85rem; color: #997a00; text-align: center; "
+                                "max-width: 600px; margin-top: 8px;"
+                            )
+
+                # Other tabs: show empty-state message
+                _rejection_empty_msg = (
+                    "No compliance data — the uploaded document was not "
+                    "recognized as a company policy."
+                )
+                for _container in [
+                    posture_container, gap_container,
+                    action_container, compliant_container,
+                    export_container,
+                ]:
+                    with _container:
+                        ui.label(_rejection_empty_msg).classes("lex-empty-state")
+
+                button.enable()
+                return
+
+            logger.info("Triage PASSED: document classified as '%s'.", triage_result.get("document_type", "Policy"))
 
             # =================================================
             # RUN REAL ADK PIPELINE
