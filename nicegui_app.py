@@ -78,14 +78,17 @@ ui.add_head_html('''
 <meta property="og:type" content="website">
 <meta property="og:title" content="LexMesh — AI-Powered Compliance Engine">
 <meta property="og:description" content="Instantly audit your company policy PDF against GDPR, HIPAA, RBI &amp; SOC 2 with AI-powered multi-framework gap analysis and a prioritised action plan.">
-<meta property="og:image" content="https://placehold.co/1200x630/101713/eae3d2?text=LexMesh+Compliance+Engine">
+<meta property="og:image" content="https://lexmesh.onrender.com/_nicegui/static/lexmesh_og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:site_name" content="LexMesh">
+<meta property="og:url" content="https://lexmesh.onrender.com">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="LexMesh — AI-Powered Compliance Engine">
 <meta name="twitter:description" content="Upload your policy PDF. Get instant GDPR, HIPAA, RBI &amp; SOC 2 compliance scores, gap analysis, and a prioritised action plan.">
-<meta name="twitter:image" content="https://placehold.co/1200x630/101713/eae3d2?text=LexMesh+Compliance+Engine">
+<meta name="twitter:image" content="https://lexmesh.onrender.com/_nicegui/static/lexmesh_og.jpg">
 ''', shared=True)
 
 
@@ -217,6 +220,12 @@ def login_page():
                     ui.link("Sign Up", "/signup").classes("text-emerald-600 hover:text-emerald-700 transition-colors")
                 ui.element('div').classes("h-px bg-slate-200 flex-grow")
 
+            # Legal footer
+            with ui.row().classes("w-full items-center justify-center gap-3 mt-4"):
+                ui.link("Privacy Policy", "/privacy").classes("text-xs text-slate-400 hover:text-slate-600")
+                ui.label("·").classes("text-xs text-slate-300")
+                ui.link("Terms & Conditions", "/terms").classes("text-xs text-slate-400 hover:text-slate-600")
+
 @ui.page("/signup")
 def signup_page():
     if auth.get_current_user():
@@ -282,6 +291,12 @@ def signup_page():
                     ui.label("Already have an account?").classes("text-slate-500")
                     ui.link("Log In", "/login").classes("text-emerald-600 hover:text-emerald-700 transition-colors")
                 ui.element('div').classes("h-px bg-slate-200 flex-grow")
+
+            # Legal footer
+            with ui.row().classes("w-full items-center justify-center gap-3 mt-4"):
+                ui.link("Privacy Policy", "/privacy").classes("text-xs text-slate-400 hover:text-slate-600")
+                ui.label("·").classes("text-xs text-slate-300")
+                ui.link("Terms & Conditions", "/terms").classes("text-xs text-slate-400 hover:text-slate-600")
 
 # ============================================================
 # EMAIL VERIFICATION PENDING PAGE
@@ -359,6 +374,22 @@ def confirm_page():
     ''')
 
 # ============================================================
+# PUBLIC LEGAL PAGES (no auth guard)
+# ============================================================
+
+@ui.page("/privacy")
+def privacy_page():
+    """Public Privacy Policy page — accessible without login."""
+    from ui.components.privacy_policy import create_privacy_policy_page
+    create_privacy_policy_page()
+
+@ui.page("/terms")
+def terms_page():
+    """Public Terms & Conditions page — accessible without login."""
+    from ui.components.terms_page import create_terms_page
+    create_terms_page()
+
+# ============================================================
 # DASHBOARD
 # ============================================================
 
@@ -405,6 +436,7 @@ def dashboard(request: Request):
             "rbi",
             "soc2",
         ],
+        "last_run_at": 0.0,  # Unix timestamp — for 30s rate limiting
     }
 
     # ========================================================
@@ -454,6 +486,21 @@ def dashboard(request: Request):
         with ui.column().classes("w-full p-6 gap-5"):
             create_dashboard_landing(
                 on_run_new_audit=lambda: ui.navigate.to('/audit'),
+            )
+        # Legal footer
+        with ui.row().classes("w-full items-center justify-center gap-3 pb-6 px-6").style(
+            "border-top: 1px solid var(--lex-border);"
+        ):
+            ui.label("LexMesh outputs are for informational purposes only and do not constitute legal advice.").style(
+                "font-size:0.75rem; color: var(--lex-muted);"
+            )
+            ui.label("·").style("color: var(--lex-muted); font-size:0.75rem;")
+            ui.link("Privacy Policy", "/privacy").style(
+                "font-size:0.75rem; color: var(--lex-sage); font-weight:600;"
+            )
+            ui.label("·").style("color: var(--lex-muted); font-size:0.75rem;")
+            ui.link("Terms & Conditions", "/terms").style(
+                "font-size:0.75rem; color: var(--lex-sage); font-weight:600;"
             )
         return  # Dashboard page is complete, no audit UI needed
 
@@ -650,6 +697,25 @@ def dashboard(request: Request):
                     ).classes(
                         "lex-empty-state"
                     )
+
+    # ========================================================
+    # LEGAL FOOTER
+    # ========================================================
+
+    with ui.row().classes("w-full items-center justify-center gap-3 py-4 mt-4").style(
+        "border-top: 1px solid var(--lex-border); margin-top: 12px;"
+    ):
+        ui.label("LexMesh outputs are for informational purposes only and do not constitute legal advice.").style(
+            "font-size:0.75rem; color: var(--lex-muted);"
+        )
+        ui.label("·").style("color: var(--lex-muted); font-size:0.75rem;")
+        ui.link("Privacy Policy", "/privacy").style(
+            "font-size:0.75rem; color: var(--lex-sage); font-weight:600;"
+        )
+        ui.label("·").style("color: var(--lex-muted); font-size:0.75rem;")
+        ui.link("Terms & Conditions", "/terms").style(
+            "font-size:0.75rem; color: var(--lex-sage); font-weight:600;"
+        )
 
     # ========================================================
     # PDF METADATA EXTRACTION
@@ -1360,16 +1426,30 @@ def dashboard(request: Request):
     # ========================================================
 
     async def run_analysis():
+        import time
+        import asyncio
 
         logger.info("=== RUN ANALYSIS TRIGGERED ===")
+
+        # ----------------------------------------------------
+        # RATE LIMITING — 30-second cooldown per session
+        # ----------------------------------------------------
+        now = time.monotonic()
+        elapsed = now - page_state.get("last_run_at", 0.0)
+        cooldown_secs = 30
+        if elapsed < cooldown_secs:
+            remaining = int(cooldown_secs - elapsed)
+            ui.notify(
+                f"⏳ Please wait {remaining}s before running another audit.",
+                type="warning",
+            )
+            return
 
         # ----------------------------------------------------
         # GET CURRENT PAGE PDF
         # ----------------------------------------------------
 
-        pdf_bytes = page_state.get(
-            "pdf_bytes"
-        )
+        pdf_bytes = page_state.get("pdf_bytes")
 
         logger.debug(
             "PDF state: %s (%d bytes)",
@@ -1378,28 +1458,36 @@ def dashboard(request: Request):
         )
 
         # ----------------------------------------------------
-        # CHECK PDF
+        # FORM VALIDATION — Check PDF, frameworks, company
         # ----------------------------------------------------
 
-        if (
-            pdf_bytes is None
-            or len(pdf_bytes) == 0
-        ):
+        validation_errors = []
 
-            status.set_text(
-                "Please upload a company policy PDF document first."
-            )
+        if pdf_bytes is None or len(pdf_bytes) == 0:
+            validation_errors.append("📄 No policy document uploaded. Please upload a PDF first.")
 
-            ui.notify(
-                "Please upload a PDF first.",
-                type="warning",
-            )
+        selected_fw_check = []
+        if sidebar["gdpr_checkbox"].value:
+            selected_fw_check.append("gdpr")
+        if sidebar["hipaa_checkbox"].value:
+            selected_fw_check.append("hipaa")
+        if sidebar["rbi_checkbox"].value:
+            selected_fw_check.append("rbi")
+        if sidebar["soc2_checkbox"].value:
+            selected_fw_check.append("soc2")
+        if not selected_fw_check:
+            validation_errors.append("⚖️ No compliance framework selected. Please choose at least one framework.")
 
+        if validation_errors:
+            for err in validation_errors:
+                ui.notify(err, type="warning", timeout=5000)
+            status.set_text(" · ".join(validation_errors))
             return
 
-        button = sidebar[
-            "run_button"
-        ]
+        button = sidebar["run_button"]
+
+        # Record timestamp BEFORE analysis starts (prevents double-click spam)
+        page_state["last_run_at"] = time.monotonic()
 
         button.disable()
 
@@ -1839,6 +1927,10 @@ def not_found_page():
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 8080))
+    # Serve static assets (OG image, etc.)
+    static_dir = Path("ui/static")
+    if static_dir.exists():
+        app.mount("/static", __import__("fastapi").staticfiles.StaticFiles(directory=str(static_dir)), name="static")
     ui.run(
         title="LexMesh — AI Compliance Engine",
         favicon="🛡️",
