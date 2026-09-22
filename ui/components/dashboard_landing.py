@@ -151,6 +151,20 @@ def create_dashboard_landing(on_run_new_audit=None):
             label="TOTAL AUDITS RUN",
             value=str(total_audits),
             color="var(--lex-sage)",
+            subtitle_hint="Audit History ↓",
+            tooltip_text="Hover highlights table • Click to jump ↓",
+            on_click=lambda: ui.run_javascript(
+                "const el = document.getElementById('lex-recent-audits-section'); "
+                "if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); "
+                "el.classList.add('lex-table-highlight-pulse'); "
+                "setTimeout(() => el.classList.remove('lex-table-highlight-pulse'), 1800); }"
+            ),
+            on_hover_enter=lambda: ui.run_javascript(
+                "document.getElementById('lex-recent-audits-section')?.classList.add('lex-table-hover-highlight');"
+            ),
+            on_hover_leave=lambda: ui.run_javascript(
+                "document.getElementById('lex-recent-audits-section')?.classList.remove('lex-table-hover-highlight');"
+            ),
         )
 
         _kpi_card(
@@ -158,7 +172,9 @@ def create_dashboard_landing(on_run_new_audit=None):
             label="FRAMEWORKS COVERED",
             value=str(len(avg_by_framework)) if avg_by_framework else "0",
             color="var(--lex-blue)",
-            on_click=lambda: ui.navigate.to('/frameworks')
+            subtitle_hint="Click to explore frameworks ➔",
+            tooltip_text="Click to explore frameworks ➔",
+            on_click=lambda: ui.navigate.to('/frameworks'),
         )
 
         _kpi_card(
@@ -434,7 +450,7 @@ def create_dashboard_landing(on_run_new_audit=None):
     # RECENT AUDIT REPORTS TABLE
     # ========================================================
 
-    with ui.column().classes("w-full lex-score-card mt-2"):
+    with ui.column().classes("w-full lex-score-card mt-2").props('id="lex-recent-audits-section"'):
 
         with ui.row().classes(
             "items-center gap-2 mb-3"
@@ -554,16 +570,37 @@ def create_dashboard_landing(on_run_new_audit=None):
 # INTERNAL KPI CARD HELPER
 # ============================================================
 
-def _kpi_card(icon: str, label: str, value: str, color: str, on_click=None):
-    """Render a single KPI stat card with strict alignment."""
+def _kpi_card(
+    icon: str,
+    label: str,
+    value: str,
+    color: str,
+    on_click=None,
+    subtitle_hint=None,
+    tooltip_text=None,
+    on_hover_enter=None,
+    on_hover_leave=None,
+):
+    """Render a single KPI stat card with strict alignment and interactive hover hints."""
 
     card = ui.column().classes(
-        "flex-1 lex-score-card justify-between gap-3 h-36 cursor-pointer"
+        "flex-1 lex-score-card justify-between gap-3 h-36 cursor-pointer relative"
     ).style("min-width: 180px;")
     
     if on_click:
-        card.classes("hover:bg-slate-50 transition-colors")
         card.on('click', on_click)
+
+    if on_hover_enter:
+        card.on('mouseenter', on_hover_enter)
+    if on_hover_leave:
+        card.on('mouseleave', on_hover_leave)
+
+    if tooltip_text:
+        card.tooltip(tooltip_text).classes(
+            "text-xs font-bold px-3 py-1.5 rounded-lg shadow-xl"
+        ).style(
+            "background: rgba(26, 36, 31, 0.95); color: #f5f2eb; border: 1px solid var(--lex-sage);"
+        )
 
     with card:
 
@@ -591,13 +628,22 @@ def _kpi_card(icon: str, label: str, value: str, color: str, on_click=None):
                 "lex-card-title flex-1 leading-tight font-extrabold"
             ).style("font-size: 0.75rem; letter-spacing: 0.05em;")
 
-        ui.label(
-            value
-        ).style(
-            f"font-size: 2.2rem; "
-            f"font-weight: 900; "
-            f"color: var(--lex-text); "
-            f"line-height: 1; "
-            f"margin-top: 0;"
-        )
+        with ui.row().classes("w-full items-end justify-between"):
+            ui.label(
+                value
+            ).style(
+                f"font-size: 2.2rem; "
+                f"font-weight: 900; "
+                f"color: var(--lex-text); "
+                f"line-height: 1; "
+                f"margin-top: 0;"
+            )
+
+            if subtitle_hint:
+                with ui.row().classes(
+                    "items-center gap-1 text-[11px] font-extrabold px-2.5 py-1 rounded-lg lex-card-hint-badge"
+                ).style(
+                    "background: var(--lex-surface-hover); color: var(--lex-sage); border: 1px solid var(--lex-border);"
+                ):
+                    ui.label(subtitle_hint)
 

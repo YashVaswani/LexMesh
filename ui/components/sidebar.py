@@ -235,29 +235,49 @@ def create_sidebar(
                 # REAL UPLOAD
                 # ------------------------------------------------
 
+                with ui.row().classes("w-full items-center justify-between mt-1 mb-1 px-0.5"):
+                    ui.label("POLICY DOCUMENT").classes(
+                        "text-[11px] font-extrabold tracking-wider"
+                    ).style("color: var(--lex-muted);")
+                    ui.label("PDF • Max 25 MB").classes(
+                        "text-[10px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-100/70 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-300/60 dark:border-emerald-800/60"
+                    )
+
                 uploaded_file = ui.upload(
                     label="Upload Company Policy PDF",
                     auto_upload=True,
                 ).props(
-                    "accept=.pdf max-files=1 flat bordered class=w-full"
+                    "accept=.pdf max-files=1 max-file-size=26214400 flat bordered class=w-full"
                 ).classes(
                     "lex-policy-upload"
                 )
 
-                with ui.row().classes("w-full items-center justify-between mt-1 px-1"):
-                    ui.label(
-                        "PDF only • 1 document at a time"
-                    ).classes(
-                        "lex-upload-help"
-                    )
+                # Attached file card with remove cross (HIDDEN until a document is uploaded)
+                attached_file_container = ui.row().classes(
+                    "w-full items-center justify-between p-2 rounded-xl mt-2 border transition-all"
+                ).style(
+                    "background: var(--lex-surface-hover); border-color: var(--lex-sage);"
+                )
+                attached_file_container.set_visibility(False)
+
+                with attached_file_container:
+                    with ui.row().classes("items-center gap-2 flex-1 min-w-0"):
+                        lucide_icon(
+                            "file-check",
+                            size=18,
+                            class_name="lex-target-icon shrink-0",
+                        )
+                        attached_file_name_label = ui.label("").classes(
+                            "text-xs font-bold truncate flex-1"
+                        ).style("color: var(--lex-text);")
+
                     clear_upload_btn = ui.button(
-                        "Clear File",
                         icon="close",
                     ).props(
-                        "flat dense size=xs color=negative"
+                        "flat round dense size=xs color=negative"
                     ).classes(
-                        "text-xs font-medium"
-                    )
+                        "shrink-0 hover:bg-red-50 dark:hover:bg-red-950/30"
+                    ).tooltip("Remove uploaded document")
 
                 # ------------------------------------------------
                 # COMPANY
@@ -307,6 +327,8 @@ def create_sidebar(
             "rbi_checkbox": rbi_checkbox,
             "soc2_checkbox": soc2_checkbox,
             "uploaded_file": uploaded_file,
+            "attached_file_container": attached_file_container,
+            "attached_file_name_label": attached_file_name_label,
             "clear_upload_btn": clear_upload_btn,
             "company_name": company_name,
             "policy_name": policy_name,

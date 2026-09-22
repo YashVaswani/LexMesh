@@ -1229,6 +1229,10 @@ def dashboard(request: Request):
                 "pdf_name"
             ] = uploaded_file.name
 
+            if "attached_file_container" in sidebar:
+                sidebar["attached_file_name_label"].text = uploaded_file.name
+                sidebar["attached_file_container"].set_visibility(True)
+
             print(
                 "[LexMesh] PDF bytes:",
                 len(pdf_data),
@@ -1327,6 +1331,9 @@ def dashboard(request: Request):
 
     def handle_clear_upload():
         sidebar["uploaded_file"].reset()
+        if "attached_file_container" in sidebar:
+            sidebar["attached_file_container"].set_visibility(False)
+            sidebar["attached_file_name_label"].text = ""
         page_state["pdf_bytes"] = None
         page_state["pdf_name"] = ""
         sidebar["company_name"].value = ""
@@ -1334,14 +1341,17 @@ def dashboard(request: Request):
         sidebar["policy_name"].value = ""
         sidebar["policy_name"].update()
         status.set_text("Upload a company policy PDF to begin.")
-        ui.notify("Document cleared. You can now upload a new PDF.", type="info")
+        ui.notify("Document removed. You can now upload a new PDF.", type="info")
 
     if "clear_upload_btn" in sidebar:
         sidebar["clear_upload_btn"].on_click(handle_clear_upload)
 
     def handle_upload_rejected(event):
         sidebar["uploaded_file"].reset()
-        ui.notify("Previous file cleared. Please select your new PDF.", type="info")
+        if "attached_file_container" in sidebar:
+            sidebar["attached_file_container"].set_visibility(False)
+            sidebar["attached_file_name_label"].text = ""
+        ui.notify("File exceeds limit or is not a PDF (Max 25 MB).", type="warning")
 
     sidebar["uploaded_file"].on("rejected", handle_upload_rejected)
 
