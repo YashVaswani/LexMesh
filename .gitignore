@@ -25,3 +25,4 @@ scratch/
 # Log files
 lexmesh.log
 lexmesh.log.*
+.nicegui/
