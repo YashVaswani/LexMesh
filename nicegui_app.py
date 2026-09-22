@@ -1316,7 +1316,7 @@ def dashboard(request: Request):
             logger.error("PDF upload error: %s", e, exc_info=True)
 
     # --------------------------------------------------------
-    # THIS IS THE IMPORTANT CHANGE
+    # UPLOAD & CLEAR EVENT WIRING (Strict 1-Document Policy)
     # --------------------------------------------------------
 
     sidebar[
@@ -1324,6 +1324,26 @@ def dashboard(request: Request):
     ].on_upload(
         handle_upload
     )
+
+    def handle_clear_upload():
+        sidebar["uploaded_file"].reset()
+        page_state["pdf_bytes"] = None
+        page_state["pdf_name"] = ""
+        sidebar["company_name"].value = ""
+        sidebar["company_name"].update()
+        sidebar["policy_name"].value = ""
+        sidebar["policy_name"].update()
+        status.set_text("Upload a company policy PDF to begin.")
+        ui.notify("Document cleared. You can now upload a new PDF.", type="info")
+
+    if "clear_upload_btn" in sidebar:
+        sidebar["clear_upload_btn"].on_click(handle_clear_upload)
+
+    def handle_upload_rejected(event):
+        sidebar["uploaded_file"].reset()
+        ui.notify("Previous file cleared. Please select your new PDF.", type="info")
+
+    sidebar["uploaded_file"].on("rejected", handle_upload_rejected)
 
     # ========================================================
     # RUN ANALYSIS

@@ -239,16 +239,25 @@ def create_sidebar(
                     label="Upload Company Policy PDF",
                     auto_upload=True,
                 ).props(
-                    "accept=.pdf flat bordered class=w-full"
+                    "accept=.pdf max-files=1 flat bordered class=w-full"
                 ).classes(
                     "lex-policy-upload"
                 )
 
-                ui.label(
-                    "PDF only • Select your company policy document"
-                ).classes(
-                    "lex-upload-help"
-                )
+                with ui.row().classes("w-full items-center justify-between mt-1 px-1"):
+                    ui.label(
+                        "PDF only • 1 document at a time"
+                    ).classes(
+                        "lex-upload-help"
+                    )
+                    clear_upload_btn = ui.button(
+                        "Clear File",
+                        icon="close",
+                    ).props(
+                        "flat dense size=xs color=negative"
+                    ).classes(
+                        "text-xs font-medium"
+                    )
 
                 # ------------------------------------------------
                 # COMPANY
@@ -298,6 +307,7 @@ def create_sidebar(
             "rbi_checkbox": rbi_checkbox,
             "soc2_checkbox": soc2_checkbox,
             "uploaded_file": uploaded_file,
+            "clear_upload_btn": clear_upload_btn,
             "company_name": company_name,
             "policy_name": policy_name,
             "run_button": run_button,
