@@ -1,157 +1,111 @@
-# LexMesh — Policy-Centric Multi-Framework Compliance Engine
+# LexMesh — Multi-Framework Compliance & Legal Audit Engine
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Framework](https://img.shields.io/badge/Orchestration-Google%20ADK-green.svg)](https://ai.google.dev/)
-[![SDK](https://img.shields.io/badge/Google%20GenAI-v2.18.1-4285F4.svg)](https://github.com/googleapis/python-genai)
-[![Database](https://img.shields.io/badge/Database-Supabase%20Cloud-emerald.svg)](https://supabase.com/)
-[![LLM](https://img.shields.io/badge/LLMs-Gemini%20Flash%20%7C%20Groq%20Llama%203.3-orange.svg)](https://groq.com/)
-[![UI](https://img.shields.io/badge/UI-NiceGUI-green.svg)](https://nicegui.io/)
-[![PDF Engine](https://img.shields.io/badge/Exporter-ReportLab-darkblue.svg)](https://www.reportlab.com/)
+[![Compliance Coverage](https://img.shields.io/badge/Compliance-4_Global_Frameworks-23382b.svg)](#-regulatory-frameworks-covered)
+[![Audit Speed](https://img.shields.io/badge/Audit_Speed-Sub--45_Seconds-4e795d.svg)](#-enterprise-capabilities)
+[![Statutory Checks](https://img.shields.io/badge/Statutory_Checks-250%2B_Requirements-365240.svg)](#-regulatory-frameworks-covered)
+[![Deliverables](https://img.shields.io/badge/Deliverables-Audit--Grade_PDF_%26_JSON-b8ab9b.svg)](#-enterprise-capabilities)
+[![Live Demo](https://img.shields.io/badge/Live_SaaS-lexmesh.onrender.com-success.svg)](https://lexmesh.onrender.com)
 
-**LexMesh** is an enterprise-grade, policy-centric **Multi-Framework Compliance & Legal Audit Engine**. Powered by Google ADK orchestration primitives, LexMesh simultaneously evaluates company policy documents against **250+ atomic, testable statutory requirements** across four major global regulatory standards:
+**LexMesh** is an enterprise-grade **Multi-Framework Compliance & Legal Audit Engine** designed to automate corporate policy evaluation against major international statutory regulations. 
 
-1. **EU GDPR** — General Data Protection Regulation (Art. 1–99)
-2. **US HIPAA** — Health Insurance Portability and Accountability Act (45 CFR § 160 & 164)
-3. **RBI Cyber Framework** — Reserve Bank of India Cyber Security & KYC Master Directions
-4. **SOC 2 Type II** — AICPA Trust Services Criteria (Security, Availability, Confidentiality, Processing Integrity, Privacy)
+By mapping and evaluating corporate internal policies against **250+ atomic statutory requirements simultaneously**, LexMesh condenses multi-week legal and audit consulting engagements into a comprehensive, verified audit in **under 45 seconds**.
 
 ---
 
-## 🌟 Key Features & Capabilities
+## 🎯 Executive Summary
 
-- 🤖 **Google ADK Supervisor Architecture**: Uses a **Supervisor Router Agent** to oversee policy ingestion and delegate audit evaluations in parallel to **Chapter Sub-Agents** via an 8-worker thread pool.
-- ⚡ **High-Speed Sub-45s Pipeline**: Evaluates 250+ requirements across selected statutory frameworks simultaneously in **under 45 seconds** using 15-item micro-batching and `asyncio.to_thread` non-blocking execution.
-- 🏢 **Org Industry Presets & Framework Deselection**: Provides an **Organization Industry** selector with presets (SaaS, Healthcare, Banking/Fintech, Global, Custom) that automatically presets checkable switches, letting users easily include/exclude specific standards (RBI, HIPAA, GDPR, SOC 2).
-- 📊 **Weighted Article Coverage Scoring**: Calculates framework compliance scores by grouping requirement verdicts by article/control first. Weights requirements (Fully Met = 1.0, Partially Met = 0.70, Not Met = 0.0) to prevent partial coverage from dragging overall scores near 0%.
-- 🎯 **Targeted Zero-Cost RAG Matcher**: Extracts top relevant policy paragraphs (~600 chars / ~350 tokens) per requirement using keyword-density scoring, eliminating context dilution and cutting API token consumption by **70%**.
-- ⚡ **Persistent SHA-256 Audit Caching**: Features in-memory + Supabase Cloud database lookup fallback. Persistent database cached loader runs automatically across server restarts for instant zero-cost re-audits.
-- 🔑 **Multi-Key API Fallback Engine**: Supports comma-separated keys (`GEMINI_API_KEY=key1,key2`) and multi-model rotation across modern **Google GenAI SDK v2** (`gemini-3.1-flash-lite`, `gemini-flash-latest`) with secondary **Groq fallback** (`llama-3.3-70b-versatile`, `llama-3.1-8b-instant`).
-- 🎨 **Executive Sage & Beige Design System**: Features a high-contrast Warm Beige (`#F5F2EB`) and Forest Sage (`#23382B`) design system, Google Font **Plus Jakarta Sans** typography, Lucide vector SVG icons, and 0 emoji clutter.
-- 🎯 **Interactive Scope Selection**: Sidebar dropdown and switches enable users to dynamically filter audit scores, policy domain gap accordions, and action plans by active standards in real-time.
-- 🚨 **Statutory Fine & Exposure Calculator**: Evaluates statutory penalties across standards:
-  - **EU GDPR**: Art. 83 Tier 1 (€10M or 2%) vs Tier 2 (€20M or 4% global annual revenue).
-  - **US HIPAA**: Statutory Civil Monetary Penalty ($1.9M+/year under 45 CFR § 160).
-  - **RBI Cyber**: Banking Regulation Act statutory penalties & FIU-IND enforcement directions.
-  - **SOC 2**: Qualified vs Unqualified audit opinion risk.
-- ✅ **Separated Compliant Areas & Remediation Plan**: Action plan strictly lists actual policy gaps (P1 Critical, P2 High, P3 Medium). Fully compliant items are moved to a dedicated **Compliant Areas** section in the UI (showing verification quotes) and in PDF reports.
-- 📄 **Audit-Grade ReportLab PDF & JSON Exporter**: Renders PDF audit reports complete with wrapped regulation tables, status color indicators, policy quotes, and targeted scope downloads.
+| Traditional Manual Audits | The LexMesh Automated Approach |
+| :--- | :--- |
+| ⏳ **3 to 6 weeks** per audit engagement | ⚡ **Under 45 seconds** end-to-end evaluation |
+| 💰 **$30,000 – $80,000** in billable legal fees | 📉 **Fraction of the cost** with zero recurring manual labor |
+| 📑 Disconnected spreadsheets and static memos | 📊 **Live interactive dashboard** with historical trend analytics |
+| ⚠️ Subjective reviewer interpretations | ⚖️ **Deterministic, quote-verified statutory criteria** |
+| 🔄 Serial audits (one framework reviewed at a time) | 🌐 **Simultaneous cross-framework synthesis** (GDPR, HIPAA, RBI, SOC 2) |
 
 ---
 
-## 🏗️ Architecture Blueprint
+## ⚖️ Regulatory Frameworks Covered
+
+LexMesh systematically audits policy documents against the following core statutory standards:
+
+| Framework | Regulatory Authority | Statutory Scope | Financial & Legal Exposure |
+| :--- | :--- | :--- | :--- |
+| **EU GDPR** | European Union / DPAs | 99 Articles (Regulation EU 2016/679) | Up to **€20,000,000** or **4% global annual revenue** |
+| **US HIPAA** | US Dept. of Health & Human Services | 45 CFR § 160 & § 164 (Security & Privacy) | Up to **$1.9M+ per year** in Civil Monetary Penalties |
+| **RBI Cyber** | Reserve Bank of India | Cyber Security & Digital Banking Directives | Banking Regulation Act penalties & enforcement |
+| **SOC 2 Type II** | AICPA | Trust Services Criteria (CC1–CC9) | Qualified audit opinion & loss of enterprise contracts |
+
+---
+
+## 🌟 Enterprise Capabilities
+
+### ⚡ Simultaneous Multi-Framework Audit Engine
+Evaluates policies across all selected regulatory regimes concurrently, mapping overlapping requirements (such as incident response, encryption standards, access governance, and vendor risk) into a unified cross-regulatory matrix.
+
+### 🔍 Automated Document Intelligence
+Intelligently ingests internal corporate policies (PDF) and automatically extracts key metadata—including legal corporate entities, policy categories, effective dates, and version numbering—without requiring manual data entry.
+
+### 🏢 Industry-Specific Scope Presets
+Includes pre-configured statutory scoping profiles for specific industry verticals:
+- **General SaaS / Technology Enterprise**: Focused on GDPR & SOC 2 Type II.
+- **Healthcare & Medical Technology**: Focused on HIPAA & GDPR.
+- **Fintech / Banking / NBFC**: Focused on RBI Cyber Security Directives, GDPR & SOC 2.
+- **Global Conglomerate**: Full simultaneous coverage across all statutory regimes.
+- **Custom Scoping**: Fine-grained toggle control to audit any combination of standards.
+
+### 📊 Statutory Article-Weighted Scoring
+Unlike naive keyword matchers, LexMesh groups compliance verdicts by formal statutory chapters and articles. Requirements are assessed with weighted precision (**Fully Met**, **Partially Met**, **Not Met**) to provide mathematically rigorous compliance indexes that accurately reflect regulatory exposure.
+
+### 🚨 Statutory Fine & Legal Exposure Calculator
+Calculates real-time financial and legal liability estimates based on statutory penalty tiers, highlighting critical exposure areas before external regulatory audits occur.
+
+### 🎯 Clear Separation: Compliant Areas vs. Remediation Plan
+- **Compliant Areas**: Surfaces every verified policy clause alongside the exact document quotes that fulfill regulatory requirements, providing ready-made evidence for external auditors.
+- **Prioritized Action Plan**: Consolidates missing provisions into an actionable, prioritized remediation agenda categorized by urgency (**P1 Critical**, **P2 High**, **P3 Medium**).
+
+### 📄 Board-Ready Audit Deliverables
+- **Executive Audit PDF Report**: A comprehensive, publication-ready formal audit memorandum detailing scope, methodology, statutory gap breakdown, and compliant quote records.
+- **Structured JSON Export**: Machine-readable audit output designed for enterprise SIEM, GRC platforms, and compliance data lakes.
+
+---
+
+## 🔄 How LexMesh Works
 
 ```mermaid
-flowchart TD
-    A[📄 User Uploads Policy PDF] --> B[🔍 Metadata Extractor & Section Chunking]
-    B --> C[🤖 Google ADK Supervisor Router Agent]
-    C --> D[⚙️ 8-Worker Parallel Thread Pool]
-    
-    subgraph ParallelSubAgents [Parallel Chapter Sub-Agents]
-        E1[EU GDPR Sub-Agent]
-        E2[US HIPAA Sub-Agent]
-        E3[RBI Cyber Sub-Agent]
-        E4[SOC 2 Type II Sub-Agent]
-    end
-    
-    D --> E1 & E2 & E3 & E4
-    
-    E1 & E2 & E3 & E4 <--> F[🎯 Targeted Paragraph Matcher]
-    E1 & E2 & E3 & E4 <--> G[(⚡ SHA-256 Cache - In-Memory & Supabase)]
-    E1 & E2 & E3 & E4 <--> H[🔑 Multi-Key Fallback Engine: Gemini v2 → Groq]
-    
-    E1 & E2 & E3 & E4 --> I[📊 Master Audit Report Aggregator]
-    
-    I --> J[🎨 Interactive NiceGUI Web Dashboard]
-    I --> K[📄 ReportLab Audit PDF Exporter]
-    I --> L[📥 Targeted Scope JSON Exporter]
+flowchart LR
+    A[📄 Policy Ingestion<br/>Automated Metadata & Version Detection] --> B[🎯 Scope Configuration<br/>Industry Presets & Standard Selection]
+    B --> C[⚙️ Multi-Framework Audit<br/>250+ Atomic Statutory Checks]
+    C --> D[📊 Executive Dashboard<br/>Compliance Scores & Gap Analysis]
+    D --> E1[📑 Audit-Grade PDF Report]
+    D --> E2[📋 Prioritized Remediation Plan]
+    D --> E3[📥 Structured JSON Export]
 ```
+
+1. **Upload Policy Document**: Ingest any corporate privacy, information security, or governance policy.
+2. **Select Industry & Framework Scope**: Choose an organizational preset or customize specific standards.
+3. **Run Automated Audit**: The engine cross-references the policy text against each statutory mandate simultaneously.
+4. **Review & Remediate**: Inspect the interactive executive dashboard, download audit certificates, and review prioritized remediation steps.
 
 ---
 
-## 📂 Repository Structure
+## 👥 Who Uses LexMesh?
 
-```
-LexMesh/
-├── nicegui_app.py                 # NiceGUI Enterprise Web Dashboard & UI Entry Point
-├── config.py                      # Multi-Key Environment Config & Key Parsing Engine
-├── requirements.txt               # Lightweight Cloud Dependencies (~25 MB)
-├── vercel.json                    # Vercel Deployment Configuration
-├── Procfile                       # Procfile for Cloud Web Services
-├── api/
-│   └── index.py                   # Vercel Serverless Entry Point
-├── gdpr_requirements_master.json  # 99 Article GDPR Statutory Requirement Catalog
-├── hipaa_requirements_master.json # HIPAA 45 CFR § 160/164 Statutory Requirement Catalog
-├── rbi_requirements_master.json   # RBI Master Direction Cyber Security Requirement Catalog
-├── soc2_requirements_master.json  # AICPA SOC 2 Type II Trust Criteria Catalog
-├── agents/
-│   ├── __init__.py
-│   ├── adk_agent.py               # Google ADK Agent Primitives & Workflow Orchestrator
-│   ├── chapter_agents.py          # Targeted RAG, SHA-256 Audit Cache & LLM Provider Chain
-│   └── supervisor.py              # Supervisor Agent, Scoring Engine & Action Plan Builder
-├── db/
-│   ├── __init__.py
-│   └── supabase_client.py         # Supabase Cloud Client & Persistent Audit Cache Manager
-├── reporter/
-│   ├── __init__.py
-│   └── pdf_generator.py           # Enterprise ReportLab PDF Exporter with Text Wrapping
-├── ui/
-│   ├── components/                # Modular NiceGUI UI Components & Lucide SVGs
-│   │   ├── action_plan.py         # Remediation plan details UI card
-│   │   ├── compliant_areas.py     # Fully met requirements & verification quotes card
-│   │   └── ...
-│   └── styles/theme.css           # Executive Warm Beige & Sage Green Design System
-```
+- **Chief Information Security Officers (CISOs)**: To maintain ongoing audit readiness and identify security governance gaps.
+- **General Counsel & Corporate Legal Teams**: To ensure compliance across international operations without spending weeks on manual document reviews.
+- **Data Protection Officers (DPOs)**: To audit privacy notices, data subject rights handling, and cross-border transfer requirements.
+- **Compliance & Risk Managers**: To prepare for upcoming SOC 2, HIPAA, RBI, or GDPR regulatory audits.
 
 ---
 
-## 🚀 Quick Start Guide
+## 🌐 Live SaaS Access
 
-### 1. Prerequisites
-- **Python 3.10+** (Tested on Python 3.10, 3.11, 3.14)
-- **API Keys**: Google AI Studio (`GEMINI_API_KEY`), Groq Console (`GROQ_API_KEY`)
-- *(Optional)* Supabase Cloud project for cloud report & audit verdict storage
+The LexMesh application is live and available for demonstration:
 
-### 2. Installation
-```bash
-# Clone the repository
-git clone https://github.com/YashVaswani/LexMesh.git
-cd LexMesh
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### 3. Environment Setup
-Create a `.env` file in the project root:
-```env
-# Supports comma-separated keys for automatic rotation & higher throughput
-GEMINI_API_KEY=your_gemini_key_1,your_gemini_key_2
-GROQ_API_KEY=your_groq_key_1,your_groq_key_2
-
-# Optional Supabase Cloud database configuration
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_KEY=your_supabase_anon_key
-```
-
-### 4. Launch Application
-Start the interactive NiceGUI executive dashboard:
-```bash
-python nicegui_app.py
-```
-Open your browser at **`http://localhost:8080`**.
+🔗 **Live Platform Demo**: [https://lexmesh.onrender.com](https://lexmesh.onrender.com)
 
 ---
 
-## 📊 Compliance Coverage Summary
+## 📜 Intellectual Property & Attribution
 
-| Framework Standard | Statutory Authority | Requirement Count | Fine / Risk Exposure |
-| :--- | :--- | :--- | :--- |
-| **EU GDPR** | Regulation (EU) 2016/679 | 99 Articles | Up to €20M or 4% Global Annual Revenue |
-| **US HIPAA** | 45 CFR § 160 & § 164 | 43 Criteria | Up to $1.9M+ Civil Monetary Penalties / Year |
-| **RBI Cyber** | RBI Master Directions | 68 Provisions | Banking Regulation Act Penalties & Directives |
-| **SOC 2 Type II** | AICPA Trust Criteria | 43 Controls | Audit Qualification & Enterprise Deal Loss |
-
----
-
-## 📄 License & Attribution
-Engineered by the **LexMesh Development Team**. Powered by Google ADK, Google GenAI SDK v2, Gemini Flash, Groq Llama 3.3, Supabase, NiceGUI, Lucide Icons, and ReportLab.
+**LexMesh** is engineered and maintained by **Yash Vaswani**.  
+All rights reserved. Designed for enterprise legal governance and automated statutory auditing.
