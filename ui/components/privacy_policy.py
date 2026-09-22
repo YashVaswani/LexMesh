@@ -2,8 +2,26 @@ from nicegui import ui
 from ui.components.lucide import lucide_icon
 
 
-def create_privacy_policy_page():
+import auth
+
+
+def create_privacy_policy_page(from_page: str = None):
     """Renders the LexMesh Privacy Policy page. Publicly accessible, no auth required."""
+
+    # Determine caller context (Login, Audit, or Dashboard)
+    if not from_page:
+        from_page = "login" if not auth.get_current_user() else "dashboard"
+    from_page = from_page.lower().strip()
+
+    if from_page == "login":
+        back_label = "Back to Login"
+        back_url = "/login"
+    elif from_page == "audit":
+        back_label = "Back to Audit"
+        back_url = "/audit"
+    else:
+        back_label = "Back to Dashboard"
+        back_url = "/dashboard"
 
     ui.colors(
         primary='#4e795d',
@@ -18,7 +36,7 @@ def create_privacy_policy_page():
         # ── Header ──────────────────────────────────────────────────────────
         with ui.column().classes("w-full max-w-3xl gap-2 mb-10"):
             with ui.row().classes("items-center gap-3 mb-4"):
-                ui.link("← Back to LexMesh", "/").classes(
+                ui.link(f"← {back_label}", back_url).classes(
                     "text-sm font-semibold text-emerald-700 hover:text-emerald-900 transition-colors"
                 )
 
@@ -119,11 +137,11 @@ def create_privacy_policy_page():
 
         # ── Footer ───────────────────────────────────────────────────────────
         with ui.row().classes("w-full max-w-3xl items-center justify-center gap-4 mt-8"):
-            ui.link("Back to Dashboard", "/").classes(
+            ui.link(back_label, back_url).classes(
                 "text-sm font-semibold text-emerald-700 hover:underline"
             )
             ui.label("·").style("color:#8a9e8f;")
-            ui.link("Terms & Conditions", "/terms").classes(
+            ui.link("Terms & Conditions", f"/terms?from={from_page}").classes(
                 "text-sm font-semibold text-emerald-700 hover:underline"
             )
             ui.label("·").style("color:#8a9e8f;")

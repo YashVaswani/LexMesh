@@ -311,6 +311,9 @@ def login_page():
                         else:
                             ui.notify(err, type="negative")
 
+                email.on('keydown.enter', do_login)
+                password.on('keydown.enter', do_login)
+
                 ui.button("LOG IN", on_click=do_login).classes("w-full mt-2 h-12 rounded-lg font-bold text-white shadow-lg shadow-emerald-500/30 tracking-wider").props("color=primary unelevated icon-right=arrow_forward")
             
             # Footer Divider
@@ -323,9 +326,9 @@ def login_page():
 
             # Legal footer
             with ui.row().classes("w-full items-center justify-center gap-3 mt-4"):
-                ui.link("Privacy Policy", "/privacy").classes("text-xs text-slate-400 hover:text-slate-600")
+                ui.link("Privacy Policy", "/privacy?from=login").classes("text-xs text-slate-400 hover:text-slate-600")
                 ui.label("·").classes("text-xs text-slate-300")
-                ui.link("Terms & Conditions", "/terms").classes("text-xs text-slate-400 hover:text-slate-600")
+                ui.link("Terms & Conditions", "/terms?from=login").classes("text-xs text-slate-400 hover:text-slate-600")
 
 @ui.page("/signup")
 def signup_page():
@@ -384,6 +387,9 @@ def signup_page():
                     else:
                         ui.notify(msg, type="negative")
 
+                email.on('keydown.enter', do_signup)
+                password.on('keydown.enter', do_signup)
+
                 ui.button("SIGN UP", on_click=do_signup).classes("w-full mt-2 h-12 rounded-lg font-bold text-white shadow-lg shadow-emerald-500/30 tracking-wider").props("color=primary unelevated icon-right=person_add")
             
             with ui.row().classes("w-full items-center justify-center mt-8 gap-3"):
@@ -395,9 +401,9 @@ def signup_page():
 
             # Legal footer
             with ui.row().classes("w-full items-center justify-center gap-3 mt-4"):
-                ui.link("Privacy Policy", "/privacy").classes("text-xs text-slate-400 hover:text-slate-600")
+                ui.link("Privacy Policy", "/privacy?from=login").classes("text-xs text-slate-400 hover:text-slate-600")
                 ui.label("·").classes("text-xs text-slate-300")
-                ui.link("Terms & Conditions", "/terms").classes("text-xs text-slate-400 hover:text-slate-600")
+                ui.link("Terms & Conditions", "/terms?from=login").classes("text-xs text-slate-400 hover:text-slate-600")
 
 # ============================================================
 # EMAIL VERIFICATION PENDING PAGE
@@ -479,16 +485,18 @@ def confirm_page():
 # ============================================================
 
 @ui.page("/privacy")
-def privacy_page():
+def privacy_page(request: Request):
     """Public Privacy Policy page — accessible without login."""
     from ui.components.privacy_policy import create_privacy_policy_page
-    create_privacy_policy_page()
+    from_param = request.query_params.get("from")
+    create_privacy_policy_page(from_page=from_param)
 
 @ui.page("/terms")
-def terms_page():
+def terms_page(request: Request):
     """Public Terms & Conditions page — accessible without login."""
     from ui.components.terms_page import create_terms_page
-    create_terms_page()
+    from_param = request.query_params.get("from")
+    create_terms_page(from_page=from_param)
 
 # ============================================================
 # DASHBOARD
@@ -596,11 +604,11 @@ def dashboard(request: Request):
                 "font-size:0.75rem; color: var(--lex-muted);"
             )
             ui.label("·").style("color: var(--lex-muted); font-size:0.75rem;")
-            ui.link("Privacy Policy", "/privacy").style(
+            ui.link("Privacy Policy", "/privacy?from=dashboard").style(
                 "font-size:0.75rem; color: var(--lex-sage); font-weight:600;"
             )
             ui.label("·").style("color: var(--lex-muted); font-size:0.75rem;")
-            ui.link("Terms & Conditions", "/terms").style(
+            ui.link("Terms & Conditions", "/terms?from=dashboard").style(
                 "font-size:0.75rem; color: var(--lex-sage); font-weight:600;"
             )
         return  # Dashboard page is complete, no audit UI needed
@@ -810,11 +818,11 @@ def dashboard(request: Request):
             "font-size:0.75rem; color: var(--lex-muted);"
         )
         ui.label("·").style("color: var(--lex-muted); font-size:0.75rem;")
-        ui.link("Privacy Policy", "/privacy").style(
+        ui.link("Privacy Policy", "/privacy?from=audit").style(
             "font-size:0.75rem; color: var(--lex-sage); font-weight:600;"
         )
         ui.label("·").style("color: var(--lex-muted); font-size:0.75rem;")
-        ui.link("Terms & Conditions", "/terms").style(
+        ui.link("Terms & Conditions", "/terms?from=audit").style(
             "font-size:0.75rem; color: var(--lex-sage); font-weight:600;"
         )
 
