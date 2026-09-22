@@ -642,14 +642,16 @@ body.body--dark .lex-table-hover-highlight,
 
 .lex-framework-name {
     color: var(--lex-text) !important;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 800 !important;
+    white-space: nowrap;
 }
 
 .lex-framework-score {
-    font-size: 2rem;
+    font-size: 1.65rem;
     font-weight: 900 !important;
     color: var(--lex-text) !important;
+    white-space: nowrap;
 }
 
 .lex-framework-risk {

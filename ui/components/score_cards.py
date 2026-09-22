@@ -152,21 +152,21 @@ def create_score_cards(
             ):
 
                 with ui.row().classes(
-                    "items-center justify-between"
+                    "w-full items-center justify-between no-wrap gap-1"
                 ):
 
-                    with ui.row().classes("items-center gap-2"):
-                        lucide_icon(info["icon"], size=20, class_name=info["color"])
+                    with ui.row().classes("items-center gap-1.5 no-wrap min-w-0"):
+                        lucide_icon(info["icon"], size=18, class_name=f"{info['color']} shrink-0")
                         ui.label(
                             info['name']
                         ).classes(
-                            "lex-framework-name"
+                            "lex-framework-name whitespace-nowrap"
                         )
 
                     ui.label(
                         f"{score:.0f}%"
                     ).classes(
-                        "lex-framework-score"
+                        "lex-framework-score shrink-0"
                     )
 
                 ui.linear_progress(
