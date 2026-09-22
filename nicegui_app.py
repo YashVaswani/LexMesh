@@ -20,6 +20,11 @@ import auth
 
 logger = get_logger("app")
 
+# Serve static assets (OG social images, logos, etc.)
+_static_path = Path(__file__).parent / "ui" / "static"
+if _static_path.exists():
+    app.add_static_files("/static", str(_static_path))
+
 @app.post("/api/confirm-email")
 async def api_confirm_email(request: Request):
     """Receives the Supabase access/refresh tokens from the /confirm page JS
@@ -78,7 +83,7 @@ ui.add_head_html('''
 <meta property="og:type" content="website">
 <meta property="og:title" content="LexMesh — AI-Powered Compliance Engine">
 <meta property="og:description" content="Instantly audit your company policy PDF against GDPR, HIPAA, RBI &amp; SOC 2 with AI-powered multi-framework gap analysis and a prioritised action plan.">
-<meta property="og:image" content="https://lexmesh.onrender.com/_nicegui/static/lexmesh_og.jpg">
+<meta property="og:image" content="https://lexmesh.onrender.com/static/lexmesh_og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:site_name" content="LexMesh">
@@ -88,7 +93,7 @@ ui.add_head_html('''
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="LexMesh — AI-Powered Compliance Engine">
 <meta name="twitter:description" content="Upload your policy PDF. Get instant GDPR, HIPAA, RBI &amp; SOC 2 compliance scores, gap analysis, and a prioritised action plan.">
-<meta name="twitter:image" content="https://lexmesh.onrender.com/_nicegui/static/lexmesh_og.jpg">
+<meta name="twitter:image" content="https://lexmesh.onrender.com/static/lexmesh_og.jpg">
 ''', shared=True)
 
 
@@ -1927,10 +1932,6 @@ def not_found_page():
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 8080))
-    # Serve static assets (OG image, etc.)
-    static_dir = Path("ui/static")
-    if static_dir.exists():
-        app.mount("/static", __import__("fastapi").staticfiles.StaticFiles(directory=str(static_dir)), name="static")
     ui.run(
         title="LexMesh — AI Compliance Engine",
         favicon="🛡️",
