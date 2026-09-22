@@ -104,8 +104,8 @@ def create_dashboard_landing(on_run_new_audit=None):
             except:
                 last_audit_str = str(last_dt_str)[:10]
 
-        # Recent Reports (Top 5)
-        for r in reports[:5]:
+        # All Audit Reports
+        for r in reports:
             dt_str = r.get("created_at", "")
             fmt_date = ""
             if dt_str:
@@ -454,25 +454,35 @@ def create_dashboard_landing(on_run_new_audit=None):
     with ui.column().classes("w-full lex-score-card mt-2").props('id="lex-recent-audits-section"'):
 
         with ui.row().classes(
-            "items-center gap-2 mb-3"
+            "w-full items-center justify-between mb-3"
         ):
-            lucide_icon(
-                "clipboard-list",
-                size=20,
-                class_name="lex-pipeline-icon",
-            )
+            with ui.row().classes("items-center gap-2"):
+                lucide_icon(
+                    "clipboard-list",
+                    size=20,
+                    class_name="lex-pipeline-icon",
+                )
 
-            ui.label(
-                "Recent Audit Reports"
-            ).classes(
-                "lex-section-heading"
-            ).style(
-                "margin: 0 !important;"
-            )
+                ui.label(
+                    "All Audit Reports"
+                ).classes(
+                    "lex-section-heading"
+                ).style(
+                    "margin: 0 !important;"
+                )
+
+            if recent_audits_data:
+                ui.label(
+                    f"{len(recent_audits_data)} Total Audits"
+                ).classes(
+                    "text-xs font-bold px-3 py-1 rounded-full"
+                ).style(
+                    "background: rgba(78,121,93,0.12); color: #4e795d; border: 1px solid rgba(78,121,93,0.3);"
+                )
 
         # The data is now dynamically pulled from Supabase via recent_audits_data
 
-        # Table header
+        # Table header (sticky)
         with ui.row().classes(
             "w-full items-center px-4 py-2"
         ).style(
@@ -500,69 +510,68 @@ def create_dashboard_landing(on_run_new_audit=None):
                 "width: 140px; text-align: center;"
             )
 
-
-
-        # Table rows
+        # Table rows container (scrollable for all audits)
         if not recent_audits_data:
             with ui.row().classes("w-full justify-center p-4"):
                 ui.label("No audits found. Run a new audit to see data here.").classes("text-sm text-gray-500")
-                
-        for audit in recent_audits_data:
-            _score = audit["score"]
+        else:
+            with ui.column().classes("w-full max-h-[600px] overflow-y-auto").style("gap: 0; scrollbar-width: thin;"):
+                for audit in recent_audits_data:
+                    _score = audit["score"]
 
-            if _score >= 80:
-                pill_bg = "#3b6349"
-            elif _score >= 60:
-                pill_bg = "#b45339"
-            else:
-                pill_bg = "#9e3232"
+                    if _score >= 80:
+                        pill_bg = "#3b6349"
+                    elif _score >= 60:
+                        pill_bg = "#b45339"
+                    else:
+                        pill_bg = "#9e3232"
 
-            with ui.row().classes(
-                "w-full items-center px-4 py-3 lex-table-row cursor-pointer"
-            ).style(
-                "border-bottom: 1px solid var(--lex-border);"
-            ):
-                ui.label(
-                    audit["company"]
-                ).classes(
-                    "flex-1 font-bold"
-                ).style(
-                    "color: var(--lex-text); "
-                    "font-size: 0.95rem;"
-                )
+                    with ui.row().classes(
+                        "w-full items-center px-4 py-3 lex-table-row cursor-pointer"
+                    ).style(
+                        "border-bottom: 1px solid var(--lex-border);"
+                    ):
+                        ui.label(
+                            audit["company"]
+                        ).classes(
+                            "flex-1 font-bold"
+                        ).style(
+                            "color: var(--lex-text); "
+                            "font-size: 0.95rem;"
+                        )
 
-                ui.label(
-                    audit["policy"]
-                ).classes(
-                    "flex-1 font-semibold"
-                ).style(
-                    "color: var(--lex-muted); "
-                    "font-size: 0.9rem;"
-                )
+                        ui.label(
+                            audit["policy"]
+                        ).classes(
+                            "flex-1 font-semibold"
+                        ).style(
+                            "color: var(--lex-muted); "
+                            "font-size: 0.9rem;"
+                        )
 
-                ui.label(
-                    f"{_score}%"
-                ).style(
-                    f"background: {pill_bg}; "
-                    "color: #ffffff; "
-                    "border-radius: 999px; "
-                    "padding: 4px 14px; "
-                    "font-weight: 800; "
-                    "font-size: 0.85rem; "
-                    "width: 80px; "
-                    "text-align: center;"
-                )
+                        ui.label(
+                            f"{_score}%"
+                        ).style(
+                            f"background: {pill_bg}; "
+                            "color: #ffffff; "
+                            "border-radius: 999px; "
+                            "padding: 4px 14px; "
+                            "font-weight: 800; "
+                            "font-size: 0.85rem; "
+                            "width: 80px; "
+                            "text-align: center;"
+                        )
 
-                ui.label(
-                    audit["date"]
-                ).classes(
-                    "font-semibold"
-                ).style(
-                    "color: var(--lex-muted); "
-                    "font-size: 0.85rem; "
-                    "width: 140px; "
-                    "text-align: center;"
-                )
+                        ui.label(
+                            audit["date"]
+                        ).classes(
+                            "font-semibold"
+                        ).style(
+                            "color: var(--lex-muted); "
+                            "font-size: 0.85rem; "
+                            "width: 140px; "
+                            "text-align: center;"
+                        )
 
 
 
