@@ -649,6 +649,75 @@ body.body--dark .lex-domain-badge,
 
 
 /* ============================================================
+   FRAMEWORKS PAGE EXPANSION ACCORDIONS
+   ============================================================ */
+
+.lex-framework-accordion {
+    background: var(--lex-card-bg) !important;
+    border: 2px solid var(--lex-card-border) !important;
+    border-radius: 16px !important;
+    box-shadow: var(--lex-shadow) !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.lex-framework-accordion:hover {
+    border-color: var(--lex-sage) !important;
+}
+
+.lex-framework-accordion .q-expansion-item__container {
+    background: var(--lex-card-bg) !important;
+    color: var(--lex-text) !important;
+    border-radius: 14px !important;
+}
+
+.lex-framework-accordion .q-item {
+    color: var(--lex-text) !important;
+    font-weight: 800 !important;
+    padding: 16px 20px !important;
+}
+
+.lex-framework-accordion .q-item__label {
+    color: var(--lex-text) !important;
+    font-weight: 800 !important;
+    font-size: 1.15rem !important;
+}
+
+.lex-framework-accordion .q-expansion-item__content {
+    background: var(--lex-surface-hover) !important;
+    color: var(--lex-text) !important;
+    padding: 20px 24px !important;
+    border-top: 1px solid var(--lex-card-border) !important;
+}
+
+.lex-framework-desc {
+    color: var(--lex-text) !important;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.lex-framework-industries-box {
+    background: var(--lex-card-bg) !important;
+    border: 1px solid var(--lex-card-border) !important;
+    border-radius: 10px !important;
+    padding: 10px 14px !important;
+    margin-top: 8px;
+}
+
+.lex-framework-industries-label {
+    color: var(--lex-text) !important;
+    font-weight: 800 !important;
+    font-size: 0.88rem;
+}
+
+.lex-framework-industries-text {
+    color: var(--lex-sage) !important;
+    font-weight: 700 !important;
+    font-size: 0.88rem;
+}
+
+
+/* ============================================================
    DETAILED GAP ANALYSIS ACCORDIONS
    ============================================================ */
 

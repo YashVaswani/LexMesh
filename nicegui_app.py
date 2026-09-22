@@ -1,3 +1,4 @@
+import os
 import json
 import re
 import warnings
@@ -656,121 +657,185 @@ def dashboard(request: Request):
 
     def extract_metadata_from_pdf(
         pdf_bytes: bytes,
+        filename: str = "",
     ):
-
         try:
-
             doc = fitz.open(
                 stream=pdf_bytes,
                 filetype="pdf",
             )
-
             if len(doc) == 0:
                 return "", ""
 
-            first_page_text = (
-                doc[0].get_text()
-            )
+            # Check up to first 2 pages
+            page_texts = [doc[i].get_text() for i in range(min(2, len(doc)))]
+            full_header_text = "\n".join(page_texts)
+            lines = [l.strip() for l in full_header_text.splitlines() if l.strip()]
 
             company = ""
             policy = ""
 
-            # ------------------------------------------------
-            # COMPANY
-            # ------------------------------------------------
+            # ----------------------------------------------------
+            # 1. COMPANY EXTRACTION (Multi-Tier Robust Strategy)
+            # ----------------------------------------------------
 
-            company_match = re.search(
-                r"(?:Company|Organization)\s*(?:Name)?\s*[:\t]\s*([^\n\r]+)",
-                first_page_text,
+            # Tier 1: Key-Value label pattern (e.g. "Company QuickCart Retail LLC", "Company: Acme Corp")
+            for line in lines:
+                kv_match = re.match(
+                    r"^(?:Company|Organization|Legal\s+Entity)(?:\s+Name)?\s*[:\t\-–—|]?\s+(.+)$",
+                    line,
+                    re.IGNORECASE,
+                )
+                if kv_match:
+                    candidate = kv_match.group(1).strip()
+                    if len(candidate) >= 2 and not re.match(r"^(?:Name|Title|Address|Location|Description|Registered|Effective)$", candidate, re.IGNORECASE):
+                        company = candidate
+                        break
+
+            # Tier 2: Two-line table cell format (Line 1: "Company", Line 2: "QuickCart Retail LLC")
+            if not company:
+                for i, line in enumerate(lines):
+                    if re.match(r"^(?:Company|Organization|Legal\s+Entity)(?:\s+Name)?\s*[:\t\-–—|]?$", line, re.IGNORECASE):
+                        if i + 1 < len(lines):
+                            candidate = lines[i + 1].strip()
+                            if candidate and not re.match(r"^(?:Registered|Effective|Website|Contact|Version|Date|Review|Document)\b", candidate, re.IGNORECASE):
+                                company = candidate
+                                break
+
+            # Tier 3: Legal Preamble / Introduction Sentence
+            # e.g. "This Privacy Policy describes how QuickCart Retail LLC ('QuickCart', 'we') handles..."
+            if not company:
+                preamble_match = re.search(
+                    r"(?:This\s+(?:[A-Za-z\s]+)?Policy\s+(?:describes|explains|governs|sets\s+forth|outlines)\s+how\s+)"
+                    r"([A-Z0-9][A-Za-z0-9&.,'’\- ]+?)"
+                    r"(?:\s*\((?:['\"‘“]|we\b|collectively|the\b)|,|\s+handles|\s+collects|\s+uses|\s+processes|\s+operates|\s+ships)",
+                    full_header_text,
+                    re.IGNORECASE,
+                )
+                if preamble_match:
+                    candidate = preamble_match.group(1).strip()
+                    if 2 <= len(candidate) <= 60 and not re.search(r"\b(?:Policy|Notice|Document|Statement)\b", candidate, re.IGNORECASE):
+                        company = candidate
+
+            if not company:
+                preamble_match2 = re.search(
+                    r"(?:privacy\s+practices\s+of\s+|welcome\s+to\s+|at\s+)"
+                    r"([A-Z0-9][A-Za-z0-9&.,'’\- ]{2,50}?)"
+                    r"(?:\s*\((?:['\"‘“]|we\b|collectively)|,\s*we\b|\.\s|\n)",
+                    full_header_text,
+                    re.IGNORECASE,
+                )
+                if preamble_match2:
+                    candidate = preamble_match2.group(1).strip()
+                    if 2 <= len(candidate) <= 60:
+                        company = candidate
+
+            # Tier 4: Corporate Entity Suffix Match (Comprehensive legal suffixes)
+            if not company:
+                corp_suffix_match = re.search(
+                    r"\b([A-Z][A-Za-z0-9&.]*(?:\s+[A-Z0-9][A-Za-z0-9&.]*){0,5}\s+"
+                    r"(?:LLC|L\.L\.C\.|LLP|L\.L\.P\.|Ltd\.?|LTD|Limited|Inc\.?|INC|Incorporated|"
+                    r"Corp\.?|CORP|Corporation|Pvt\.?\s+Ltd\.?|Private\s+Limited|Co\.?|Company|"
+                    r"GmbH|AG|PLC|Retail\s+LLC|Technologies|Technology|Systems|AI|Labs|Solutions|"
+                    r"Holdings|Group|Enterprises|Ventures|Partners|Services|Bank|Capital))\b",
+                    full_header_text,
+                )
+                if corp_suffix_match:
+                    candidate = re.sub(r"\s+", " ", corp_suffix_match.group(1)).strip()
+                    if not re.search(r"\b(?:Privacy|Security|Cookie|Terms|Compliance)\b", candidate, re.IGNORECASE):
+                        company = candidate
+
+            # Tier 5: Title Block on Page 1 (Line directly above PRIVACY POLICY / SECURITY POLICY)
+            if not company:
+                for i, line in enumerate(lines[:10]):
+                    if re.search(r"\b(?:PRIVACY\s+POLICY|SECURITY\s+POLICY|DATA\s+PROTECTION)\b", line, re.IGNORECASE):
+                        if i > 0:
+                            candidate = lines[i - 1].strip()
+                            if len(candidate) >= 3 and not re.search(r"\b(?:Page\s+\d+|Version|\d{4}|Confidential|Table\s+of)\b", candidate, re.IGNORECASE):
+                                company = candidate
+                                break
+
+            # Tier 6: PDF Document Metadata Properties
+            if not company and doc.metadata:
+                meta_author = doc.metadata.get("author") or doc.metadata.get("creator") or ""
+                meta_author = meta_author.strip()
+                if meta_author and len(meta_author) >= 3 and not re.search(r"(?:Word|Acrobat|PDF|Canva|LaTeX|ReportLab|Writer|InDesign)", meta_author, re.IGNORECASE):
+                    company = meta_author
+
+            # Tier 7: Filename Fallback (e.g. "SampleInput_QuickCart_Policy.pdf" -> "QuickCart")
+            if not company and filename:
+                base = os.path.splitext(filename)[0]
+                base = re.sub(r"^(?:SampleInput_|Sample_Input_|Sample_|Input_|Test_|Demo_|Draft_)", "", base, flags=re.IGNORECASE)
+                base = re.sub(r"(?:_Policy|-Policy|_Privacy|-Privacy|_Security|-Security|_v\d+.*|-v\d+.*|_condensed.*)$", "", base, flags=re.IGNORECASE)
+                base = re.sub(r"[-_]+", " ", base).strip()
+                if base and len(base) >= 2:
+                    company = base
+
+            # Clean company name
+            if company:
+                company = re.sub(r"\s+", " ", company).strip()
+
+            # ----------------------------------------------------
+            # 2. POLICY NAME & VERSION EXTRACTION
+            # ----------------------------------------------------
+
+            known_types = [
+                ("Information Security Policy", r"Information\s+Security\s+Policy"),
+                ("Data Protection Policy", r"Data\s+Protection\s+Policy"),
+                ("Incident Response Plan", r"Incident\s+Response\s+(?:Plan|Policy)"),
+                ("Access Control Policy", r"Access\s+Control\s+Policy"),
+                ("Acceptable Use Policy", r"Acceptable\s+Use\s+Policy"),
+                ("Customer Data Statement", r"Customer\s+Data\s+Statement"),
+                ("Privacy Policy", r"Privacy\s+Policy"),
+                ("Privacy Notice", r"Privacy\s+Notice"),
+                ("Security Policy", r"Security\s+Policy"),
+                ("Terms of Service", r"Terms\s+of\s+(?:Service|Use)"),
+            ]
+
+            policy_type = ""
+            for p_name, p_pattern in known_types:
+                if re.search(r"\b" + p_pattern + r"\b", full_header_text, re.IGNORECASE):
+                    policy_type = p_name
+                    break
+
+            if not policy_type:
+                policy_type = "Privacy Policy"
+
+            # Version detection
+            version_str = ""
+            v_match = re.search(
+                r"(?:Document\s+Version|Policy\s+Version|Version|Ver\.?|v)\s*[:\s\-]*([vV]?\d+(?:\.\d+)*)\b",
+                full_header_text,
                 re.IGNORECASE,
             )
-
-            if company_match:
-
-                company = (
-                    company_match
-                    .group(1)
-                    .strip()
-                )
-
+            if v_match:
+                v_val = v_match.group(1).strip()
+                version_str = v_val if v_val.lower().startswith("v") else f"v{v_val}"
             else:
+                v_match2 = re.search(r"\b(v\d+\.\d+)\b", full_header_text, re.IGNORECASE)
+                if v_match2:
+                    version_str = v_match2.group(1).strip()
 
-                company_match = re.search(
-                    r"\b([A-Z][A-Za-z0-9&]*(?:\s+[A-Z][A-Za-z0-9&]*){0,4}\s+"
-                    r"(?:Pvt\s+Ltd|Ltd|Inc|Corp|"
-                    r"Corporation|Technologies|"
-                    r"Systems|AI))\b",
-                    first_page_text,
-                )
+            if policy_type and version_str:
+                policy = f"{policy_type} {version_str}"
+            elif policy_type:
+                policy = policy_type
+            elif version_str:
+                policy = f"Enterprise Policy {version_str}"
+            else:
+                policy = "Enterprise Privacy Policy"
 
-                if company_match:
-
-                    company = (
-                        re.sub(r"\s+", " ", company_match.group(1))
-                        .strip()
-                    )
-
-            # ------------------------------------------------
-            # POLICY NAME
-            # ------------------------------------------------
-
-            title_match = re.search(
-                r"(PRIVACY POLICY|PRIVACY NOTICE|"
-                r"DATA PROTECTION POLICY|"
-                r"INFORMATION SECURITY POLICY|"
-                r"ACCESS CONTROL POLICY|"
-                r"INCIDENT RESPONSE PLAN|"
-                r"TERMS OF SERVICE)[^\n]*",
-                first_page_text,
-                re.IGNORECASE,
-            )
-
-            # ------------------------------------------------
-            # VERSION
-            # ------------------------------------------------
-
-            version_match = re.search(
-                r"(v\d+\.\d+|\b\d+\.\d+\b)",
-                first_page_text,
-                re.IGNORECASE,
-            )
-
-            if (
-                title_match
-                and version_match
-            ):
-
-                policy = (
-                    f"{title_match.group(0).strip().title()} "
-                    f"{version_match.group(0)}"
-                )
-
-            elif title_match:
-
-                policy = (
-                    title_match
-                    .group(0)
-                    .strip()
-                    .title()
-                )
-
-            elif version_match:
-
-                policy = (
-                    f"Enterprise Policy "
-                    f"{version_match.group(0)}"
-                )
-
-            return company, policy
+            return company.strip(), policy.strip()
 
         except Exception as e:
-
-            print(
-                "[LexMesh] Metadata extraction error:",
-                e,
-            )
-
-            return "", ""
+            logger.error("[LexMesh] Metadata extraction error: %s", e)
+            fallback_co = ""
+            if filename:
+                base = os.path.splitext(filename)[0]
+                base = re.sub(r"^(?:SampleInput_|Sample_Input_|Sample_|Input_|Test_|Demo_)", "", base, flags=re.IGNORECASE)
+                base = re.sub(r"(?:_Policy|-Policy|_Privacy|-Privacy|_v\d+.*|-v\d+.*)$", "", base, flags=re.IGNORECASE)
+                fallback_co = re.sub(r"[-_]+", " ", base).strip()
+            return fallback_co, "Privacy Policy"
 
     # ========================================================
     # REPORT FILTER
@@ -1173,10 +1238,9 @@ def dashboard(request: Request):
             # TRY METADATA EXTRACTION
             # ------------------------------------------------
 
-            company, policy = (
-                extract_metadata_from_pdf(
-                    pdf_data
-                )
+            company, policy = extract_metadata_from_pdf(
+                pdf_data,
+                filename=uploaded_file.name,
             )
 
             print(
@@ -1194,32 +1258,48 @@ def dashboard(request: Request):
             # ------------------------------------------------
 
             if company:
-
                 sidebar[
                     "company_name"
                 ].value = company
+                sidebar[
+                    "company_name"
+                ].update()
 
             if policy:
-
                 sidebar[
                     "policy_name"
                 ].value = policy
+                sidebar[
+                    "policy_name"
+                ].update()
 
             # ------------------------------------------------
             # SUCCESS
             # ------------------------------------------------
 
+            detected_parts = []
+            if company:
+                detected_parts.append(f"Company: {company}")
+            if policy:
+                detected_parts.append(f"Policy: {policy}")
+            det_str = f" • Detected { ' | '.join(detected_parts) }" if detected_parts else ""
+
             status.set_text(
-                f"Document {uploaded_file.name} uploaded and ready for analysis."
+                f"Document {uploaded_file.name} uploaded and ready for analysis.{det_str}"
             )
 
             ui.notify(
-                "PDF uploaded successfully. "
-                "Click Run Unified Gap Analysis.",
+                f"Recognized: {company or 'Company'} — {policy or 'Policy'}",
                 type="positive",
             )
 
-            logger.info("PDF ready for analysis: %s (%d bytes)", page_state['pdf_name'], len(pdf_data))
+            logger.info(
+                "PDF ready for analysis: %s (%d bytes, company='%s', policy='%s')",
+                page_state['pdf_name'],
+                len(pdf_data),
+                company,
+                policy,
+            )
 
         except Exception as e:
 
