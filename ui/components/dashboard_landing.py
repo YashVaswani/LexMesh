@@ -33,44 +33,15 @@ def create_dashboard_landing(on_run_new_audit=None):
             )
 
         if on_run_new_audit:
-            with ui.row().classes("gap-3 items-center flex-wrap"):
-                ui.button(
-                    "Run New Audit",
-                    on_click=on_run_new_audit,
-                ).classes(
-                    "lex-run-button"
-                ).style(
-                    "width: auto !important; "
-                    "padding: 0 32px !important;"
-                ).props("unelevated no-caps")
-
-                # Secondary CTA — for first-time visitors without a PDF
-                with ui.element("button").classes("lex-demo-cta-btn").on(
-                    "click", lambda: ui.navigate.to("/audit?demo=1")
-                ).style(
-                    "display: flex; align-items: center; gap: 8px; "
-                    "background: rgba(78,121,93,0.12); "
-                    "border: 1.5px solid rgba(78,121,93,0.45); "
-                    "color: #7ca689; border-radius: 10px; "
-                    "padding: 9px 22px; font-size: 0.875rem; "
-                    "font-weight: 700; cursor: pointer; "
-                    "transition: all 0.2s ease; font-family: inherit; "
-                    "white-space: nowrap;"
-                ).on(
-                    "mouseenter",
-                    lambda e: ui.run_javascript(
-                        "document.querySelector('.lex-demo-cta-btn')?.style && "
-                        "(document.querySelector('.lex-demo-cta-btn').style.background='rgba(78,121,93,0.22)');"
-                    )
-                ).on(
-                    "mouseleave",
-                    lambda e: ui.run_javascript(
-                        "document.querySelector('.lex-demo-cta-btn')?.style && "
-                        "(document.querySelector('.lex-demo-cta-btn').style.background='rgba(78,121,93,0.12)');"
-                    )
-                ):
-                    lucide_icon("play-circle", size=16, class_name="", extra_style="color: #7ca689;")
-                    ui.label("Load Sample Policy (Quick Demo)")
+            ui.button(
+                "Run New Audit",
+                on_click=on_run_new_audit,
+            ).classes(
+                "lex-run-button"
+            ).style(
+                "width: auto !important; "
+                "padding: 0 32px !important;"
+            ).props("unelevated no-caps")
 
 
     # ========================================================
