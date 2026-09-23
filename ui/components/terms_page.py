@@ -146,7 +146,8 @@ def create_terms_page(from_page: str = None):
             section(
                 "mail",
                 "7. Contact",
-                "If you have any questions about these Terms or wish to report a concern, please contact the LexMesh team through the platform. "
+                "If you have any questions about these Terms, compliance concerns, or legal notices, please contact the LexMesh team directly "
+                "at <a href='mailto:lexmesh.official@gmail.com' style='color:#4e795d;font-weight:700;text-decoration:underline;'>lexmesh.official@gmail.com</a>. "
                 "We aim to respond to all inquiries within 5 business days.",
             )
 

@@ -132,7 +132,8 @@ def create_privacy_policy_page(from_page: str = None):
                 "mail",
                 "7. Contact",
                 "For any privacy-related inquiries, data deletion requests, or to report a concern, please contact the LexMesh team directly "
-                "through the platform. We are committed to responding to all privacy inquiries within 5 business days.",
+                "at <a href='mailto:lexmesh.official@gmail.com' style='color:#4e795d;font-weight:700;text-decoration:underline;'>lexmesh.official@gmail.com</a>. "
+                "We are committed to responding to all privacy inquiries within 5 business days.",
             )
 
         # ── Footer ───────────────────────────────────────────────────────────
