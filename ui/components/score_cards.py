@@ -102,17 +102,14 @@ def create_score_cards(
 
             # Score element with animated counter
             score_el = ui.label(
-                f"{overall:.0f}%"
+                "0%"
             ).classes(
-                f"lex-overall-score lex-score-animated {colour}"
-            )
-            # Trigger JS counter animation
-            ui.run_javascript(
-                f"lexAnimateScore(document.querySelector('.lex-overall-score'), {overall:.0f}, 900);"
-            )
+                f"lex-overall-score lex-score-animated {colour} lex-animate-counter"
+            ).props(f'data-target="{overall:.0f}"')
+
             # Trigger confetti if high score
             if overall >= 85:
-                ui.run_javascript("setTimeout(lexConfetti, 400);")
+                ui.run_javascript("setTimeout(lexConfetti, 500);")
 
         ui.linear_progress(
             value=max(
@@ -200,10 +197,10 @@ def create_score_cards(
                         )
 
                     ui.label(
-                        f"{score:.0f}%"
+                        "0%"
                     ).classes(
-                        f"lex-framework-score shrink-0 lex-score-animated {fw_colour}"
-                    )
+                        f"lex-framework-score shrink-0 lex-score-animated {fw_colour} lex-animate-counter"
+                    ).props(f'data-target="{score:.0f}"')
 
                 ui.linear_progress(
                     value=max(
@@ -229,6 +226,9 @@ def create_score_cards(
                 ).classes(
                     "lex-framework-exposure"
                 )
+
+    # Animate all scores simultaneously
+    ui.run_javascript("if(window.lexAnimateAllScores) window.lexAnimateAllScores();")
 
 
 def _number(value):

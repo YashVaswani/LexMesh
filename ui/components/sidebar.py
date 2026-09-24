@@ -274,10 +274,10 @@ def create_sidebar(
                     clear_upload_btn = ui.button(
                         icon="close",
                     ).props(
-                        "flat round dense size=xs color=negative"
+                        "flat round dense size=xs color=negative id=lex-clear-btn"
                     ).classes(
-                        "shrink-0 hover:bg-red-50 dark:hover:bg-red-950/30"
-                    ).tooltip("Remove uploaded document")
+                        "shrink-0 hover:bg-red-50 dark:hover:bg-red-950/30 lex-clear-btn"
+                    ).tooltip("Remove uploaded document (Esc)")
 
                 # ------------------------------------------------
                 # COMPANY
@@ -312,10 +312,10 @@ def create_sidebar(
                 run_button = ui.button(
                     "Run Unified Gap Analysis",
                 ).props(
-                    "unelevated"
+                    "unelevated id=lex-run-btn"
                 ).classes(
                     "lex-run-button"
-                )
+                ).tooltip("Run Analysis (Ctrl + Enter)")
 
         return {
             "drawer": drawer,

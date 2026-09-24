@@ -94,28 +94,64 @@ document.addEventListener('DOMContentLoaded',function(){
   obs.observe(document.body,{attributes:true,attributeFilter:['class']});
 });
 
-// 2. Keyboard Shortcuts
-document.addEventListener('keydown',function(e){
-  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+// 2. Keyboard Shortcuts (Global capture listener)
+window.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
     e.preventDefault();
-    var btn=document.querySelector('.lex-run-button');
-    if(btn&&!btn.disabled)btn.click();
+    e.stopPropagation();
+    var btn = document.getElementById('lex-run-btn') || document.querySelector('.lex-run-button');
+    if (btn) {
+      btn.click();
+      btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+    }
+  } else if (e.key === 'Escape') {
+    var cBtn = document.getElementById('lex-clear-btn') || document.querySelector('.lex-clear-btn');
+    if (cBtn) {
+      cBtn.click();
+      cBtn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+    }
   }
-});
+}, true);
 
-// 1. Animated Score Counter
-window.lexAnimateScore=function(el,target,dur){
-  if(!el)return;
-  el.classList.add('lex-score-animated');
-  var st=null;
-  function step(ts){
-    if(!st)st=ts;
-    var p=Math.min((ts-st)/dur,1);
-    var ease=1-Math.pow(1-p,3);
-    el.textContent=Math.round(ease*target)+'%';
-    if(p<1)requestAnimationFrame(step);
+// 1. Animated Score Counter (Multi-score animator with DOM readiness retry)
+window.lexAnimateAllScores = function() {
+  var attempts = 0;
+  function run() {
+    var counters = document.querySelectorAll('.lex-animate-counter');
+    if (!counters || counters.length === 0) {
+      attempts++;
+      if (attempts < 30) setTimeout(run, 50);
+      return;
+    }
+    counters.forEach(function(el) {
+      if (el.dataset.animating === 'true') return;
+      el.dataset.animating = 'true';
+      var target = parseFloat(el.getAttribute('data-target') || el.dataset.target || el.textContent.replace('%','') || 0);
+      if (isNaN(target)) target = 0;
+      var duration = 1200;
+      var startTime = null;
+      el.textContent = '0%';
+      el.classList.add('lex-score-animated');
+      function step(ts) {
+        if (!startTime) startTime = ts;
+        var p = Math.min((ts - startTime) / duration, 1);
+        var ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(ease * target) + '%';
+        if (p < 1) {
+          requestAnimationFrame(step);
+        } else {
+          el.textContent = Math.round(target) + '%';
+          el.dataset.animating = 'done';
+        }
+      }
+      requestAnimationFrame(step);
+    });
   }
-  requestAnimationFrame(step);
+  setTimeout(run, 60);
+};
+
+window.lexAnimateScore = function(el, target, dur) {
+  window.lexAnimateAllScores();
 };
 
 // 10. Confetti on High Score
@@ -2327,18 +2363,35 @@ def dashboard(request: Request):
     )
 
     # 2. Keyboard shortcuts (Ctrl+Enter -> Run Analysis, Esc -> Clear Upload)
+    def _handle_page_key(e):
+        if not getattr(e.action, 'keydown', False):
+            return
+        if e.key == 'Enter' and (getattr(e.modifiers, 'ctrl', False) or getattr(e.modifiers, 'meta', False)):
+            import asyncio
+            asyncio.create_task(run_analysis())
+        elif e.key == 'Escape':
+            handle_clear_upload()
+
+    ui.keyboard(on_key=_handle_page_key)
+
     ui.run_javascript("""
         window.addEventListener('keydown', function(e) {
             if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                 e.preventDefault();
-                var btn = document.querySelector('.lex-run-button') || document.querySelector('button.lex-btn-primary');
-                if (btn && !btn.disabled) btn.click();
+                e.stopPropagation();
+                var btn = document.getElementById('lex-run-btn') || document.querySelector('.lex-run-button');
+                if (btn) {
+                    btn.click();
+                    btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+                }
+            } else if (e.key === 'Escape') {
+                var cBtn = document.getElementById('lex-clear-btn') || document.querySelector('.lex-clear-btn');
+                if (cBtn) {
+                    cBtn.click();
+                    cBtn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+                }
             }
-            if (e.key === 'Escape') {
-                var cBtn = document.querySelector('[title*="Remove"]') || document.querySelector('.lex-clear-btn');
-                if (cBtn) cBtn.click();
-            }
-        });
+        }, true);
     """)
 
     # ========================================================
