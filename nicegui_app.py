@@ -299,18 +299,18 @@ def login_page():
                 # Login Action
                 def do_login():
                     if not email.value or not password.value:
-                        ui.notify("Please enter both email and password.", type="warning", position='top-right')
+                        ui.notify("Please enter both email and password.", type="warning", position='top')
                         return
                     success, msg = auth.sign_in(email.value, password.value)
                     if success:
-                        ui.notify("Logged in successfully!", type="positive", position='top-right')
+                        ui.notify("Logged in successfully!", type="positive", position='top')
                         ui.navigate.to('/')
                     else:
                         err = str(msg)
                         if 'email' in err.lower() and 'confirm' in err.lower():
-                            ui.notify("Please verify your email first. Check your inbox.", type="warning", timeout=6000, position='top-right')
+                            ui.notify("Please verify your email first. Check your inbox.", type="warning", timeout=6000, position='top')
                         else:
-                            ui.notify(err, type="negative", position='top-right')
+                            ui.notify(err, type="negative", position='top')
 
                 email.on('keydown.enter', do_login)
                 password.on('keydown.enter', do_login)
@@ -327,12 +327,13 @@ def login_page():
 
             # Legal footer
             with ui.row().classes("w-full items-center justify-center gap-3 mt-4"):
-                ui.link("Privacy Policy", "/privacy?from=login").classes("text-xs text-slate-400 hover:text-slate-600")
+                ui.link("Privacy Policy", "/privacy?from=login").classes("text-xs text-slate-400 hover:text-slate-600").style("word-spacing:0.25em;")
                 ui.label("·").classes("text-xs text-slate-300")
-                ui.link("Terms & Conditions", "/terms?from=login").classes("text-xs text-slate-400 hover:text-slate-600")
+                ui.link("Terms & Conditions", "/terms?from=login").classes("text-xs text-slate-400 hover:text-slate-600").style("word-spacing:0.25em;")
 
 @ui.page("/signup")
 def signup_page():
+
     if auth.get_current_user():
         ui.navigate.to('/')
         return
@@ -375,16 +376,16 @@ def signup_page():
                 
                 def do_signup():
                     if not email.value or not password.value:
-                        ui.notify("Please enter both email and password.", type="warning", position='top-right')
+                        ui.notify("Please enter both email and password.", type="warning", position='top')
                         return
                     if not company_name_input.value.strip():
-                        ui.notify("Please enter your company name.", type="warning", position='top-right')
+                        ui.notify("Please enter your company name.", type="warning", position='top')
                         return
                     if len(password.value) < 6:
-                        ui.notify("Password must be at least 6 characters.", type="warning", position='top-right')
+                        ui.notify("Password must be at least 6 characters.", type="warning", position='top')
                         return
                     if password.value != confirm_password.value:
-                        ui.notify("Passwords do not match. Please check and try again.", type="negative", position='top-right')
+                        ui.notify("Passwords do not match. Please check and try again.", type="negative", position='top')
                         return
                     success, msg = auth.sign_up(email.value, password.value)
                     if success and msg == "CHECK_EMAIL":
@@ -396,14 +397,14 @@ def signup_page():
                             "Account created! Please check your inbox and click the verification link to activate your account.",
                             type="positive",
                             timeout=8000,
-                            position='top-right'
+                            position='top'
                         )
                         ui.navigate.to('/verify-email')
                     elif success:
-                        ui.notify("Signed up successfully! Welcome to LexMesh.", type="positive", position='top-right')
+                        ui.notify("Signed up successfully! Welcome to LexMesh.", type="positive", position='top')
                         ui.navigate.to('/')
                     else:
-                        ui.notify(msg, type="negative", position='top-right')
+                        ui.notify(msg, type="negative", position='top')
 
                 email.on('keydown.enter', do_signup)
                 password.on('keydown.enter', do_signup)
@@ -420,9 +421,9 @@ def signup_page():
 
             # Legal footer
             with ui.row().classes("w-full items-center justify-center gap-3 mt-4"):
-                ui.link("Privacy Policy", "/privacy?from=login").classes("text-xs text-slate-400 hover:text-slate-600")
+                ui.link("Privacy Policy", "/privacy?from=login").classes("text-xs text-slate-400 hover:text-slate-600").style("word-spacing:0.25em;")
                 ui.label("·").classes("text-xs text-slate-300")
-                ui.link("Terms & Conditions", "/terms?from=login").classes("text-xs text-slate-400 hover:text-slate-600")
+                ui.link("Terms & Conditions", "/terms?from=login").classes("text-xs text-slate-400 hover:text-slate-600").style("word-spacing:0.25em;")
 
 # ============================================================
 # EMAIL VERIFICATION PENDING PAGE
@@ -675,11 +676,15 @@ def dashboard(request: Request):
         # STATUS
         # ----------------------------------------------------
 
-        status = ui.label(
-            "Upload a company policy PDF to begin."
-        ).classes(
-            "lex-analysis-status"
-        )
+        # Status row: inline spinner (hidden by default) + text label
+        with ui.row().classes("items-center gap-3") as status_row:
+            status_spinner = ui.spinner(size="sm", color="primary")
+            status_spinner.set_visibility(False)
+            status = ui.label(
+                "Upload a company policy PDF to begin."
+            ).classes(
+                "lex-analysis-status"
+            )
 
         # ====================================================
         # HORIZONTAL TABS
@@ -1424,15 +1429,10 @@ def dashboard(request: Request):
             ] = uploaded_file.name
 
             # ------------------------------------------------
-            # UPLOADING FEEDBACK — show spinner immediately
+            # UPLOADING FEEDBACK — show inline spinner
             # ------------------------------------------------
-            status.set_text("⏳ Uploading document and understanding content...")
-            ui.notify(
-                "📄 Uploading & understanding your document...",
-                type="info",
-                position='top-right',
-                timeout=4000,
-            )
+            status_spinner.set_visibility(True)
+            status.set_text("Uploading & understanding document...")
 
             if "attached_file_container" in sidebar:
                 sidebar["attached_file_name_label"].text = uploaded_file.name
@@ -1493,14 +1493,15 @@ def dashboard(request: Request):
                 detected_parts.append(f"Policy: {policy}")
             det_str = f" • Detected { ' | '.join(detected_parts) }" if detected_parts else ""
 
+            status_spinner.set_visibility(False)
             status.set_text(
-                f"Document {uploaded_file.name} uploaded and ready for analysis.{det_str}"
+                f"✅ Document ready — {uploaded_file.name}{det_str}"
             )
 
             ui.notify(
                 f"✅ Document understood — {company or 'Company'} · {policy or 'Policy'}",
                 type="positive",
-                position='top-right',
+                position='top',
             )
 
             logger.info(
@@ -1516,12 +1517,13 @@ def dashboard(request: Request):
             page_state["pdf_bytes"] = None
             page_state["pdf_name"] = ""
 
+            status_spinner.set_visibility(False)
             status.set_text(f"❌ Upload failed: {e}")
 
             ui.notify(
                 f"Upload failed: {e}",
                 type="negative",
-                position='top-right',
+                position='top',
             )
 
             logger.error("PDF upload error: %s", e, exc_info=True)
@@ -1544,7 +1546,7 @@ def dashboard(request: Request):
         sidebar["policy_name"].value = ""
         sidebar["policy_name"].update()
         status.set_text("Upload a company policy PDF to begin.")
-        ui.notify("Document removed. You can now upload a new PDF.", type="info", position='top-right')
+        ui.notify("Document removed. You can now upload a new PDF.", type="info", position='top')
 
     if "clear_upload_btn" in sidebar:
         sidebar["clear_upload_btn"].on_click(handle_clear_upload)
@@ -1554,7 +1556,7 @@ def dashboard(request: Request):
         if "attached_file_container" in sidebar:
             sidebar["attached_file_container"].set_visibility(False)
             sidebar["attached_file_name_label"].text = ""
-        ui.notify("File exceeds limit or is not a PDF (Max 25 MB).", type="warning", position='top-right')
+        ui.notify("File exceeds limit or is not a PDF (Max 25 MB).", type="warning", position='top')
 
     sidebar["uploaded_file"].on("rejected", handle_upload_rejected)
 
@@ -1618,7 +1620,7 @@ def dashboard(request: Request):
             ui.notify(
                 f"⏳ Please wait {remaining}s before running another audit.",
                 type="warning",
-                position='top-right',
+                position='top',
             )
             return
 
@@ -1657,7 +1659,7 @@ def dashboard(request: Request):
 
         if validation_errors:
             for err in validation_errors:
-                ui.notify(err, type="warning", timeout=5000, position='top-right')
+                ui.notify(err, type="warning", timeout=5000, position='top')
             status.set_text(" · ".join(validation_errors))
             return
 
@@ -1667,6 +1669,7 @@ def dashboard(request: Request):
         page_state["last_run_at"] = time.monotonic()
 
         button.disable()
+        status_spinner.set_visibility(True)
 
         try:
 
@@ -1708,7 +1711,7 @@ def dashboard(request: Request):
 
             if not selected_fw_keys:
                 status.set_text("Please select at least one evaluation framework in the sidebar.")
-                ui.notify("Please select at least one framework.", type="warning", position='top-right')
+                ui.notify("Please select at least one framework.", type="warning", position='top')
                 button.enable()
                 return
 
@@ -1726,7 +1729,7 @@ def dashboard(request: Request):
             # =================================================
 
             status.set_text(
-                "📖 Reading policy PDF..."
+                "Reading policy PDF..."
             )
 
             logger.info("Opening PDF for text extraction...")
@@ -1768,7 +1771,7 @@ def dashboard(request: Request):
             # =================================================
 
             status.set_text(
-                "🔍 Classifying document type..."
+                "Classifying document type..."
             )
 
             logger.info("Running document triage classification...")
@@ -1796,11 +1799,12 @@ def dashboard(request: Request):
                     f"{doc_type}, not a company policy."
                 )
                 status.set_text(rejection_msg)
+                status_spinner.set_visibility(False)
                 ui.notify(
                     f"Not a policy document: {reason}",
                     type="warning",
                     close_button=True,
-                    position='top-right',
+                    position='top',
                 )
 
                 # Clear all tab containers and show rejection state
@@ -2052,7 +2056,7 @@ def dashboard(request: Request):
             ui.notify(
                 "✅ Compliance analysis completed successfully.",
                 type="positive",
-                position='top-right',
+                position='top',
             )
 
             logger.info("=== ANALYSIS SUCCESS | Overall Score: %s%% ===", score)
@@ -2067,13 +2071,14 @@ def dashboard(request: Request):
 
             try:
                 status.set_text(f"Analysis failed: {e}")
-                ui.notify(f"Analysis failed: {e}", type="negative", position='top-right')
+                ui.notify(f"Analysis failed: {e}", type="negative", position='top')
             except Exception:
                 pass
 
         finally:
 
             button.enable()
+            status_spinner.set_visibility(False)
 
     # ========================================================
     # CONNECT RUN BUTTON
