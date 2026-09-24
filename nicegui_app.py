@@ -70,12 +70,125 @@ ui.add_head_html('''
         if (window.lucide) lucide.createIcons();
     });
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <!-- Custom favicon: branded mesh-shield icon -->
 <link rel="icon" type="image/png" href="/static/favicon.png">
 <link rel="shortcut icon" href="/static/favicon.png">
 <link rel="apple-touch-icon" href="/static/favicon.png">
 ''', shared=True)
+
+# ── Global UX JS bundle (13, 2, 1, 10, 8, 14) ───────────────────────────────
+ui.add_head_html('''
+<script>
+// 13. Dark Mode Persistence
+(function(){
+  if(localStorage.getItem('lex_dark_mode')==='1'){
+    document.body.classList.add('body--dark','q-dark');
+  }
+})();
+document.addEventListener('DOMContentLoaded',function(){
+  var obs=new MutationObserver(function(){
+    var dark=document.body.classList.contains('body--dark')||document.body.classList.contains('q-dark');
+    localStorage.setItem('lex_dark_mode',dark?'1':'0');
+  });
+  obs.observe(document.body,{attributes:true,attributeFilter:['class']});
+});
+
+// 2. Keyboard Shortcuts
+document.addEventListener('keydown',function(e){
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+    e.preventDefault();
+    var btn=document.querySelector('.lex-run-button');
+    if(btn&&!btn.disabled)btn.click();
+  }
+});
+
+// 1. Animated Score Counter
+window.lexAnimateScore=function(el,target,dur){
+  if(!el)return;
+  el.classList.add('lex-score-animated');
+  var st=null;
+  function step(ts){
+    if(!st)st=ts;
+    var p=Math.min((ts-st)/dur,1);
+    var ease=1-Math.pow(1-p,3);
+    el.textContent=Math.round(ease*target)+'%';
+    if(p<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+};
+
+// 10. Confetti on High Score
+window.lexConfetti=function(){
+  if(typeof confetti!=='undefined'){
+    confetti({particleCount:120,spread:80,origin:{y:0.55},colors:['#4e795d','#7ca689','#eae3d2','#3b6349','#8a7642']});
+    setTimeout(function(){
+      confetti({particleCount:60,angle:60,spread:55,origin:{x:0,y:0.6},colors:['#4e795d','#d4e2d8','#23382b']});
+      confetti({particleCount:60,angle:120,spread:55,origin:{x:1,y:0.6},colors:['#4e795d','#d4e2d8','#23382b']});
+    },260);
+  }
+};
+
+// 8. Copy to Clipboard
+window.lexCopyText=function(text,btn){
+  navigator.clipboard.writeText(text).then(function(){
+    var orig=btn.innerHTML;
+    btn.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+    btn.style.color='#3b6349';
+    setTimeout(function(){btn.innerHTML=orig;btn.style.color='';},1800);
+  });
+};
+
+// 14. Onboarding Tour
+window.lexStartTour=function(){
+  var steps=[
+    {selector:'.lex-policy-upload',title:'Step 1 — Upload Policy',desc:'Upload your company policy PDF here (max 25 MB). We support Privacy, Security, and Data Protection policies.'},
+    {selector:'.lex-framework-select',title:'Step 2 — Select Industry',desc:'Choose your organisation type to auto-configure the relevant compliance frameworks.'},
+    {selector:'.lex-run-button',title:'Step 3 — Run Analysis',desc:'Click to start the AI-powered audit. Keyboard shortcut: Ctrl + Enter.'},
+    {selector:'.lex-dashboard-tabs',title:'Step 4 — Review Results',desc:'Your compliance scores, policy gaps, action plan, and exportable PDF report appear here.'},
+  ];
+  var i=0;
+  var overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.42);z-index:99990;pointer-events:none;';
+  document.body.appendChild(overlay);
+  function showStep(){
+    document.querySelectorAll('.lex-tour-highlight').forEach(function(e){e.classList.remove('lex-tour-highlight');});
+    if(i>=steps.length){overlay.remove();document.getElementById('lex-tour-popup')?.remove();return;}
+    var s=steps[i];
+    var target=document.querySelector(s.selector);
+    if(target){target.classList.add('lex-tour-highlight');target.scrollIntoView({behavior:'smooth',block:'center'});}
+    var popup=document.getElementById('lex-tour-popup')||document.createElement('div');
+    popup.id='lex-tour-popup';
+    popup.style.cssText='position:fixed;bottom:32px;left:50%;transform:translateX(-50%);z-index:99995;background:#1b2721;border:2px solid #4e795d;border-radius:18px;padding:20px 28px;max-width:420px;width:calc(100vw - 48px);box-shadow:0 12px 40px rgba(0,0,0,0.6);font-family:Plus Jakarta Sans,sans-serif;pointer-events:all;';
+    popup.innerHTML='<div style="font-size:0.75rem;font-weight:800;color:#7ca689;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;">'+(i+1)+' / '+steps.length+'</div>'
+      +'<div style="font-size:1rem;font-weight:900;color:#f5f2eb;margin-bottom:8px;">'+s.title+'</div>'
+      +'<div style="font-size:0.88rem;color:#a3b8aa;line-height:1.6;margin-bottom:16px;">'+s.desc+'</div>'
+      +'<div style="display:flex;gap:10px;">'
+      +'<button onclick="document.querySelectorAll(\'.lex-tour-highlight\').forEach(e=>e.classList.remove(\'lex-tour-highlight\'));document.getElementById(\'lex-tour-popup\').remove();document.body.querySelector(\'[style*=99990]\')?.remove();" style="flex:1;padding:8px;border-radius:10px;border:1.5px solid #36483e;background:transparent;color:#a3b8aa;font-weight:700;cursor:pointer;font-size:0.85rem;">Skip</button>'
+      +'<button id="lex-tour-next" style="flex:2;padding:8px;border-radius:10px;border:none;background:linear-gradient(135deg,#4e795d,#23382b);color:#fff;font-weight:800;cursor:pointer;font-size:0.85rem;">'+(i<steps.length-1?'Next &rarr;':'Done &check;')+'</button>'
+      +'</div>';
+    document.body.appendChild(popup);
+    document.getElementById('lex-tour-next').onclick=function(){i++;showStep();};
+  }
+  showStep();
+};
+document.addEventListener('DOMContentLoaded',function(){
+  if(!localStorage.getItem('lex_tour_seen')){
+    setTimeout(function(){
+      if(!document.querySelector('.lex-run-button'))return;
+      var fab=document.createElement('button');
+      fab.title='Take a product tour';
+      fab.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
+      fab.style.cssText='position:fixed;bottom:80px;right:24px;z-index:9999;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#4e795d,#23382b);color:#fff;border:none;cursor:pointer;box-shadow:0 6px 20px rgba(78,121,93,0.5);display:flex;align-items:center;justify-content:center;transition:transform 0.2s ease;';
+      fab.onmouseenter=function(){this.style.transform='scale(1.12)';};fab.onmouseleave=function(){this.style.transform='scale(1)';};
+      fab.onclick=function(){localStorage.setItem('lex_tour_seen','1');fab.remove();window.lexStartTour();};
+      document.body.appendChild(fab);
+    },2500);
+  }
+});
+</script>
+''', shared=True)
+
 
 # Plausible privacy-friendly analytics (no cookies, GDPR-compliant)
 ui.add_head_html(
@@ -687,6 +800,26 @@ def dashboard(request: Request):
             )
 
         # ====================================================
+        # PROGRESS STEPS BAR (3)
+        # ====================================================
+        with ui.element('div').classes('lex-progress-steps w-full') as progress_steps:
+            # Step 1
+            with ui.element('span').classes('lex-step').props('id="lstep1"'):
+                ui.html('<span class="lex-step-dot">1</span> Upload')
+            ui.html('<div class="lex-step-connector" id="lconn1"></div>')
+            # Step 2
+            with ui.element('span').classes('lex-step').props('id="lstep2"'):
+                ui.html('<span class="lex-step-dot">2</span> Classify')
+            ui.html('<div class="lex-step-connector" id="lconn2"></div>')
+            # Step 3
+            with ui.element('span').classes('lex-step').props('id="lstep3"'):
+                ui.html('<span class="lex-step-dot">3</span> Analyse')
+            ui.html('<div class="lex-step-connector" id="lconn3"></div>')
+            # Step 4
+            with ui.element('span').classes('lex-step').props('id="lstep4"'):
+                ui.html('<span class="lex-step-dot">4</span> Report')
+
+        # ====================================================
         # HORIZONTAL TABS
         # ====================================================
 
@@ -745,11 +878,16 @@ def dashboard(request: Request):
 
                 with ui.column().classes("w-full") as score_container:
 
-                    ui.label(
-                        "Upload a company policy PDF and click Run Analysis to view compliance scores."
-                    ).classes(
-                        "lex-empty-state"
-                    )
+                    # PDF Preview (18) — shown before first analysis run
+                    with ui.element('div').classes('lex-pdf-preview-panel w-full') as pdf_preview_container:
+                        with ui.column().classes('items-center gap-3 w-full'):
+                            ui.html('<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--lex-muted);opacity:0.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>')
+                            ui.label('Upload a policy PDF to preview it here').style('color:var(--lex-muted);font-size:0.95rem;font-weight:600;text-align:center;')
+                            ui.label('Then click Run Analysis to generate your compliance report').style('color:var(--lex-muted);font-size:0.82rem;text-align:center;opacity:0.7;')
+                    with ui.element('div').classes('w-full') as pdf_canvas_container:
+                        pass
+                    pdf_canvas_container.set_visibility(False)
+
 
             # =================================================
             # 2. ACTION PLAN
@@ -1504,6 +1642,48 @@ def dashboard(request: Request):
                 position='top',
             )
 
+            # Progress: step 1 done -> step 2 active
+            ui.run_javascript("""
+                var s=document.getElementById('lstep1');
+                if(s){s.classList.remove('active');s.classList.add('done');}
+                var c=document.getElementById('lconn1');if(c)c.classList.add('done');
+                var s2=document.getElementById('lstep2');if(s2)s2.classList.add('active');
+            """)
+
+            # 18. PDF Preview
+            import base64 as _b64
+            _pdf_b64 = _b64.b64encode(pdf_data).decode()
+            pdf_preview_container.set_visibility(False)
+            pdf_canvas_container.set_visibility(True)
+            pdf_canvas_container.clear()
+            _fname = uploaded_file.name
+            with pdf_canvas_container:
+                ui.html(f"""
+<div class="lex-pdf-preview-panel">
+  <div style="font-size:0.82rem;font-weight:800;color:var(--lex-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Document Preview</div>
+  <div style="font-size:0.9rem;font-weight:700;color:var(--lex-text);margin-bottom:12px;">{_fname}</div>
+  <div class="lex-pdf-canvas-wrapper"><canvas id="lex-pdf-preview-canvas"></canvas></div>
+  <div style="font-size:0.78rem;color:var(--lex-muted);margin-top:8px;">Page 1 preview &#x2022; Select frameworks then click Run Analysis</div>
+</div>
+<script type="module">
+import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs';
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
+try {
+  const raw = atob('{_pdf_b64}');
+  const arr = new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++) arr[i]=raw.charCodeAt(i);
+  const pdf = await pdfjsLib.getDocument({data:arr}).promise;
+  const page = await pdf.getPage(1);
+  const canvas = document.getElementById('lex-pdf-preview-canvas');
+  if(canvas){
+    const vp = page.getViewport({scale:1.4});
+    canvas.height=vp.height; canvas.width=vp.width;
+    await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
+  }
+} catch(e){ console.warn('PDF preview:',e); }
+</script>
+""")
+
             logger.info(
                 "PDF ready for analysis: %s (%d bytes, company='%s', policy='%s')",
                 page_state['pdf_name'],
@@ -1545,6 +1725,18 @@ def dashboard(request: Request):
         sidebar["company_name"].update()
         sidebar["policy_name"].value = ""
         sidebar["policy_name"].update()
+        pdf_canvas_container.set_visibility(False)
+        pdf_canvas_container.clear()
+        pdf_preview_container.set_visibility(True)
+        ui.run_javascript("""
+            ['lstep1','lstep2','lstep3','lstep4'].forEach(function(id, i) {
+                var el = document.getElementById(id);
+                if (el) { el.classList.remove('done', 'active'); if (i === 0) el.classList.add('active'); }
+            });
+            ['lconn1','lconn2','lconn3'].forEach(function(id) {
+                var el = document.getElementById(id); if (el) el.classList.remove('done');
+            });
+        """)
         status.set_text("Upload a company policy PDF to begin.")
         ui.notify("Document removed. You can now upload a new PDF.", type="info", position='top')
 
@@ -1670,6 +1862,32 @@ def dashboard(request: Request):
 
         button.disable()
         status_spinner.set_visibility(True)
+
+        # Step tracker (3): Move to step 2 (Classify)
+        ui.run_javascript("""
+            var s1 = document.getElementById('lstep1'); if(s1){s1.classList.remove('active'); s1.classList.add('done');}
+            var c1 = document.getElementById('lconn1'); if(c1) c1.classList.add('done');
+            var s2 = document.getElementById('lstep2'); if(s2) s2.classList.add('active');
+        """)
+
+        # Skeleton loaders (8): show shimmer placeholders while analysis runs
+        score_container.clear()
+        with score_container:
+            ui.html("""
+            <div class="w-full flex flex-col gap-4">
+                <div class="lex-skeleton-card w-full">
+                    <div class="lex-skeleton lex-skeleton-title"></div>
+                    <div class="lex-skeleton lex-skeleton-score"></div>
+                    <div class="lex-skeleton lex-skeleton-line" style="width:75%; margin:16px auto 0;"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 w-full">
+                    <div class="lex-skeleton-card"><div class="lex-skeleton lex-skeleton-title"></div><div class="lex-skeleton lex-skeleton-line"></div><div class="lex-skeleton lex-skeleton-line" style="width:60%;"></div></div>
+                    <div class="lex-skeleton-card"><div class="lex-skeleton lex-skeleton-title"></div><div class="lex-skeleton lex-skeleton-line"></div><div class="lex-skeleton lex-skeleton-line" style="width:60%;"></div></div>
+                    <div class="lex-skeleton-card"><div class="lex-skeleton lex-skeleton-title"></div><div class="lex-skeleton lex-skeleton-line"></div><div class="lex-skeleton lex-skeleton-line" style="width:60%;"></div></div>
+                    <div class="lex-skeleton-card"><div class="lex-skeleton lex-skeleton-title"></div><div class="lex-skeleton lex-skeleton-line"></div><div class="lex-skeleton lex-skeleton-line" style="width:60%;"></div></div>
+                </div>
+            </div>
+            """)
 
         try:
 
@@ -1876,6 +2094,13 @@ def dashboard(request: Request):
                 "Running LexMesh compliance analysis..."
             )
 
+            # Step tracker (3): Move to step 3 (Analyse)
+            ui.run_javascript("""
+                var s2 = document.getElementById('lstep2'); if(s2){s2.classList.remove('active'); s2.classList.add('done');}
+                var c2 = document.getElementById('lconn2'); if(c2) c2.classList.add('done');
+                var s3 = document.getElementById('lstep3'); if(s3) s3.classList.add('active');
+            """)
+
             logger.info("Calling ADK pipeline...")
             import asyncio
             import functools
@@ -2059,6 +2284,13 @@ def dashboard(request: Request):
                 position='top',
             )
 
+            # Step tracker (3): Move to step 4 (Report)
+            ui.run_javascript("""
+                var s3 = document.getElementById('lstep3'); if(s3){s3.classList.remove('active'); s3.classList.add('done');}
+                var c3 = document.getElementById('lconn3'); if(c3) c3.classList.add('done');
+                var s4 = document.getElementById('lstep4'); if(s4){s4.classList.remove('active'); s4.classList.add('done');}
+            """)
+
             logger.info("=== ANALYSIS SUCCESS | Overall Score: %s%% ===", score)
 
         except Exception as e:
@@ -2089,6 +2321,21 @@ def dashboard(request: Request):
     ].on_click(
         run_analysis
     )
+
+    # 2. Keyboard shortcuts (Ctrl+Enter -> Run Analysis, Esc -> Clear Upload)
+    ui.run_javascript("""
+        window.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                var btn = document.querySelector('.lex-run-button') || document.querySelector('button.lex-btn-primary');
+                if (btn && !btn.disabled) btn.click();
+            }
+            if (e.key === 'Escape') {
+                var cBtn = document.querySelector('[title*="Remove"]') || document.querySelector('.lex-clear-btn');
+                if (cBtn) cBtn.click();
+            }
+        });
+    """)
 
     # ========================================================
     # FRAMEWORK CHANGE CALLBACK

@@ -1000,3 +1000,103 @@ body.body--dark ::-webkit-scrollbar-thumb,
 .q-dark ::-webkit-scrollbar-thumb {
     background: #36483e;
 }
+
+/* UX ENHANCEMENTS — Appended */
+
+/* ============================================================
+   SKELETON LOADER (9)
+   ============================================================ */
+@keyframes lex-shimmer {
+    0%   { background-position: -700px 0; }
+    100% { background-position: 700px 0; }
+}
+.lex-skeleton {
+    background: linear-gradient(90deg, var(--lex-border) 25%, var(--lex-surface-hover) 50%, var(--lex-border) 75%);
+    background-size: 700px 100%;
+    animation: lex-shimmer 1.5s ease-in-out infinite;
+    border-radius: 12px;
+}
+.lex-skeleton-card { background:var(--lex-card-bg)!important; border:2px solid var(--lex-card-border)!important; border-radius:18px!important; padding:24px!important; box-shadow:var(--lex-shadow)!important; overflow:hidden; }
+.lex-skeleton-line  { height:14px; margin-bottom:12px; border-radius:8px; }
+.lex-skeleton-title { height:26px; width:52%; margin-bottom:18px; border-radius:10px; }
+.lex-skeleton-score { height:72px; width:90px; border-radius:50%; margin:8px auto; }
+
+/* ============================================================
+   ANIMATED SCORE COUNTER (1) + COLOUR CODING (5)
+   ============================================================ */
+@keyframes lex-count-in {
+    from { opacity:0; transform:translateY(14px) scale(0.88); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+}
+.lex-score-animated { animation: lex-count-in 0.55s cubic-bezier(0.34,1.56,0.64,1) both; }
+.lex-score-high { color:#3b6349!important; }
+.lex-score-mid  { color:#8a7642!important; }
+.lex-score-low  { color:#9e3232!important; }
+
+@keyframes lex-pulse-green { 0%,100%{box-shadow:0 0 0 0 rgba(59,99,73,0);}50%{box-shadow:0 0 0 10px rgba(59,99,73,0.18);} }
+@keyframes lex-pulse-amber { 0%,100%{box-shadow:0 0 0 0 rgba(138,118,66,0);}50%{box-shadow:0 0 0 10px rgba(138,118,66,0.2);} }
+@keyframes lex-pulse-red   { 0%,100%{box-shadow:0 0 0 0 rgba(158,50,50,0);}50%{box-shadow:0 0 0 10px rgba(158,50,50,0.2);} }
+.lex-pulse-green { animation:lex-pulse-green 2.5s ease-in-out infinite; border-radius:14px; }
+.lex-pulse-amber { animation:lex-pulse-amber 2.5s ease-in-out infinite; border-radius:14px; }
+.lex-pulse-red   { animation:lex-pulse-red   2.5s ease-in-out infinite; border-radius:14px; }
+
+/* ============================================================
+   PROGRESS STEPS BAR (3)
+   ============================================================ */
+.lex-progress-steps { display:flex; align-items:center; padding:10px 20px; background:var(--lex-surface)!important; border:2px solid var(--lex-border)!important; border-radius:16px; box-shadow:var(--lex-shadow); flex-wrap:nowrap; overflow-x:auto; gap:0; }
+.lex-step { display:flex; align-items:center; gap:7px; font-size:0.8rem; font-weight:700; color:var(--lex-muted); white-space:nowrap; transition:color 0.3s ease; }
+.lex-step-dot { width:22px; height:22px; border-radius:50%; border:2.5px solid var(--lex-border); display:flex; align-items:center; justify-content:center; font-size:0.62rem; font-weight:900; background:var(--lex-bg); transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1); flex-shrink:0; }
+.lex-step.done .lex-step-dot   { background:#3b6349; border-color:#3b6349; color:#fff; }
+.lex-step.done                  { color:#3b6349!important; }
+.lex-step.active .lex-step-dot { background:#4e795d; border-color:#4e795d; color:#fff; animation:lex-pulse-green 1.8s ease-in-out infinite; }
+.lex-step.active                { color:#4e795d!important; font-weight:900; }
+.lex-step-connector { height:2px; flex:1; min-width:18px; background:var(--lex-border); margin:0 5px; border-radius:2px; transition:background 0.4s ease; }
+.lex-step-connector.done { background:#3b6349; }
+
+/* ============================================================
+   CARD MICRO-ANIMATIONS (16) + COPY BUTTON (8)
+   ============================================================ */
+.lex-hover-lift { transition:transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease, border-color 0.2s ease!important; }
+.lex-hover-lift:hover { transform:translateY(-3px); box-shadow:0 14px 30px -6px rgba(35,56,43,0.15)!important; border-color:var(--lex-sage)!important; }
+.lex-copy-btn { opacity:0; transition:opacity 0.2s ease, transform 0.15s ease!important; }
+.lex-gap-expansion:hover .lex-copy-btn, .lex-action-item:hover .lex-copy-btn { opacity:1; }
+
+/* ============================================================
+   FRAMEWORK BADGES (17)
+   ============================================================ */
+.lex-fw-badge { display:inline-flex; align-items:center; gap:7px; padding:7px 15px; border-radius:12px; border:2px solid; font-weight:800; font-size:0.82rem; cursor:pointer; transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1); user-select:none; white-space:nowrap; }
+.lex-fw-badge:hover  { transform:translateY(-1px); filter:brightness(1.05); }
+.lex-fw-badge-gdpr  { background:#e7f2ea; color:#23382b; border-color:#4e795d; }
+.lex-fw-badge-hipaa { background:#e5f2f1; color:#1b3532; border-color:#2e7067; }
+.lex-fw-badge-rbi   { background:#fdf0ea; color:#4a1f10; border-color:#b45339; }
+.lex-fw-badge-soc2  { background:#f8f3e5; color:#3a2f0e; border-color:#8a7642; }
+.lex-fw-badge-gdpr.lex-fw-active  { background:#4e795d; color:#fff; box-shadow:0 4px 12px rgba(78,121,93,0.35); }
+.lex-fw-badge-hipaa.lex-fw-active { background:#2e7067; color:#fff; box-shadow:0 4px 12px rgba(46,112,103,0.35); }
+.lex-fw-badge-rbi.lex-fw-active   { background:#b45339; color:#fff; box-shadow:0 4px 12px rgba(180,83,57,0.35); }
+.lex-fw-badge-soc2.lex-fw-active  { background:#8a7642; color:#fff; box-shadow:0 4px 12px rgba(138,118,66,0.35); }
+body.q-dark .lex-fw-badge-gdpr  { background:#1a2d1f; color:#7ca689; border-color:#4e795d; }
+body.q-dark .lex-fw-badge-hipaa { background:#162624; color:#4ea89c; border-color:#2e7067; }
+body.q-dark .lex-fw-badge-rbi   { background:#2a1510; color:#d9755b; border-color:#b45339; }
+body.q-dark .lex-fw-badge-soc2  { background:#261f0c; color:#d9c59a; border-color:#8a7642; }
+
+/* ============================================================
+   PDF PREVIEW PANEL (18)
+   ============================================================ */
+.lex-pdf-preview-panel { background:var(--lex-card-bg)!important; border:2px solid var(--lex-card-border)!important; border-radius:20px!important; overflow:hidden; box-shadow:var(--lex-shadow-lg)!important; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:340px; padding:28px; gap:18px; }
+.lex-pdf-canvas-wrapper { border-radius:10px; overflow:hidden; box-shadow:0 6px 24px rgba(0,0,0,0.2); width:100%; max-width:500px; }
+.lex-pdf-canvas-wrapper canvas { width:100%!important; height:auto!important; display:block; }
+
+/* ============================================================
+   AUDIT HISTORY TIMELINE (7)
+   ============================================================ */
+.lex-timeline-entry { position:relative; padding-left:30px; border-left:3px solid var(--lex-border); padding-bottom:20px; transition:border-color 0.2s ease; }
+.lex-timeline-entry:last-child { border-left-color:transparent; padding-bottom:0; }
+.lex-timeline-entry:hover { border-left-color:var(--lex-sage); }
+.lex-timeline-entry::before { content:''; position:absolute; left:-9px; top:12px; width:15px; height:15px; border-radius:50%; background:var(--lex-sage); border:3px solid var(--lex-bg); box-shadow:0 0 0 2px var(--lex-sage); transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1); }
+.lex-timeline-entry:hover::before { transform:scale(1.3); }
+.lex-trend-up   { color:#3b6349!important; font-weight:800; }
+.lex-trend-down { color:#9e3232!important; font-weight:800; }
+.lex-trend-flat { color:var(--lex-muted)!important; font-weight:700; }
+
+#lex-confetti-canvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:99998; }
+.lex-tour-highlight { outline:3px solid var(--lex-sage)!important; outline-offset:4px; border-radius:12px; box-shadow:0 0 0 6px rgba(78,121,93,0.18)!important; animation:lex-pulse-green 1.6s ease-in-out 3; }

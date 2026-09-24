@@ -9,6 +9,13 @@ STATUS_CLASS = {
     "Conflicting": "lex-status-conflict",
 }
 
+_COPY_ICON = (
+    '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" '
+    'fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">'
+    '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>'
+    '<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>'
+)
+
 
 def create_gap_analysis(report):
 
@@ -117,35 +124,50 @@ def create_gap_analysis(report):
                 ),
             ),
         )
-        
+
         mandate = gap.get("requirement_mandate", gap.get("gdpr_requires", ""))
         policy_citation = gap.get("your_policy", "")
+        fix_text = str(fix) if fix else ""
 
         header_title = f"[{req_id}] {str(requirement)[:100]}" if req_id else f"{index + 1}. {str(requirement)[:100]}"
+
         with ui.expansion(
             header_title
         ).classes(
             "w-full lex-gap-expansion"
         ):
 
+            # Badge row + copy button
             with ui.row().classes(
-                "items-center gap-2 mb-3"
+                "w-full items-center justify-between mb-3 flex-wrap gap-2"
             ):
-
-                ui.badge(
-                    str(framework).upper()
-                ).classes(
-                    "lex-framework-mini-badge"
-                )
-
-                ui.badge(
-                    str(status)
-                ).classes(
-                    STATUS_CLASS.get(
-                        status,
-                        "lex-status-unknown",
+                with ui.row().classes("items-center gap-2"):
+                    ui.badge(
+                        str(framework).upper()
+                    ).classes(
+                        "lex-framework-mini-badge"
                     )
-                )
+
+                    ui.badge(
+                        str(status)
+                    ).classes(
+                        STATUS_CLASS.get(
+                            status,
+                            "lex-status-unknown",
+                        )
+                    )
+
+                # 8. Copy-to-clipboard button (appears on hover)
+                if fix_text:
+                    ui.html(
+                        f'<button class="lex-copy-btn" title="Copy remediation fix to clipboard" '
+                        f'onclick="lexCopyText({repr(fix_text)}, this)" '
+                        f'style="background:transparent;border:1.5px solid var(--lex-border);'
+                        f'border-radius:8px;padding:5px 10px;cursor:pointer;color:var(--lex-muted);'
+                        f'display:inline-flex;align-items:center;gap:5px;font-size:0.75rem;font-weight:700;'
+                        f'transition:all 0.15s ease;">'
+                        f'{_COPY_ICON} Copy Fix</button>'
+                    )
 
             if mandate:
                 with ui.row().classes("items-center gap-2 mt-3 mb-1"):

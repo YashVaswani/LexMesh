@@ -66,12 +66,27 @@ def create_header(on_nav_change=None, active_tab="dashboard"):
 
             lucide_icon("sun", size=20, class_name="text-amber-400")
 
-            ui.switch(
+            def handle_theme_toggle(e):
+                dark_mode.set_value(e.value)
+                ui.run_javascript(f"localStorage.setItem('lexmesh_dark_mode', '{str(e.value).lower()}');")
+
+            theme_switch = ui.switch(
                 value=False,
-                on_change=lambda e: dark_mode.set_value(e.value),
+                on_change=handle_theme_toggle,
             ).props(
                 "color=emerald"
             )
+
+            # Restore dark mode preference on page load
+            ui.run_javascript("""
+                try {
+                    const saved = localStorage.getItem('lexmesh_dark_mode');
+                    if (saved === 'true') {
+                        var sw = document.querySelector('.q-toggle');
+                        if (sw && !sw.classList.contains('q-toggle--active')) sw.click();
+                    }
+                } catch(e) {}
+            """)
 
             lucide_icon("moon", size=20, class_name="text-emerald-200 dark:text-emerald-400")
 
