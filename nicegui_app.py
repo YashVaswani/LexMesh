@@ -299,18 +299,18 @@ def login_page():
                 # Login Action
                 def do_login():
                     if not email.value or not password.value:
-                        ui.notify("Please enter both email and password.", type="warning")
+                        ui.notify("Please enter both email and password.", type="warning", position='top-right')
                         return
                     success, msg = auth.sign_in(email.value, password.value)
                     if success:
-                        ui.notify("Logged in successfully!", type="positive")
+                        ui.notify("Logged in successfully!", type="positive", position='top-right')
                         ui.navigate.to('/')
                     else:
                         err = str(msg)
                         if 'email' in err.lower() and 'confirm' in err.lower():
-                            ui.notify("Please verify your email first. Check your inbox.", type="warning", timeout=6000)
+                            ui.notify("Please verify your email first. Check your inbox.", type="warning", timeout=6000, position='top-right')
                         else:
-                            ui.notify(err, type="negative")
+                            ui.notify(err, type="negative", position='top-right')
 
                 email.on('keydown.enter', do_login)
                 password.on('keydown.enter', do_login)
@@ -355,6 +355,11 @@ def signup_page():
             ui.label("Create a new account").classes("text-sm text-slate-500 font-medium mb-8")
             
             with ui.column().classes("w-full gap-4"):
+                # Company Name
+                company_name_input = ui.input("Company Name", placeholder="e.g. TechStartup Pvt Ltd").classes("w-full text-md").props('outlined rounded bg-color="white" color="emerald"')
+                with company_name_input.add_slot('prepend'):
+                    ui.icon('business').classes('text-slate-400')
+
                 email = ui.input("Email").classes("w-full text-md").props('outlined rounded bg-color="white" color="emerald"')
                 with email.add_slot('prepend'):
                     ui.icon('mail_outline').classes('text-slate-400')
@@ -362,34 +367,47 @@ def signup_page():
                 password = ui.input("Password", password=True, password_toggle_button=True).classes("w-full text-md").props('outlined rounded bg-color="white" color="emerald"')
                 with password.add_slot('prepend'):
                     ui.icon('lock_outline').classes('text-slate-400')
+
+                # Confirm Password
+                confirm_password = ui.input("Confirm Password", password=True, password_toggle_button=True).classes("w-full text-md").props('outlined rounded bg-color="white" color="emerald"')
+                with confirm_password.add_slot('prepend'):
+                    ui.icon('lock_reset').classes('text-slate-400')
                 
                 def do_signup():
                     if not email.value or not password.value:
-                        ui.notify("Please enter both email and password.", type="warning")
+                        ui.notify("Please enter both email and password.", type="warning", position='top-right')
+                        return
+                    if not company_name_input.value.strip():
+                        ui.notify("Please enter your company name.", type="warning", position='top-right')
                         return
                     if len(password.value) < 6:
-                        ui.notify("Password must be at least 6 characters.", type="warning")
+                        ui.notify("Password must be at least 6 characters.", type="warning", position='top-right')
+                        return
+                    if password.value != confirm_password.value:
+                        ui.notify("Passwords do not match. Please check and try again.", type="negative", position='top-right')
                         return
                     success, msg = auth.sign_up(email.value, password.value)
                     if success and msg == "CHECK_EMAIL":
-                        # Clear the form and show a verification pending message
                         email.value = ''
                         password.value = ''
+                        confirm_password.value = ''
+                        company_name_input.value = ''
                         ui.notify(
                             "Account created! Please check your inbox and click the verification link to activate your account.",
                             type="positive",
-                            timeout=8000
+                            timeout=8000,
+                            position='top-right'
                         )
-                        # Navigate to a confirmation-pending page
                         ui.navigate.to('/verify-email')
                     elif success:
-                        ui.notify("Signed up successfully! Welcome to LexMesh.", type="positive")
+                        ui.notify("Signed up successfully! Welcome to LexMesh.", type="positive", position='top-right')
                         ui.navigate.to('/')
                     else:
-                        ui.notify(msg, type="negative")
+                        ui.notify(msg, type="negative", position='top-right')
 
                 email.on('keydown.enter', do_signup)
                 password.on('keydown.enter', do_signup)
+                confirm_password.on('keydown.enter', do_signup)
 
                 ui.button("SIGN UP", on_click=do_signup).classes("w-full mt-2 h-12 rounded-lg font-bold text-white shadow-lg shadow-emerald-500/30 tracking-wider").props("color=primary unelevated icon-right=person_add")
             
@@ -1405,6 +1423,17 @@ def dashboard(request: Request):
                 "pdf_name"
             ] = uploaded_file.name
 
+            # ------------------------------------------------
+            # UPLOADING FEEDBACK — show spinner immediately
+            # ------------------------------------------------
+            status.set_text("⏳ Uploading document and understanding content...")
+            ui.notify(
+                "📄 Uploading & understanding your document...",
+                type="info",
+                position='top-right',
+                timeout=4000,
+            )
+
             if "attached_file_container" in sidebar:
                 sidebar["attached_file_name_label"].text = uploaded_file.name
                 sidebar["attached_file_container"].set_visibility(True)
@@ -1469,8 +1498,9 @@ def dashboard(request: Request):
             )
 
             ui.notify(
-                f"Recognized: {company or 'Company'} — {policy or 'Policy'}",
+                f"✅ Document understood — {company or 'Company'} · {policy or 'Policy'}",
                 type="positive",
+                position='top-right',
             )
 
             logger.info(
@@ -1491,6 +1521,7 @@ def dashboard(request: Request):
             ui.notify(
                 f"Upload failed: {e}",
                 type="negative",
+                position='top-right',
             )
 
             logger.error("PDF upload error: %s", e, exc_info=True)
@@ -1513,7 +1544,7 @@ def dashboard(request: Request):
         sidebar["policy_name"].value = ""
         sidebar["policy_name"].update()
         status.set_text("Upload a company policy PDF to begin.")
-        ui.notify("Document removed. You can now upload a new PDF.", type="info")
+        ui.notify("Document removed. You can now upload a new PDF.", type="info", position='top-right')
 
     if "clear_upload_btn" in sidebar:
         sidebar["clear_upload_btn"].on_click(handle_clear_upload)
@@ -1523,7 +1554,7 @@ def dashboard(request: Request):
         if "attached_file_container" in sidebar:
             sidebar["attached_file_container"].set_visibility(False)
             sidebar["attached_file_name_label"].text = ""
-        ui.notify("File exceeds limit or is not a PDF (Max 25 MB).", type="warning")
+        ui.notify("File exceeds limit or is not a PDF (Max 25 MB).", type="warning", position='top-right')
 
     sidebar["uploaded_file"].on("rejected", handle_upload_rejected)
 
@@ -1587,6 +1618,7 @@ def dashboard(request: Request):
             ui.notify(
                 f"⏳ Please wait {remaining}s before running another audit.",
                 type="warning",
+                position='top-right',
             )
             return
 
@@ -1625,7 +1657,7 @@ def dashboard(request: Request):
 
         if validation_errors:
             for err in validation_errors:
-                ui.notify(err, type="warning", timeout=5000)
+                ui.notify(err, type="warning", timeout=5000, position='top-right')
             status.set_text(" · ".join(validation_errors))
             return
 
@@ -1676,7 +1708,7 @@ def dashboard(request: Request):
 
             if not selected_fw_keys:
                 status.set_text("Please select at least one evaluation framework in the sidebar.")
-                ui.notify("Please select at least one framework.", type="warning")
+                ui.notify("Please select at least one framework.", type="warning", position='top-right')
                 button.enable()
                 return
 
@@ -1768,6 +1800,7 @@ def dashboard(request: Request):
                     f"Not a policy document: {reason}",
                     type="warning",
                     close_button=True,
+                    position='top-right',
                 )
 
                 # Clear all tab containers and show rejection state
@@ -2017,8 +2050,9 @@ def dashboard(request: Request):
             )
 
             ui.notify(
-                "Compliance analysis completed successfully.",
+                "✅ Compliance analysis completed successfully.",
                 type="positive",
+                position='top-right',
             )
 
             logger.info("=== ANALYSIS SUCCESS | Overall Score: %s%% ===", score)
@@ -2033,7 +2067,7 @@ def dashboard(request: Request):
 
             try:
                 status.set_text(f"Analysis failed: {e}")
-                ui.notify(f"Analysis failed: {e}", type="negative")
+                ui.notify(f"Analysis failed: {e}", type="negative", position='top-right')
             except Exception:
                 pass
 

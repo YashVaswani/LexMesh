@@ -52,6 +52,7 @@ def create_terms_page(from_page: str = None):
                 with ui.column().classes("gap-0"):
                     ui.label("Terms & Conditions").style(
                         "font-size:2rem;font-weight:900;color:#1b3825;line-height:1.1;"
+                        "word-spacing:0.18em;letter-spacing:0.01em;"
                     )
                     ui.label("LexMesh — AI Compliance Engine").style(
                         "font-size:0.9rem;font-weight:600;color:#647269;"

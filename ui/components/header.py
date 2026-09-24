@@ -21,11 +21,15 @@ def create_header(on_nav_change=None, active_tab="dashboard"):
     ):
 
         # ====================================================
-        # LEFT — LOGO + BRAND
+        # LEFT — LOGO + BRAND (clickable → home)
         # ====================================================
 
         with ui.row().classes(
-            "items-center gap-3"
+            "items-center gap-3 cursor-pointer select-none"
+        ).style(
+            "transition: opacity 0.18s ease;"
+        ).on(
+            "click", lambda: ui.navigate.to('/dashboard')
         ):
 
             lucide_icon("shield", size=32, class_name="text-emerald-400")
