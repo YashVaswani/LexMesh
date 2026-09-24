@@ -29,7 +29,7 @@ def create_header(on_nav_change=None, active_tab="dashboard"):
         ).style(
             "transition: opacity 0.18s ease;"
         ).on(
-            "click", lambda: ui.navigate.to('/dashboard')
+            "click", lambda: ui.navigate.to('/dashboard' if auth.get_current_user() else '/login')
         ):
 
             lucide_icon("shield", size=32, class_name="text-emerald-400")
@@ -95,11 +95,12 @@ def create_header(on_nav_change=None, active_tab="dashboard"):
                 auth.sign_out()
                 ui.navigate.to('/login')
 
-            ui.button(
-                icon="logout",
-                on_click=on_logout
-            ).props(
-                "flat round color=emerald"
-            ).tooltip("Log out")
+            if auth.get_current_user():
+                ui.button(
+                    icon="logout",
+                    on_click=on_logout
+                ).props(
+                    "flat round color=emerald"
+                ).tooltip("Log out")
 
     return {}

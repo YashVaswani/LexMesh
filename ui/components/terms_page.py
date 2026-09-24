@@ -1,5 +1,6 @@
 from nicegui import ui
 from ui.components.lucide import lucide_icon
+from ui.components.header import create_header
 
 
 import auth
@@ -30,16 +31,13 @@ def create_terms_page(from_page: str = None):
         negative='#9e3232',
     )
 
-    with ui.column().classes("w-full min-h-screen items-center py-12 px-4").style(
+    create_header()
+
+    with ui.column().classes("w-full min-h-screen items-center py-10 px-4").style(
         "background: var(--lex-bg, #f5f2eb);"
     ):
         # ── Header ──────────────────────────────────────────────────────────
         with ui.column().classes("w-full max-w-3xl gap-2 mb-10"):
-            with ui.row().classes("items-center gap-3 mb-4"):
-                ui.link(f"← {back_label}", back_url).classes(
-                    "text-sm font-semibold text-emerald-700 hover:text-emerald-900 transition-colors"
-                )
-
             with ui.row().classes("items-center gap-3"):
                 with ui.element("div").style(
                     "width:48px;height:48px;border-radius:14px;"
@@ -154,10 +152,6 @@ def create_terms_page(from_page: str = None):
 
         # ── Footer ───────────────────────────────────────────────────────────
         with ui.row().classes("w-full max-w-3xl items-center justify-center gap-4 mt-8"):
-            ui.link(back_label, back_url).classes(
-                "text-sm font-semibold text-emerald-700 hover:underline"
-            )
-            ui.label("·").style("color:#8a9e8f;")
             ui.link("Privacy Policy", f"/privacy?from={from_page}").classes(
                 "text-sm font-semibold text-emerald-700 hover:underline"
             )
