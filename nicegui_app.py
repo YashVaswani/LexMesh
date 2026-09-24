@@ -1650,39 +1650,43 @@ def dashboard(request: Request):
                 var s2=document.getElementById('lstep2');if(s2)s2.classList.add('active');
             """)
 
-            # 18. PDF Preview
+            # 18. PDF Preview (Rendered cleanly via PyMuPDF without fragile JS f-string escaping)
             import base64 as _b64
-            _pdf_b64 = _b64.b64encode(pdf_data).decode()
             pdf_preview_container.set_visibility(False)
             pdf_canvas_container.set_visibility(True)
             pdf_canvas_container.clear()
             _fname = uploaded_file.name
+
+            img_b64 = ""
+            try:
+                doc = fitz.open(stream=pdf_data, filetype="pdf")
+                if len(doc) > 0:
+                    pix = doc[0].get_pixmap(dpi=130)
+                    img_b64 = _b64.b64encode(pix.tobytes("png")).decode("utf-8")
+                doc.close()
+            except Exception as _pe:
+                logger.warning("PDF preview raster error: %s", _pe)
+
             with pdf_canvas_container:
-                ui.html(f"""
+                if img_b64:
+                    ui.html(f'''
 <div class="lex-pdf-preview-panel">
   <div style="font-size:0.82rem;font-weight:800;color:var(--lex-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Document Preview</div>
   <div style="font-size:0.9rem;font-weight:700;color:var(--lex-text);margin-bottom:12px;">{_fname}</div>
-  <div class="lex-pdf-canvas-wrapper"><canvas id="lex-pdf-preview-canvas"></canvas></div>
+  <div class="lex-pdf-canvas-wrapper" style="max-height: 520px; overflow-y: auto; border: 1px solid var(--lex-border); border-radius: 10px; box-shadow: 0 4px 18px rgba(0,0,0,0.12);">
+    <img src="data:image/png;base64,{img_b64}" style="width: 100%; height: auto; display: block;" alt="PDF Page 1 Preview" />
+  </div>
   <div style="font-size:0.78rem;color:var(--lex-muted);margin-top:8px;">Page 1 preview &#x2022; Select frameworks then click Run Analysis</div>
 </div>
-<script type="module">
-import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs';
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
-try {
-  const raw = atob('{_pdf_b64}');
-  const arr = new Uint8Array(raw.length);
-  for(let i=0;i<raw.length;i++) arr[i]=raw.charCodeAt(i);
-  const pdf = await pdfjsLib.getDocument({data:arr}).promise;
-  const page = await pdf.getPage(1);
-  const canvas = document.getElementById('lex-pdf-preview-canvas');
-  if(canvas){
-    const vp = page.getViewport({scale:1.4});
-    canvas.height=vp.height; canvas.width=vp.width;
-    await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
-  }
-} catch(e){ console.warn('PDF preview:',e); }
-</script>
-""")
+''')
+                else:
+                    ui.html(f'''
+<div class="lex-pdf-preview-panel">
+  <div style="font-size:0.82rem;font-weight:800;color:var(--lex-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Document Ready</div>
+  <div style="font-size:0.9rem;font-weight:700;color:var(--lex-text);margin-bottom:12px;">{_fname}</div>
+  <div style="font-size:0.85rem;color:var(--lex-muted);">Ready for analysis. Select frameworks and click Run Analysis.</div>
+</div>
+''')
 
             logger.info(
                 "PDF ready for analysis: %s (%d bytes, company='%s', policy='%s')",
