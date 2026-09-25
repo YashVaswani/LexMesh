@@ -2,6 +2,7 @@ from nicegui import ui
 from ui.components.lucide import lucide_icon
 from db.supabase_client import supabase_db
 from datetime import datetime
+import math
 
 def create_dashboard_landing(on_run_new_audit=None):
     """Render the executive Dashboard Landing Page.
@@ -510,13 +511,35 @@ def create_dashboard_landing(on_run_new_audit=None):
                 "width: 140px; text-align: center;"
             )
 
-        # Table rows container (scrollable for all audits)
-        if not recent_audits_data:
-            with ui.row().classes("w-full justify-center p-4"):
-                ui.label("No audits found. Run a new audit to see data here.").classes("text-sm text-gray-500")
-        else:
-            with ui.column().classes("w-full max-h-[600px] overflow-y-auto").style("gap: 0; scrollbar-width: thin;"):
-                for audit in recent_audits_data:
+        # Table rows container with 8-report pagination
+        PAGE_SIZE = 8
+        total_audits = len(recent_audits_data) if recent_audits_data else 0
+        total_pages = max(1, math.ceil(total_audits / PAGE_SIZE)) if total_audits > 0 else 1
+
+        table_rows_container = ui.column().classes("w-full").style("gap: 0;")
+        pagination_bar_container = ui.row().classes(
+            "w-full items-center justify-between px-4 py-3 flex-wrap gap-3"
+        ).style("border-top: 1px solid var(--lex-border);")
+
+        current_page_box = {"page": 1}
+
+        def render_audit_page(page_num: int):
+            current_page_box["page"] = page_num
+            table_rows_container.clear()
+            pagination_bar_container.clear()
+
+            if not recent_audits_data:
+                with table_rows_container:
+                    with ui.row().classes("w-full justify-center p-6"):
+                        ui.label("No audits found. Run a new audit to see data here.").classes("text-sm text-gray-500")
+                return
+
+            start_idx = (page_num - 1) * PAGE_SIZE
+            end_idx = min(start_idx + PAGE_SIZE, total_audits)
+            page_audits = recent_audits_data[start_idx:end_idx]
+
+            with table_rows_container:
+                for audit in page_audits:
                     _score = audit["score"]
 
                     if _score >= 80:
@@ -572,6 +595,53 @@ def create_dashboard_landing(on_run_new_audit=None):
                             "width: 140px; "
                             "text-align: center;"
                         )
+
+            # Pagination controls: ONLY show if total audits exceed 8
+            if total_audits > PAGE_SIZE:
+                with pagination_bar_container:
+                    ui.label(
+                        f"Showing {start_idx + 1}–{end_idx} of {total_audits} reports"
+                    ).classes(
+                        "text-xs font-semibold"
+                    ).style("color: var(--lex-muted);")
+
+                    with ui.row().classes("items-center gap-1.5"):
+                        # Prev Button
+                        prev_btn = ui.button(
+                            "‹ Prev",
+                            on_click=lambda: render_audit_page(max(1, current_page_box["page"] - 1))
+                        ).props("dense unelevated size=sm").classes("px-3 py-1 font-bold rounded-lg text-xs")
+                        if page_num <= 1:
+                            prev_btn.disable().style("opacity: 0.35; cursor: not-allowed; background: var(--lex-surface-hover); color: var(--lex-muted);")
+                        else:
+                            prev_btn.style("background: var(--lex-surface-hover); color: var(--lex-text); cursor: pointer;")
+
+                        # Numeric Page Pills
+                        for p in range(1, total_pages + 1):
+                            if p == 1 or p == total_pages or abs(p - page_num) <= 1:
+                                is_active = (p == page_num)
+                                p_btn = ui.button(
+                                    str(p),
+                                    on_click=lambda p_val=p: render_audit_page(p_val)
+                                ).props("dense unelevated size=sm").classes("w-7 h-7 font-bold rounded-lg text-xs")
+                                if is_active:
+                                    p_btn.style("background: var(--lex-sage, #4e795d) !important; color: #ffffff !important;")
+                                else:
+                                    p_btn.style("background: var(--lex-surface-hover); color: var(--lex-text); cursor: pointer;")
+                            elif abs(p - page_num) == 2:
+                                ui.label("…").classes("text-xs font-bold px-1").style("color: var(--lex-muted);")
+
+                        # Next Button
+                        next_btn = ui.button(
+                            "Next ›",
+                            on_click=lambda: render_audit_page(min(total_pages, current_page_box["page"] + 1))
+                        ).props("dense unelevated size=sm").classes("px-3 py-1 font-bold rounded-lg text-xs")
+                        if page_num >= total_pages:
+                            next_btn.disable().style("opacity: 0.35; cursor: not-allowed; background: var(--lex-surface-hover); color: var(--lex-muted);")
+                        else:
+                            next_btn.style("background: var(--lex-surface-hover); color: var(--lex-text); cursor: pointer;")
+
+        render_audit_page(1)
 
 
 

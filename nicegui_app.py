@@ -7,10 +7,12 @@ from pathlib import Path
 # Suppress SDK deprecation warnings in application output logs
 warnings.filterwarnings("ignore")
 
+import uuid
 import pymupdf as fitz
 from nicegui import app, ui
-from fastapi import Request
+from fastapi import Request, Response
 from fastapi.responses import JSONResponse
+
 
 from config import config
 from db.supabase_client import supabase_db
@@ -45,6 +47,31 @@ async def api_confirm_email(request: Request):
         return JSONResponse({"success": False, "error": "Token validation failed"})
     except Exception as e:
         return JSONResponse({"success": False, "error": str(e)}, status_code=500)
+
+
+# In-memory store for temporarily uploaded PDFs for full preview in a new browser tab
+_uploaded_pdf_store = {}
+
+@app.get("/api/view-pdf/{preview_id}")
+async def view_uploaded_pdf(preview_id: str):
+    """Serve uploaded PDF inline in browser so user can view all pages natively."""
+    item = _uploaded_pdf_store.get(preview_id)
+    if not item:
+        return Response(
+            content="Document preview expired or not found. Please upload the PDF again in LexMesh.",
+            media_type="text/plain",
+            status_code=404,
+        )
+    filename = item.get("filename", "document.pdf")
+    return Response(
+        content=item["bytes"],
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f'inline; filename="{filename}"',
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+        },
+    )
+
 
 
 from ui.components.header import create_header
@@ -425,7 +452,7 @@ def login_page():
                 if (urlParams.get('confirmed') === '1') {
                     var banner = document.createElement('div');
                     banner.style.cssText = 'background:#d1fae5;border:1px solid #6ee7b7;color:#065f46;border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:0.875rem;text-align:center;font-weight:500;';
-                    banner.innerHTML = '✅ Email verified! You can now log in.';
+                    banner.innerHTML = 'Email verified successfully! You can now log in.';
                     var card = document.querySelector('.nicegui-card');
                     if (card) card.prepend(banner);
                 }
@@ -1669,11 +1696,11 @@ def dashboard(request: Request):
 
             status_spinner.set_visibility(False)
             status.set_text(
-                f"✅ Document ready — {uploaded_file.name}{det_str}"
+                f"Document ready — {uploaded_file.name}{det_str}"
             )
 
             ui.notify(
-                f"✅ Document understood — {company or 'Company'} · {policy or 'Policy'}",
+                f"Document understood — {company or 'Company'} · {policy or 'Policy'}",
                 type="positive",
                 position='top',
             )
@@ -1686,12 +1713,20 @@ def dashboard(request: Request):
                 var s2=document.getElementById('lstep2');if(s2)s2.classList.add('active');
             """)
 
-            # 18. PDF Preview (Rendered cleanly via PyMuPDF without fragile JS f-string escaping)
+            # 18. PDF Preview (Rendered cleanly via PyMuPDF with Full Document New-Tab Preview)
             import base64 as _b64
             pdf_preview_container.set_visibility(False)
             pdf_canvas_container.set_visibility(True)
             pdf_canvas_container.clear()
             _fname = uploaded_file.name
+
+            # Store PDF in memory for full document new-tab view
+            preview_id = str(uuid.uuid4())
+            _uploaded_pdf_store[preview_id] = {
+                "bytes": pdf_data,
+                "filename": _fname,
+            }
+            page_state["preview_id"] = preview_id
 
             img_b64 = ""
             try:
@@ -1707,19 +1742,40 @@ def dashboard(request: Request):
                 if img_b64:
                     ui.html(f'''
 <div class="lex-pdf-preview-panel">
-  <div style="font-size:0.82rem;font-weight:800;color:var(--lex-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Document Preview</div>
-  <div style="font-size:0.9rem;font-weight:700;color:var(--lex-text);margin-bottom:12px;">{_fname}</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--lex-border);">
+    <div>
+      <div style="font-size:0.82rem;font-weight:800;color:var(--lex-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;">Document Preview</div>
+      <div style="font-size:0.95rem;font-weight:700;color:var(--lex-text);">{_fname}</div>
+    </div>
+    <a href="/api/view-pdf/{preview_id}" target="_blank" rel="noopener noreferrer" class="lex-open-tab-btn" title="Open entire document in a new tab">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+      <span>Preview in New Tab</span>
+    </a>
+  </div>
   <div class="lex-pdf-canvas-wrapper" style="max-height: 520px; overflow-y: auto; border: 1px solid var(--lex-border); border-radius: 10px; box-shadow: 0 4px 18px rgba(0,0,0,0.12);">
     <img src="data:image/png;base64,{img_b64}" style="width: 100%; height: auto; display: block;" alt="PDF Page 1 Preview" />
   </div>
-  <div style="font-size:0.78rem;color:var(--lex-muted);margin-top:8px;">Page 1 preview &#x2022; Select frameworks then click Run Analysis</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:0.78rem;color:var(--lex-muted);">
+    <span>Page 1 preview &#x2022; Select frameworks then click Run Analysis</span>
+    <a href="/api/view-pdf/{preview_id}" target="_blank" rel="noopener noreferrer" style="color:var(--lex-sage);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
+      Open all pages &rarr;
+    </a>
+  </div>
 </div>
 ''')
                 else:
                     ui.html(f'''
 <div class="lex-pdf-preview-panel">
-  <div style="font-size:0.82rem;font-weight:800;color:var(--lex-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Document Ready</div>
-  <div style="font-size:0.9rem;font-weight:700;color:var(--lex-text);margin-bottom:12px;">{_fname}</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--lex-border);">
+    <div>
+      <div style="font-size:0.82rem;font-weight:800;color:var(--lex-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;">Document Ready</div>
+      <div style="font-size:0.95rem;font-weight:700;color:var(--lex-text);">{_fname}</div>
+    </div>
+    <a href="/api/view-pdf/{preview_id}" target="_blank" rel="noopener noreferrer" class="lex-open-tab-btn" title="Open entire document in a new tab">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+      <span>Preview in New Tab</span>
+    </a>
+  </div>
   <div style="font-size:0.85rem;color:var(--lex-muted);">Ready for analysis. Select frameworks and click Run Analysis.</div>
 </div>
 ''')
@@ -1759,6 +1815,9 @@ def dashboard(request: Request):
         if "attached_file_container" in sidebar:
             sidebar["attached_file_container"].set_visibility(False)
             sidebar["attached_file_name_label"].text = ""
+        old_pid = page_state.pop("preview_id", None)
+        if old_pid:
+            _uploaded_pdf_store.pop(old_pid, None)
         page_state["pdf_bytes"] = None
         page_state["pdf_name"] = ""
         sidebar["company_name"].value = ""
@@ -2319,7 +2378,7 @@ def dashboard(request: Request):
             )
 
             ui.notify(
-                "✅ Compliance analysis completed successfully.",
+                "Compliance analysis completed successfully.",
                 type="positive",
                 position='top',
             )

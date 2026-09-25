@@ -1100,3 +1100,83 @@ body.q-dark .lex-fw-badge-soc2  { background:#261f0c; color:#d9c59a; border-colo
 
 #lex-confetti-canvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:99998; }
 .lex-tour-highlight { outline:3px solid var(--lex-sage)!important; outline-offset:4px; border-radius:12px; box-shadow:0 0 0 6px rgba(78,121,93,0.18)!important; animation:lex-pulse-green 1.6s ease-in-out 3; }
+
+/* ============================================================
+   DISTINCT TOASTER NOTIFICATIONS (Positive, Warning, Negative, Info)
+   ============================================================ */
+.q-notification {
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.28), 0 4px 10px -2px rgba(0, 0, 0, 0.16) !important;
+    border: 1.5px solid transparent !important;
+    padding: 12px 20px !important;
+    letter-spacing: 0.01em !important;
+}
+
+/* SUCCESS / POSITIVE — Unmistakable Rich Emerald Green */
+.q-notification.bg-positive,
+.q-notification--positive,
+.q-notification[class*="bg-positive"] {
+    background: linear-gradient(135deg, #1b6338, #103d22) !important;
+    border-color: #34d399 !important;
+    color: #ffffff !important;
+}
+
+/* WARNING — Unmistakable Warm Amber / Gold */
+.q-notification.bg-warning,
+.q-notification--warning,
+.q-notification[class*="bg-warning"] {
+    background: linear-gradient(135deg, #b86200, #7a3c00) !important;
+    border-color: #f59e0b !important;
+    color: #ffffff !important;
+}
+
+/* ERROR / NEGATIVE — Unmistakable Deep Crimson Red */
+.q-notification.bg-negative,
+.q-notification--negative,
+.q-notification[class*="bg-negative"] {
+    background: linear-gradient(135deg, #b91c1c, #701010) !important;
+    border-color: #f87171 !important;
+    color: #ffffff !important;
+}
+
+/* INFO — Unmistakable Sapphire Teal */
+.q-notification.bg-info,
+.q-notification--info,
+.q-notification[class*="bg-info"] {
+    background: linear-gradient(135deg, #0e7490, #155e75) !important;
+    border-color: #38bdf8 !important;
+    color: #ffffff !important;
+}
+
+.q-notification .q-icon {
+    font-size: 1.25rem !important;
+}
+
+/* ============================================================
+   OPEN DOCUMENT IN NEW TAB BUTTON
+   ============================================================ */
+.lex-open-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 16px;
+    border-radius: 10px;
+    background: var(--lex-surface);
+    color: var(--lex-text);
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-decoration: none;
+    border: 1.5px solid var(--lex-border);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: var(--lex-shadow);
+    cursor: pointer;
+}
+.lex-open-tab-btn:hover {
+    background: var(--lex-sage) !important;
+    color: #ffffff !important;
+    border-color: var(--lex-sage) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(78, 121, 93, 0.3) !important;
+}
