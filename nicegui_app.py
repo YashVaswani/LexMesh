@@ -1,4 +1,4 @@
-import os
+﻿import os
 import json
 import re
 import warnings
@@ -1571,7 +1571,7 @@ def dashboard(request: Request):
     # ========================================================
 
     def render_pdf_preview(preview_id: str, fname: str, pdf_bytes_data: bytes):
-        """Render page 1 preview canvas and native 'Preview in New Tab' button."""
+        """Render page 1 preview canvas and native 'Preview' button."""
         import base64 as _b64
         pdf_preview_container.set_visibility(False)
         pdf_canvas_container.set_visibility(True)
@@ -1596,7 +1596,7 @@ def dashboard(request: Request):
 
                     # Native Quasar button with @click.stop - guarantees opening in a brand new tab without Quasar router interception
                     ui.button(
-                        "Preview in New Tab",
+                        "Preview",
                         icon="open_in_new",
                         on_click=lambda pid=preview_id: ui.run_javascript(f"window.open('/api/view-pdf/{pid}', '_blank');")
                     ).props(
