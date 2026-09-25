@@ -51,6 +51,9 @@ async def api_confirm_email(request: Request):
 
 # In-memory store for temporarily uploaded PDFs for full preview in a new browser tab
 _uploaded_pdf_store = {}
+# Active document per user session so page reloads/back-navigation don't wipe out uploaded files
+_user_active_documents = {}
+
 
 @app.get("/api/view-pdf/{preview_id}")
 async def view_uploaded_pdf(preview_id: str):
@@ -1567,7 +1570,58 @@ def dashboard(request: Request):
     # Use NiceGUI's dedicated .on_upload().
     # ========================================================
 
+    def render_pdf_preview(preview_id: str, fname: str, pdf_bytes_data: bytes):
+        """Render page 1 preview canvas and native 'Preview in New Tab' button."""
+        import base64 as _b64
+        pdf_preview_container.set_visibility(False)
+        pdf_canvas_container.set_visibility(True)
+        pdf_canvas_container.clear()
+
+        img_b64 = ""
+        try:
+            doc = fitz.open(stream=pdf_bytes_data, filetype="pdf")
+            if len(doc) > 0:
+                pix = doc[0].get_pixmap(dpi=130)
+                img_b64 = _b64.b64encode(pix.tobytes("png")).decode("utf-8")
+            doc.close()
+        except Exception as _pe:
+            logger.warning("PDF preview raster error: %s", _pe)
+
+        with pdf_canvas_container:
+            with ui.column().classes("w-full lex-pdf-preview-panel").style("gap: 12px;"):
+                with ui.row().classes("w-full items-center justify-between flex-wrap gap-3 pb-3").style("border-bottom: 1px solid var(--lex-border);"):
+                    with ui.column().classes("gap-0"):
+                        ui.label("DOCUMENT PREVIEW").classes("text-[11px] font-extrabold tracking-wider").style("color: var(--lex-muted);")
+                        ui.label(fname).classes("text-sm font-bold truncate max-w-[340px]").style("color: var(--lex-text);")
+
+                    # Native Quasar button with @click.stop - guarantees opening in a brand new tab without Quasar router interception
+                    ui.button(
+                        "Preview in New Tab",
+                        icon="open_in_new",
+                        on_click=lambda pid=preview_id: ui.run_javascript(f"window.open('/api/view-pdf/{pid}', '_blank');")
+                    ).props(
+                        f'unelevated no-caps size=sm @click.stop="window.open(\'/api/view-pdf/{preview_id}\', \'_blank\')"'
+                    ).classes("lex-open-tab-btn").style("cursor: pointer;")
+
+                if img_b64:
+                    with ui.element("div").classes("lex-pdf-canvas-wrapper w-full").style(
+                        "max-height: 520px; overflow-y: auto; border: 1px solid var(--lex-border); border-radius: 10px; box-shadow: 0 4px 18px rgba(0,0,0,0.12);"
+                    ):
+                        ui.html(f'<img src="data:image/png;base64,{img_b64}" style="width: 100%; height: auto; display: block;" alt="PDF Page 1 Preview" />')
+
+                    with ui.row().classes("w-full items-center justify-between text-xs mt-1").style("color: var(--lex-muted);"):
+                        ui.label("Page 1 preview • Select frameworks then click Run Analysis")
+                        ui.button(
+                            "Open full document in new tab ↗",
+                            on_click=lambda pid=preview_id: ui.run_javascript(f"window.open('/api/view-pdf/{pid}', '_blank');")
+                        ).props(
+                            f'flat dense no-caps size=xs @click.stop="window.open(\'/api/view-pdf/{preview_id}\', \'_blank\')"'
+                        ).style("color: var(--lex-sage); font-weight: 700; cursor: pointer;")
+                else:
+                    ui.label("Ready for analysis. Select frameworks and click Run Analysis.").classes("text-sm").style("color: var(--lex-muted);")
+
     async def handle_upload(event):
+
 
         try:
 
@@ -1713,14 +1767,8 @@ def dashboard(request: Request):
                 var s2=document.getElementById('lstep2');if(s2)s2.classList.add('active');
             """)
 
-            # 18. PDF Preview (Rendered cleanly via PyMuPDF with Full Document New-Tab Preview)
-            import base64 as _b64
-            pdf_preview_container.set_visibility(False)
-            pdf_canvas_container.set_visibility(True)
-            pdf_canvas_container.clear()
+            # 18. PDF Preview (Rendered cleanly with Full Document New-Tab Preview)
             _fname = uploaded_file.name
-
-            # Store PDF in memory for full document new-tab view
             preview_id = str(uuid.uuid4())
             _uploaded_pdf_store[preview_id] = {
                 "bytes": pdf_data,
@@ -1728,57 +1776,18 @@ def dashboard(request: Request):
             }
             page_state["preview_id"] = preview_id
 
-            img_b64 = ""
-            try:
-                doc = fitz.open(stream=pdf_data, filetype="pdf")
-                if len(doc) > 0:
-                    pix = doc[0].get_pixmap(dpi=130)
-                    img_b64 = _b64.b64encode(pix.tobytes("png")).decode("utf-8")
-                doc.close()
-            except Exception as _pe:
-                logger.warning("PDF preview raster error: %s", _pe)
+            # Persist to session active document store so reloads / navigation don't wipe out the document
+            _u_key = app.storage.user.get("user_id") or "current_user"
+            _user_active_documents[_u_key] = {
+                "pdf_bytes": pdf_data,
+                "pdf_name": _fname,
+                "preview_id": preview_id,
+                "company": company,
+                "policy": policy,
+            }
 
-            with pdf_canvas_container:
-                if img_b64:
-                    ui.html(f'''
-<div class="lex-pdf-preview-panel">
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--lex-border);">
-    <div>
-      <div style="font-size:0.82rem;font-weight:800;color:var(--lex-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;">Document Preview</div>
-      <div style="font-size:0.95rem;font-weight:700;color:var(--lex-text);">{_fname}</div>
-    </div>
-    <a href="/api/view-pdf/{preview_id}" target="_blank" rel="noopener noreferrer" class="lex-open-tab-btn" title="Open entire document in a new tab">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-      <span>Preview in New Tab</span>
-    </a>
-  </div>
-  <div class="lex-pdf-canvas-wrapper" style="max-height: 520px; overflow-y: auto; border: 1px solid var(--lex-border); border-radius: 10px; box-shadow: 0 4px 18px rgba(0,0,0,0.12);">
-    <img src="data:image/png;base64,{img_b64}" style="width: 100%; height: auto; display: block;" alt="PDF Page 1 Preview" />
-  </div>
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:0.78rem;color:var(--lex-muted);">
-    <span>Page 1 preview &#x2022; Select frameworks then click Run Analysis</span>
-    <a href="/api/view-pdf/{preview_id}" target="_blank" rel="noopener noreferrer" style="color:var(--lex-sage);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
-      Open all pages &rarr;
-    </a>
-  </div>
-</div>
-''')
-                else:
-                    ui.html(f'''
-<div class="lex-pdf-preview-panel">
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--lex-border);">
-    <div>
-      <div style="font-size:0.82rem;font-weight:800;color:var(--lex-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;">Document Ready</div>
-      <div style="font-size:0.95rem;font-weight:700;color:var(--lex-text);">{_fname}</div>
-    </div>
-    <a href="/api/view-pdf/{preview_id}" target="_blank" rel="noopener noreferrer" class="lex-open-tab-btn" title="Open entire document in a new tab">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-      <span>Preview in New Tab</span>
-    </a>
-  </div>
-  <div style="font-size:0.85rem;color:var(--lex-muted);">Ready for analysis. Select frameworks and click Run Analysis.</div>
-</div>
-''')
+            render_pdf_preview(preview_id, _fname, pdf_data)
+
 
             logger.info(
                 "PDF ready for analysis: %s (%d bytes, company='%s', policy='%s')",
@@ -1818,6 +1827,8 @@ def dashboard(request: Request):
         old_pid = page_state.pop("preview_id", None)
         if old_pid:
             _uploaded_pdf_store.pop(old_pid, None)
+        _u_key = app.storage.user.get("user_id") or "current_user"
+        _user_active_documents.pop(_u_key, None)
         page_state["pdf_bytes"] = None
         page_state["pdf_name"] = ""
         sidebar["company_name"].value = ""
@@ -1888,6 +1899,48 @@ def dashboard(request: Request):
                 type="positive",
                 timeout=5000,
             )
+
+    # --------------------------------------------------------
+    # RESTORE ACTIVE DOCUMENT ON PAGE LOAD / BACK-NAVIGATION
+    # --------------------------------------------------------
+    _u_key = app.storage.user.get("user_id") or "current_user"
+    _saved_doc = _user_active_documents.get(_u_key)
+    if not _is_demo and _saved_doc and _saved_doc.get("pdf_bytes"):
+        page_state["pdf_bytes"] = _saved_doc["pdf_bytes"]
+        page_state["pdf_name"] = _saved_doc["pdf_name"]
+        page_state["preview_id"] = _saved_doc["preview_id"]
+
+        if _saved_doc["preview_id"] not in _uploaded_pdf_store:
+            _uploaded_pdf_store[_saved_doc["preview_id"]] = {
+                "bytes": _saved_doc["pdf_bytes"],
+                "filename": _saved_doc["pdf_name"],
+            }
+
+        if "attached_file_container" in sidebar:
+            sidebar["attached_file_name_label"].text = _saved_doc["pdf_name"]
+            sidebar["attached_file_container"].set_visibility(True)
+
+        if _saved_doc.get("company"):
+            sidebar["company_name"].value = _saved_doc["company"]
+            sidebar["company_name"].update()
+        if _saved_doc.get("policy"):
+            sidebar["policy_name"].value = _saved_doc["policy"]
+            sidebar["policy_name"].update()
+
+        status.set_text(f"Document ready — {_saved_doc['pdf_name']}")
+
+        render_pdf_preview(
+            _saved_doc["preview_id"],
+            _saved_doc["pdf_name"],
+            _saved_doc["pdf_bytes"],
+        )
+
+        ui.run_javascript("""
+            var s=document.getElementById('lstep1');if(s){s.classList.remove('active');s.classList.add('done');}
+            var c=document.getElementById('lconn1');if(c)c.classList.add('done');
+            var s2=document.getElementById('lstep2');if(s2)s2.classList.add('active');
+        """)
+
 
 
     # ========================================================
