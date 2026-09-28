@@ -1,4 +1,4 @@
-﻿import os
+import os
 import json
 import re
 import warnings
@@ -1082,101 +1082,131 @@ def dashboard(request: Request):
             # 1. COMPANY EXTRACTION (Multi-Tier Robust Strategy)
             # ----------------------------------------------------
 
-            # Tier 1: Key-Value label pattern (e.g. "Company QuickCart Retail LLC", "Company: Acme Corp")
-            for line in lines:
-                kv_match = re.match(
-                    r"^(?:Company|Organization|Legal\s+Entity)(?:\s+Name)?\s*[:\t\-–—|]?\s+(.+)$",
-                    line,
-                    re.IGNORECASE,
-                )
-                if kv_match:
-                    candidate = kv_match.group(1).strip()
-                    if len(candidate) >= 2 and not re.match(r"^(?:Name|Title|Address|Location|Description|Registered|Effective)$", candidate, re.IGNORECASE):
-                        company = candidate
-                        break
+            INVALID_COMPANY_SUBSTRINGS = (
+                "is not", "overridden", "rights of", "data subject", "material change",
+                "annually", "shall be", "in accordance", "applies to", "protects customer",
+                "pursuant to", "applicable law", "third party", "third parties",
+                "terms of", "privacy policy", "security policy", "confidential",
+                "table of contents", "classification:", "effective date",
+                "document version", "all rights reserved",
+            )
 
-            # Tier 2: Two-line table cell format (Line 1: "Company", Line 2: "QuickCart Retail LLC")
+            CORP_SUFFIX_PATTERN = (
+                r"(?:Pvt\.?\s+Ltd\.?|Private\s+Limited|LLC|L\.L\.C\.|LLP|L\.L\.P\.|"
+                r"Ltd\.?|LTD|Limited|Inc\.?|INC|Incorporated|Corp\.?|CORP|Corporation|"
+                r"Co\.?|Company|GmbH|AG|PLC|Technologies|Technology|Systems|AI|Labs|"
+                r"Solutions|Holdings|Group|Enterprises|Ventures|Partners|Services|Bank|Capital)"
+            )
+
+            def is_valid_company(name: str) -> bool:
+                if not name or len(name) < 2 or len(name) > 65:
+                    return False
+                lower = name.lower()
+                for bad in INVALID_COMPANY_SUBSTRINGS:
+                    if bad in lower:
+                        return False
+                # Reject if it ends with dangling prepositions or conjunctions
+                if re.search(r"\b(?:the|of|by|to|and|or|in|for|with|is|are|be|a|an)\s*$", lower):
+                    return False
+                # Reject if it starts with lowercase common verbs or prepositions
+                if re.match(r"^(?:is|are|was|were|the|an?|by|to|of|and|provided|unless|with|for)\b", lower):
+                    return False
+                return True
+
+            # Tier 1: Top lines on Page 1 with explicit Corporate Suffix (e.g. "ACME TECHNOLOGIES PVT. LTD.")
+            for line in lines[:8]:
+                clean_line = re.sub(r"^[#*•\-\s]+", "", line).strip()
+                if re.search(r"\b" + CORP_SUFFIX_PATTERN + r"\b", clean_line, re.IGNORECASE):
+                    if not re.search(r"\b(?:Policy|Guideline|Procedure|Standard|Manual|Framework|Overview)\b", clean_line, re.IGNORECASE):
+                        if is_valid_company(clean_line):
+                            company = clean_line
+                            break
+
+            # Tier 2: Title Block on Page 1 (Line directly above PRIVACY POLICY / SECURITY POLICY / DATA PROTECTION)
             if not company:
-                for i, line in enumerate(lines):
-                    if re.match(r"^(?:Company|Organization|Legal\s+Entity)(?:\s+Name)?\s*[:\t\-–—|]?$", line, re.IGNORECASE):
-                        if i + 1 < len(lines):
-                            candidate = lines[i + 1].strip()
-                            if candidate and not re.match(r"^(?:Registered|Effective|Website|Contact|Version|Date|Review|Document)\b", candidate, re.IGNORECASE):
+                for i, line in enumerate(lines[:10]):
+                    if re.search(r"\b(?:PRIVACY\s+POLICY|SECURITY\s+POLICY|DATA\s+PROTECTION|INFORMATION\s+SECURITY)\b", line, re.IGNORECASE):
+                        if i > 0:
+                            candidate = lines[i - 1].strip()
+                            if is_valid_company(candidate) and not re.search(r"\b(?:Page\s+\d+|Version|\d{4}|Confidential|Table\s+of|Draft)\b", candidate, re.IGNORECASE):
                                 company = candidate
                                 break
 
-            # Tier 3: Legal Preamble / Introduction Sentence
-            # e.g. "This Privacy Policy describes how QuickCart Retail LLC ('QuickCart', 'we') handles..."
+            # Tier 3: Explicit Key-Value label pattern (e.g. "Company: Acme Corp", "Organization: QuickCart Retail LLC")
             if not company:
-                preamble_match = re.search(
-                    r"(?:This\s+(?:[A-Za-z\s]+)?Policy\s+(?:describes|explains|governs|sets\s+forth|outlines)\s+how\s+)"
-                    r"([A-Z0-9][A-Za-z0-9&.,'’\- ]+?)"
-                    r"(?:\s*\((?:['\"‘“]|we\b|collectively|the\b)|,|\s+handles|\s+collects|\s+uses|\s+processes|\s+operates|\s+ships)",
-                    full_header_text,
-                    re.IGNORECASE,
-                )
-                if preamble_match:
-                    candidate = preamble_match.group(1).strip()
-                    if 2 <= len(candidate) <= 60 and not re.search(r"\b(?:Policy|Notice|Document|Statement)\b", candidate, re.IGNORECASE):
-                        company = candidate
+                for line in lines:
+                    kv_match = re.match(
+                        r"^(?:Company|Organization|Legal\s+Entity)(?:\s+Name)?\s*[:\t\-–—|]\s*(.+)$",
+                        line,
+                        re.IGNORECASE,
+                    )
+                    if kv_match:
+                        candidate = kv_match.group(1).strip()
+                        if is_valid_company(candidate):
+                            company = candidate
+                            break
 
+            # Tier 4: Two-line table cell format (Line 1: "Company", Line 2: "QuickCart Retail LLC")
             if not company:
-                preamble_match2 = re.search(
-                    r"(?:privacy\s+practices\s+of\s+|welcome\s+to\s+|at\s+)"
-                    r"([A-Z0-9][A-Za-z0-9&.,'’\- ]{2,50}?)"
-                    r"(?:\s*\((?:['\"‘“]|we\b|collectively)|,\s*we\b|\.\s|\n)",
-                    full_header_text,
-                    re.IGNORECASE,
-                )
-                if preamble_match2:
-                    candidate = preamble_match2.group(1).strip()
-                    if 2 <= len(candidate) <= 60:
-                        company = candidate
+                for i, line in enumerate(lines[:25]):
+                    if re.match(r"^(?:Company|Organization|Legal\s+Entity)(?:\s+Name)?\s*[:\t\-–—|]?$", line, re.IGNORECASE):
+                        if i + 1 < len(lines):
+                            candidate = lines[i + 1].strip()
+                            if is_valid_company(candidate):
+                                company = candidate
+                                break
 
-            # Tier 4: Corporate Entity Suffix Match (Comprehensive legal suffixes)
+            # Tier 5: Corporate Entity Suffix anywhere in the document header (Strict Title Cased)
             if not company:
                 corp_suffix_match = re.search(
-                    r"\b([A-Z][A-Za-z0-9&.]*(?:\s+[A-Z0-9][A-Za-z0-9&.]*){0,5}\s+"
-                    r"(?:LLC|L\.L\.C\.|LLP|L\.L\.P\.|Ltd\.?|LTD|Limited|Inc\.?|INC|Incorporated|"
-                    r"Corp\.?|CORP|Corporation|Pvt\.?\s+Ltd\.?|Private\s+Limited|Co\.?|Company|"
-                    r"GmbH|AG|PLC|Retail\s+LLC|Technologies|Technology|Systems|AI|Labs|Solutions|"
-                    r"Holdings|Group|Enterprises|Ventures|Partners|Services|Bank|Capital))\b",
+                    r"\b([A-Z][A-Za-z0-9&.]*(?:\s+[A-Z0-9][A-Za-z0-9&.]*){0,5}\s+" + CORP_SUFFIX_PATTERN + r")\b",
                     full_header_text,
                 )
                 if corp_suffix_match:
                     candidate = re.sub(r"\s+", " ", corp_suffix_match.group(1)).strip()
-                    if not re.search(r"\b(?:Privacy|Security|Cookie|Terms|Compliance)\b", candidate, re.IGNORECASE):
+                    if is_valid_company(candidate):
                         company = candidate
 
-            # Tier 5: Title Block on Page 1 (Line directly above PRIVACY POLICY / SECURITY POLICY)
+            # Tier 6: Legal Preamble (Strictly Sanitized with required company capitalization)
             if not company:
-                for i, line in enumerate(lines[:10]):
-                    if re.search(r"\b(?:PRIVACY\s+POLICY|SECURITY\s+POLICY|DATA\s+PROTECTION)\b", line, re.IGNORECASE):
-                        if i > 0:
-                            candidate = lines[i - 1].strip()
-                            if len(candidate) >= 3 and not re.search(r"\b(?:Page\s+\d+|Version|\d{4}|Confidential|Table\s+of)\b", candidate, re.IGNORECASE):
-                                company = candidate
-                                break
+                preamble_match = re.search(
+                    r"(?:This\s+(?:[A-Za-z\s]+)?Policy\s+(?:describes|explains|governs|sets\s+forth|outlines)\s+how\s+)"
+                    r"([A-Z][A-Za-z0-9&.,'’\- ]+?)"
+                    r"(?:\s+(?:operates|processes|collects|handles|uses|protects)|\s*\((?:['\"‘“]|we\b|collectively|the\b)|,)",
+                    full_header_text,
+                )
+                if preamble_match:
+                    candidate = preamble_match.group(1).strip()
+                    # Strip any trailing 'protects', 'handles', etc. if caught
+                    candidate = re.sub(r"\s+(?:protects|handles|collects|uses|processes|operates).*$", "", candidate, flags=re.IGNORECASE).strip()
+                    if is_valid_company(candidate):
+                        company = candidate
 
-            # Tier 6: PDF Document Metadata Properties
+            # Tier 7: PDF Document Metadata Properties (author / creator)
             if not company and doc.metadata:
-                meta_author = doc.metadata.get("author") or doc.metadata.get("creator") or ""
-                meta_author = meta_author.strip()
-                if meta_author and len(meta_author) >= 3 and not re.search(r"(?:Word|Acrobat|PDF|Canva|LaTeX|ReportLab|Writer|InDesign)", meta_author, re.IGNORECASE):
+                meta_author = (doc.metadata.get("author") or doc.metadata.get("creator") or "").strip()
+                if is_valid_company(meta_author) and not re.search(r"(?:Word|Acrobat|PDF|Canva|LaTeX|ReportLab|Writer|InDesign|Microsoft|Google)", meta_author, re.IGNORECASE):
                     company = meta_author
 
-            # Tier 7: Filename Fallback (e.g. "SampleInput_QuickCart_Policy.pdf" -> "QuickCart")
+            # Tier 8: Filename Fallback (e.g. "Acme_Privacy_Policy_v2.1.pdf" -> "Acme")
             if not company and filename:
                 base = os.path.splitext(filename)[0]
                 base = re.sub(r"^(?:SampleInput_|Sample_Input_|Sample_|Input_|Test_|Demo_|Draft_)", "", base, flags=re.IGNORECASE)
                 base = re.sub(r"(?:_Policy|-Policy|_Privacy|-Privacy|_Security|-Security|_v\d+.*|-v\d+.*|_condensed.*)$", "", base, flags=re.IGNORECASE)
                 base = re.sub(r"[-_]+", " ", base).strip()
-                if base and len(base) >= 2:
+                if is_valid_company(base):
                     company = base
 
-            # Clean company name
-            if company:
-                company = re.sub(r"\s+", " ", company).strip()
+            # Final validation check
+            if not is_valid_company(company):
+                if filename:
+                    base = os.path.splitext(filename)[0]
+                    base = re.sub(r"^(?:SampleInput_|Sample_Input_|Sample_|Input_|Test_|Demo_|Draft_)", "", base, flags=re.IGNORECASE)
+                    base = re.sub(r"(?:_Policy|-Policy|_Privacy|-Privacy|_Security|-Security|_v\d+.*|-v\d+.*|_condensed.*)$", "", base, flags=re.IGNORECASE)
+                    company = re.sub(r"[-_]+", " ", base).strip()
+                else:
+                    company = "Organisation"
+
 
             # ----------------------------------------------------
             # 2. POLICY NAME & VERSION EXTRACTION
