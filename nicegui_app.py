@@ -1,4 +1,4 @@
-﻿import os
+import os
 import json
 import re
 import warnings
@@ -2642,10 +2642,10 @@ def not_found_page():
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 8080))
-    # NOTE: favicon is injected via ui.add_head_html() <link> tags above.
-    # Do NOT pass favicon= here as NiceGUI expects a disk path, not a web URL.
+    _favicon_file = _static_path / "favicon.png"
     ui.run(
         title="LexMesh — AI Compliance Engine",
+        favicon=_favicon_file if _favicon_file.exists() else None,
         port=port,
         storage_secret=config.NICEGUI_STORAGE_SECRET,
         reload=False,
