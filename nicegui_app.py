@@ -2510,7 +2510,16 @@ def dashboard(request: Request):
             return
         if e.key == 'Enter' and (getattr(e.modifiers, 'ctrl', False) or getattr(e.modifiers, 'meta', False)):
             import asyncio
-            asyncio.create_task(run_analysis())
+            from nicegui import context as _lex_ctx
+            # asyncio.create_task() loses the NiceGUI client context, causing
+            # ui.run_javascript() to raise RuntimeError inside run_analysis().
+            # Capture the client now (while we're still in the event handler
+            # context) and run the coroutine inside `async with client:`.
+            _lex_client = _lex_ctx.client
+            async def _run_with_context():
+                async with _lex_client:
+                    await run_analysis()
+            asyncio.create_task(_run_with_context())
         elif e.key == 'Escape':
             handle_clear_upload()
 
