@@ -134,11 +134,14 @@ class LLMProviderChain:
             except Exception as e:
                 logger.warning("Legacy Gemini (gemini-3.6-flash): %s", str(e)[:200])
 
-        # ── TIER 2: Groq ───────────────────────────────────────────────
-        # Current live models as of Sept 2026 (per groq.com/docs/models):
+        # ── TIER 2: Groq ─────────────────────────────────────────────
+        # Current live models as of Sept 2026 (per groq.com/docs/models).
+        # Listed fastest/most-capable first. Dead models get blacklisted.
         GROQ_MODELS = [
             "llama-3.3-70b-versatile",
             "meta-llama/llama-4-scout-17b-16e-instruct",
+            "compound-beta-mini",
+            "llama3-70b-8192",
         ]
 
         if self.groq_clients:
@@ -181,16 +184,21 @@ class LLMProviderChain:
                                 self._groq_exhausted.add(k_idx)
                                 logger.info("Groq Key #%d daily quota hit — circuit breaker tripped.", k_idx + 1)
                                 break
-                            # Temporary rate limit — skip this model, try next
+                            # Temporary rate limit on this model — try next model
+                        elif "503" in err or "unavailable" in err.lower() or "overloaded" in err.lower():
+                            # Service temporarily overloaded — skip to next model (don't blacklist)
+                            logger.info("Groq model '%s' temporarily unavailable (503) — trying next model.", g_model)
                         elif ("decommissioned" in err.lower() or "no longer supported" in err.lower()
-                              or "404" in err or "does not exist" in err.lower()):
+                              or "404" in err or "does not exist" in err.lower()
+                              or "not found" in err.lower()):
                             # Model is dead — blacklist it so all threads skip it
                             self._groq_dead_models.add(g_model)
-                            logger.info("Groq model '%s' is dead — blacklisted for this run.", g_model)
+                            logger.info("Groq model '%s' is dead/404 — blacklisted for this run.", g_model)
                         # All errors: fall through to next model immediately
 
         # All providers failed — rule-based fallback will handle it
         return None
+
 
 
 llm_chain = LLMProviderChain()

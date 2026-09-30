@@ -3,6 +3,7 @@ from ui.components.lucide import lucide_icon
 from db.supabase_client import supabase_db
 from datetime import datetime
 import math
+import auth
 
 def create_dashboard_landing(on_run_new_audit=None):
     """Render the executive Dashboard Landing Page.
@@ -49,7 +50,9 @@ def create_dashboard_landing(on_run_new_audit=None):
     # FETCH REAL DATA
     # ========================================================
     
-    reports = supabase_db.get_all_reports()
+    # Fetch only this user's reports (prevent cross-account data leakage)
+    _current_user_id = auth.get_current_user()
+    reports = supabase_db.get_all_reports(user_id=_current_user_id)
     
     total_audits = len(reports)
     

@@ -1,4 +1,4 @@
-import os
+﻿import os
 import json
 import re
 import warnings
@@ -2516,25 +2516,10 @@ def dashboard(request: Request):
 
     ui.keyboard(on_key=_handle_page_key)
 
-    ui.run_javascript("""
-        window.addEventListener('keydown', function(e) {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                e.preventDefault();
-                e.stopPropagation();
-                var btn = document.getElementById('lex-run-btn') || document.querySelector('.lex-run-button');
-                if (btn) {
-                    btn.click();
-                    btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-                }
-            } else if (e.key === 'Escape') {
-                var cBtn = document.getElementById('lex-clear-btn') || document.querySelector('.lex-clear-btn');
-                if (cBtn) {
-                    cBtn.click();
-                    cBtn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-                }
-            }
-        }, true);
-    """)
+    # NOTE: Ctrl+Enter / Escape keyboard shortcuts are registered globally
+    # via ui.add_head_html(shared=True) at the top of this file.
+    # Registering again here would cause Ctrl+Enter to fire the button twice.
+
 
     # ========================================================
     # FRAMEWORK CHANGE CALLBACK
@@ -2657,9 +2642,10 @@ def not_found_page():
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 8080))
+    # NOTE: favicon is injected via ui.add_head_html() <link> tags above.
+    # Do NOT pass favicon= here as NiceGUI expects a disk path, not a web URL.
     ui.run(
         title="LexMesh — AI Compliance Engine",
-        favicon="/static/favicon.png",
         port=port,
         storage_secret=config.NICEGUI_STORAGE_SECRET,
         reload=False,

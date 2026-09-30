@@ -1,5 +1,7 @@
 from nicegui import ui
 from ui.components.lucide import lucide_icon
+import auth
+
 
 
 def create_header(on_nav_change=None, active_tab="dashboard"):
@@ -90,7 +92,6 @@ def create_header(on_nav_change=None, active_tab="dashboard"):
 
             lucide_icon("moon", size=20, class_name="text-emerald-200 dark:text-emerald-400")
 
-            import auth
             def on_logout():
                 auth.sign_out()
                 ui.navigate.to('/login')
