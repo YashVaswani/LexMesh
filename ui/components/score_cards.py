@@ -1,4 +1,4 @@
-from nicegui import ui
+﻿from nicegui import ui
 from ui.components.lucide import lucide_icon
 
 
@@ -51,6 +51,31 @@ def _pulse_class(score: float) -> str:
     return "lex-pulse-red"
 
 
+def _animate_js(el_id: int, target: float, duration: int = 1200) -> str:
+    """Return JS that animates a NiceGUI label element to count up to target%.
+    Uses getHtmlElement(id) -- the official NiceGUI JS API -- with a retry
+    loop so the element does not have to be in the DOM the instant JS runs."""
+    return f"""(function(){{
+  function animate() {{
+    var el = getHtmlElement({el_id});
+    if (!el) {{ setTimeout(animate, 60); return; }}
+    var target = {target:.0f};
+    var dur = {duration}, startTime = null;
+    el.textContent = '0%';
+    function step(ts) {{
+      if (!startTime) startTime = ts;
+      var p = Math.min((ts - startTime) / dur, 1);
+      var ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(ease * target) + '%';
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = Math.round(target) + '%';
+    }}
+    requestAnimationFrame(step);
+  }}
+  setTimeout(animate, 80);
+}})();"""
+
+
 def create_score_cards(
     summary,
     framework_summaries,
@@ -100,12 +125,18 @@ def create_score_cards(
                     "lex-risk-text"
                 )
 
-            # Score element with animated counter
+            # Score label starts at "0%" and is animated to the real value via JS.
             score_el = ui.label(
                 "0%"
             ).classes(
-                f"lex-overall-score lex-score-animated {colour} lex-animate-counter"
-            ).props(f'data-target="{overall:.0f}"')
+                f"lex-overall-score lex-score-animated {colour}"
+            )
+
+            # Use NiceGUI's getHtmlElement(id) to animate the counter.
+            # NOTE: .props('data-target=...') sets a Vue prop, NOT a real DOM
+            # data-* attribute, so getAttribute('data-target') always returns null.
+            # We pass the score value directly in the JS string instead.
+            ui.run_javascript(_animate_js(score_el.id, overall, 1200))
 
             # Trigger confetti if high score
             if overall >= 85:
@@ -169,12 +200,12 @@ def create_score_cards(
 
             risk_level = data.get(
                 "risk_level",
-                "—",
+                "-",
             )
 
             penalty = data.get(
                 "penalty_exposure",
-                "—",
+                "-",
             )
 
             fw_colour = _score_colour(score)
@@ -196,11 +227,14 @@ def create_score_cards(
                             "lex-framework-name whitespace-nowrap"
                         )
 
-                    ui.label(
+                    fw_el = ui.label(
                         "0%"
                     ).classes(
-                        f"lex-framework-score shrink-0 lex-score-animated {fw_colour} lex-animate-counter"
-                    ).props(f'data-target="{score:.0f}"')
+                        f"lex-framework-score shrink-0 lex-score-animated {fw_colour}"
+                    )
+
+                    # Animate using NiceGUI's getHtmlElement(id) API
+                    ui.run_javascript(_animate_js(fw_el.id, score, 1100))
 
                 ui.linear_progress(
                     value=max(
@@ -226,9 +260,6 @@ def create_score_cards(
                 ).classes(
                     "lex-framework-exposure"
                 )
-
-    # Animate all scores simultaneously
-    ui.run_javascript("if(window.lexAnimateAllScores) window.lexAnimateAllScores();")
 
 
 def _number(value):
